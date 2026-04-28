@@ -8,6 +8,7 @@ import adaptHYv4         from './adapter_hy_v4.js';
 import adaptV7BtcTG      from './adapter_v7_btc_tg.js';
 import adaptBasket       from './adapter_basket_breakout.js';
 import adaptBull         from './adapter_bull.js';
+import adaptCodex        from './adapter_codex.js';
 
 const loadJson = (rel) => JSON.parse(readFileSync(new URL(rel, import.meta.url), 'utf8'));
 const loadText = (rel) => readFileSync(new URL(rel, import.meta.url), 'utf8');
@@ -19,6 +20,8 @@ const fxHYv4      = loadJson('../fixtures/hy-v4-signals.json');
 const fxV7        = loadJson('../fixtures/v7-btc-tg.json');
 const fxBullPort  = loadText('../fixtures/bull-portfolio.md');
 const fxBullLog   = loadText('../fixtures/bull-trade-log.md');
+const fxCodexPort = loadText('../fixtures/codex-portfolio.md');
+const fxCodexLog  = loadText('../fixtures/codex-trade-log.md');
 
 // ---------- Shape contract every adapter must satisfy ----------
 function assertStrategyRowShape(row, expectedName) {
@@ -173,6 +176,37 @@ test('bull adapter still returns row when portfolio is missing but trade log pre
     { startingCapital: 10000 }
   );
   assert.equal(row.name, 'BULL v0');
+  assert.equal(row.status, 'live');
+  assert.ok(row.errors.some(e => e.includes('portfolio')));
+});
+
+// ---------- CODEX ----------
+test('codex adapter returns live zero-trade row from exported markdown fixtures', () => {
+  const row = adaptCodex(
+    { portfolio: { ok: true, text: fxCodexPort }, tradeLog: { ok: true, text: fxCodexLog } },
+    { startingCapital: 10000 }
+  );
+  assertStrategyRowShape(row, 'CODEX v0');
+  assert.equal(row.status, 'live');
+  assert.equal(row.trades_n, 0);
+  assert.equal(row.returns['90d'], 0);
+});
+
+test('codex adapter handles missing trade log', () => {
+  const row = adaptCodex(
+    { portfolio: { ok: true, text: fxCodexPort }, tradeLog: { ok: false, error: 'fetch failed' } },
+    { startingCapital: 10000 }
+  );
+  assert.equal(row.status, 'error');
+  assert.ok(row.errors.some(e => e.includes('tradeLog')));
+});
+
+test('codex adapter still returns row when portfolio is missing but trade log present', () => {
+  const row = adaptCodex(
+    { portfolio: { ok: false, error: 'fetch failed' }, tradeLog: { ok: true, text: fxCodexLog } },
+    { startingCapital: 10000 }
+  );
+  assert.equal(row.name, 'CODEX v0');
   assert.equal(row.status, 'live');
   assert.ok(row.errors.some(e => e.includes('portfolio')));
 });

@@ -4,13 +4,15 @@ import adaptBasket       from './adapters/adapter_basket_breakout.js';
 import adaptAggroDoge    from './adapters/adapter_aggro_doge.js';
 import adaptAnalystHY    from './adapters/adapter_analyst_hy.js';
 import adaptBull         from './adapters/adapter_bull.js';
+import adaptCodex        from './adapters/adapter_codex.js';
 
 /**
  * STRATEGIES registry: defines source, adapter, and per-strategy capital + kill-switch.
  *
- * source.type: 'sheets' | 'bull-github'
+ * source.type: 'sheets' | 'bull-github' | 'codex-local'
  *   - 'sheets':       single-tab fetch, source.tab = tab name
  *   - 'bull-github':  dual-fetch portfolio.md + trade_log.md
+ *   - 'codex-local':  dual-fetch local markdown snapshots
  *
  * starting_capital: paper-account size used for % return normalization.
  *   For strategies without an explicit declared capital (Basket, Aggro), this is
@@ -72,5 +74,16 @@ export const STRATEGIES = [
       trade_log_path: 'memory/trade_log.md',
     },
     adapter: adaptBull,
+  },
+  {
+    name: 'CODEX v0',
+    starting_capital: 10000,
+    killswitch_dd_pct: 35,
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/portfolio.md',
+      trade_log_path: 'data/codex/trade_log.md',
+    },
+    adapter: adaptCodex,
   },
 ];

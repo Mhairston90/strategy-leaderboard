@@ -1,5 +1,5 @@
 import { STRATEGIES } from './registry.js';
-import { fetchSheetTab, fetchBullFile } from './lib/fetch.js';
+import { fetchSheetTab, fetchBullFile, fetchLocalText } from './lib/fetch.js';
 import { renderRows, renderHealth, renderUpdatedAt, setupSortHandlers } from './lib/render.js';
 import { makeErrorRow } from './lib/strategy_row.js';
 
@@ -28,6 +28,16 @@ async function fetchOne(strategy) {
       { startingCapital: strategy.starting_capital }
     );
   }
+  if (strategy.source.type === 'codex-local') {
+    const [portfolio, tradeLog] = await Promise.all([
+      fetchLocalText(strategy.source.portfolio_path),
+      fetchLocalText(strategy.source.trade_log_path),
+    ]);
+    return strategy.adapter(
+      { portfolio, tradeLog },
+      { startingCapital: strategy.starting_capital }
+    );
+  }
   throw new Error('Unknown source type: ' + strategy.source.type);
 }
 
@@ -44,13 +54,13 @@ async function fetchAll() {
       row = res.value;
       // Adapter-level error → degrade source health (but research status is OK)
       if (row.status === 'error') {
-        if (strategy.source.type === 'bull-github') bullHealth = 'error';
+        if (strategy.source.type === 'bull-github' || strategy.source.type === 'codex-local') bullHealth = 'error';
         else sheetsHealth = sheetsHealth === 'ok' ? 'warn' : sheetsHealth;
       }
     } else {
-      // Whole adapter threw — synthesize an error row so the table still has 6 entries
+      // Whole adapter threw — synthesize an error row so the table still has all entries.
       row = makeErrorRow(strategy.name, String(res.reason));
-      if (strategy.source.type === 'bull-github') bullHealth = 'error';
+      if (strategy.source.type === 'bull-github' || strategy.source.type === 'codex-local') bullHealth = 'error';
       else sheetsHealth = 'error';
     }
     rows.push(row);
@@ -64,7 +74,7 @@ async function fetchAll() {
   renderHealth('health-sheets', sheetsHealth,
     sheetsHealth !== 'ok' ? 'one or more Sheet tabs failed' : null);
   renderHealth('health-bull', bullHealth,
-    bullHealth !== 'ok' ? 'BULL repo fetch failed' : null);
+    bullHealth !== 'ok' ? 'BULL repo or CODEX local fetch failed' : null);
   renderUpdatedAt(lastUpdatedAt);
 }
 
