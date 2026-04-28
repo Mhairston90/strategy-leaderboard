@@ -15,11 +15,22 @@ Single-page static dashboard ranking 6 trading strategies on the same view. Read
 
 ## Run
 
-Open `index.html` in any modern browser (Chrome, Edge, Firefox). Auto-refreshes every 5 min. Click any column header to re-sort.
+**Easy mode (Windows):** double-click `Strategy Leaderboard` on your Desktop, or `Open Leaderboard.bat` in this folder. It starts a tiny Python HTTP server on `http://localhost:8123` and opens Chrome chromeless.
 
-For chromeless app feel:
+(The browser blocks `fetch()` from `file://` URLs for security, so the dashboard won't load if you double-click `index.html` directly. The launcher serves it over `http://localhost`, which the browser treats as a real origin.)
+
+**Manual:**
+```bash
+cd C:\Users\Mhair\OneDrive\Desktop\strategy-leaderboard
+python -m http.server 8123
+# then open http://localhost:8123/ in your browser
 ```
-"C:\Program Files\Google\Chrome\Application\chrome.exe" --app=file:///C:/Users/Mhair/OneDrive/Desktop/strategy-leaderboard/index.html
+
+Auto-refreshes every 5 min once loaded. Click any column header to re-sort.
+
+To recreate the Desktop shortcut after a reinstall:
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\create-desktop-shortcut.ps1
 ```
 
 ## Test
