@@ -1,0 +1,1 @@
+{"status":"ok","tab":"Basket Breakout Open Positions","total_rows":1,"headers":["symbol","entry_time","entry_price","stop","atr_at_entry","status"],"rows":[{"symbol":"LINKUSD","entry_time":"2026-04-27T02:00:19.813Z","entry_price":9.57442,"stop":9.4962628137,"atr_at_entry":0.0521047909,"status":"OPEN"}]}
