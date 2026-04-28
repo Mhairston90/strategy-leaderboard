@@ -5,6 +5,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "test": "node --test lib/*.test.js adapters/*.test.js"
+    "test": "node --test lib/*.test.js adapters/*.test.js",
+    "smoke": "node scripts/smoke.js"
   }
 }
