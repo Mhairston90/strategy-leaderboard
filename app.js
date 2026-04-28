@@ -2,6 +2,7 @@ import { STRATEGIES } from './registry.js';
 import { fetchSheetTab, fetchBullFile, fetchLocalText } from './lib/fetch.js';
 import { renderRows, renderHealth, renderUpdatedAt, setupSortHandlers } from './lib/render.js';
 import { makeErrorRow } from './lib/strategy_row.js';
+import { healthBucketForSource, healthSeverityForRow, mergeHealth } from './lib/source_health.js';
 
 const REFRESH_MS = 5 * 60 * 1000;
 const CACHE_KEY = 'leaderboard-cache-v1';
@@ -45,23 +46,26 @@ async function fetchAll() {
   const results = await Promise.allSettled(STRATEGIES.map(fetchOne));
   const rows = [];
   let sheetsHealth = 'ok';
-  let bullHealth = 'ok';
+  let filesHealth = 'ok';
+
+  const applyHealth = (strategy, severity) => {
+    if (healthBucketForSource(strategy.source.type) === 'sheets') {
+      sheetsHealth = mergeHealth(sheetsHealth, severity);
+    } else {
+      filesHealth = mergeHealth(filesHealth, severity);
+    }
+  };
 
   results.forEach((res, i) => {
     const strategy = STRATEGIES[i];
     let row;
     if (res.status === 'fulfilled') {
       row = res.value;
-      // Adapter-level error → degrade source health (but research status is OK)
-      if (row.status === 'error') {
-        if (strategy.source.type === 'bull-github' || strategy.source.type === 'codex-local') bullHealth = 'error';
-        else sheetsHealth = sheetsHealth === 'ok' ? 'warn' : sheetsHealth;
-      }
+      applyHealth(strategy, healthSeverityForRow(row, strategy.source.type));
     } else {
       // Whole adapter threw — synthesize an error row so the table still has all entries.
       row = makeErrorRow(strategy.name, String(res.reason));
-      if (strategy.source.type === 'bull-github' || strategy.source.type === 'codex-local') bullHealth = 'error';
-      else sheetsHealth = 'error';
+      applyHealth(strategy, 'error');
     }
     rows.push(row);
   });
@@ -73,8 +77,8 @@ async function fetchAll() {
   renderRows(rowsState, STRATEGIES, currentSort.key, currentSort.asc);
   renderHealth('health-sheets', sheetsHealth,
     sheetsHealth !== 'ok' ? 'one or more Sheet tabs failed' : null);
-  renderHealth('health-bull', bullHealth,
-    bullHealth !== 'ok' ? 'BULL repo or CODEX local fetch failed' : null);
+  renderHealth('health-bull', filesHealth,
+    filesHealth !== 'ok' ? 'BULL GitHub or CODEX local file fetch issue' : null);
   renderUpdatedAt(lastUpdatedAt);
 }
 

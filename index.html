@@ -12,7 +12,7 @@
       <div class="title">Strategy Leaderboard</div>
       <div class="meta">
         <span id="health-sheets" class="health" title="Sheets fetch status"><span class="dot"></span>Sheets</span>
-        <span id="health-bull"   class="health" title="GitHub fetch status"><span class="dot"></span>GitHub</span>
+        <span id="health-bull"   class="health" title="GitHub and local file fetch status"><span class="dot"></span>Files</span>
         <span id="updated" class="dim">loading…</span>
         <button id="refresh-btn" class="refresh-btn" type="button">⟳ Refresh</button>
       </div>
@@ -36,12 +36,12 @@
         </tr>
       </thead>
       <tbody id="rows">
-        <tr><td colspan="12" class="loading">Loading data from Sheets and GitHub…</td></tr>
+        <tr><td colspan="12" class="loading">Loading data from Sheets and files…</td></tr>
       </tbody>
     </table>
 
     <footer class="dash-footer">
-      <span>data: Sheets doGet · raw.githubusercontent.com</span>
+      <span>data: Sheets doGet · raw.githubusercontent.com · local CODEX snapshots</span>
       <span style="margin-left:auto;">v1 · auto-refresh 5m</span>
     </footer>
   </div>

@@ -5,7 +5,7 @@
 // Run with: node scripts/smoke.js
 
 import { STRATEGIES } from '../registry.js';
-import { fetchSheetTab, fetchBullFile } from '../lib/fetch.js';
+import { fetchSheetTab, fetchBullFile, fetchLocalText } from '../lib/fetch.js';
 
 async function fetchOne(strategy) {
   if (strategy.source.type === 'sheets') {
@@ -16,6 +16,16 @@ async function fetchOne(strategy) {
     const [portfolio, tradeLog] = await Promise.all([
       fetchBullFile(strategy.source.portfolio_path),
       fetchBullFile(strategy.source.trade_log_path),
+    ]);
+    return strategy.adapter(
+      { portfolio, tradeLog },
+      { startingCapital: strategy.starting_capital }
+    );
+  }
+  if (strategy.source.type === 'codex-local') {
+    const [portfolio, tradeLog] = await Promise.all([
+      fetchLocalText(strategy.source.portfolio_path),
+      fetchLocalText(strategy.source.trade_log_path),
     ]);
     return strategy.adapter(
       { portfolio, tradeLog },
@@ -39,7 +49,7 @@ function fmtInt(v) {
   return String(v).padStart(3);
 }
 
-console.log('Fetching live data for all 6 strategies…\n');
+console.log(`Fetching live data for all ${STRATEGIES.length} strategies…\n`);
 const results = await Promise.allSettled(STRATEGIES.map(fetchOne));
 
 console.log(
@@ -98,7 +108,7 @@ results.forEach((res, i) => {
 });
 
 if (shapeFailures === 0) {
-  console.log('  ✅ All 6 rows have valid StrategyRow shape');
+  console.log(`  ✅ All ${STRATEGIES.length} rows have valid StrategyRow shape`);
 } else {
   console.log(`  ${shapeFailures} shape failures`);
   exitCode = 1;
