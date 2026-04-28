@@ -1,0 +1,11 @@
+{
+  "name": "strategy-leaderboard",
+  "version": "0.1.0",
+  "description": "Sortable cross-strategy performance dashboard. Reads Sheets doGet + BULL GitHub raw.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node --test lib/*.test.js adapters/*.test.js",
+    "smoke": "node scripts/smoke.js"
+  }
+}
