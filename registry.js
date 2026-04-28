@@ -86,4 +86,15 @@ export const STRATEGIES = [
     },
     adapter: adaptCodex,
   },
+  {
+    name: 'CODEX Aggro v0',
+    starting_capital: 10000,
+    killswitch_dd_pct: 45,
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/aggro_portfolio.md',
+      trade_log_path: 'data/codex/aggro_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
 ];

@@ -19,7 +19,7 @@ async function fetchOne(strategy) {
     ]);
     return strategy.adapter(
       { portfolio, tradeLog },
-      { startingCapital: strategy.starting_capital }
+      { startingCapital: strategy.starting_capital, name: strategy.name }
     );
   }
   if (strategy.source.type === 'codex-local') {
@@ -29,7 +29,7 @@ async function fetchOne(strategy) {
     ]);
     return strategy.adapter(
       { portfolio, tradeLog },
-      { startingCapital: strategy.starting_capital }
+      { startingCapital: strategy.starting_capital, name: strategy.name }
     );
   }
   throw new Error('Unknown source type: ' + strategy.source.type);

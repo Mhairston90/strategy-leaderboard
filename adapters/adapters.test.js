@@ -22,6 +22,8 @@ const fxBullPort  = loadText('../fixtures/bull-portfolio.md');
 const fxBullLog   = loadText('../fixtures/bull-trade-log.md');
 const fxCodexPort = loadText('../fixtures/codex-portfolio.md');
 const fxCodexLog  = loadText('../fixtures/codex-trade-log.md');
+const fxCodexAggroPort = loadText('../fixtures/codex-aggro-portfolio.md');
+const fxCodexAggroLog  = loadText('../fixtures/codex-aggro-trade-log.md');
 
 // ---------- Shape contract every adapter must satisfy ----------
 function assertStrategyRowShape(row, expectedName) {
@@ -209,4 +211,15 @@ test('codex adapter still returns row when portfolio is missing but trade log pr
   assert.equal(row.name, 'CODEX v0');
   assert.equal(row.status, 'live');
   assert.ok(row.errors.some(e => e.includes('portfolio')));
+});
+
+test('codex adapter can label aggro row from exported markdown fixtures', () => {
+  const row = adaptCodex(
+    { portfolio: { ok: true, text: fxCodexAggroPort }, tradeLog: { ok: true, text: fxCodexAggroLog } },
+    { startingCapital: 10000, name: 'CODEX Aggro v0' }
+  );
+  assertStrategyRowShape(row, 'CODEX Aggro v0');
+  assert.equal(row.status, 'live');
+  assert.equal(row.trades_n, 0);
+  assert.equal(row.returns['90d'], 0);
 });

@@ -5,7 +5,7 @@ import { makeErrorRow } from './lib/strategy_row.js';
 import { healthBucketForSource, healthSeverityForRow, mergeHealth } from './lib/source_health.js';
 
 const REFRESH_MS = 5 * 60 * 1000;
-const CACHE_KEY = 'leaderboard-cache-v2';
+const CACHE_KEY = 'leaderboard-cache-v3';
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 
 const currentSort = { key: 'r90', asc: false };
@@ -26,7 +26,7 @@ async function fetchOne(strategy) {
     ]);
     return strategy.adapter(
       { portfolio, tradeLog },
-      { startingCapital: strategy.starting_capital }
+      { startingCapital: strategy.starting_capital, name: strategy.name }
     );
   }
   if (strategy.source.type === 'codex-local') {
@@ -36,7 +36,7 @@ async function fetchOne(strategy) {
     ]);
     return strategy.adapter(
       { portfolio, tradeLog },
-      { startingCapital: strategy.starting_capital }
+      { startingCapital: strategy.starting_capital, name: strategy.name }
     );
   }
   throw new Error('Unknown source type: ' + strategy.source.type);
