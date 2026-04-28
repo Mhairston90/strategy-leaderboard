@@ -2,6 +2,9 @@
 .superpowers/
 .worktrees/
 
+# Local preview servers
+.server-*.log
+
 # Node
 node_modules/
 
