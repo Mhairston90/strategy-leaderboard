@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Strategy Leaderboard</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="dash">
+    <header class="dash-header">
+      <div class="title">Strategy Leaderboard</div>
+      <div class="meta">
+        <span id="health-sheets" class="health" title="Sheets fetch status"><span class="dot"></span>Sheets</span>
+        <span id="health-bull"   class="health" title="GitHub fetch status"><span class="dot"></span>GitHub</span>
+        <span id="updated" class="dim">loading…</span>
+        <button id="refresh-btn" class="refresh-btn" type="button">⟳ Refresh</button>
+      </div>
+    </header>
+
+    <table id="leaderboard">
+      <thead>
+        <tr>
+          <th data-key="name" class="sortable left">Strategy</th>
+          <th data-key="status" class="sortable left">Status</th>
+          <th data-key="r90" class="sortable sorted">90d %</th>
+          <th data-key="r30" class="sortable">30d %</th>
+          <th data-key="r7"  class="sortable">7d %</th>
+          <th data-key="sharpe" class="sortable" title="best-effort, sanity-check vs source">Sharpe</th>
+          <th data-key="pf" class="sortable" title="best-effort, sanity-check vs source">PF</th>
+          <th data-key="max_dd" class="sortable" title="best-effort, sanity-check vs source">Max DD</th>
+          <th data-key="trades_n" class="sortable">Trades</th>
+          <th data-key="win_pct" class="sortable">Win %</th>
+          <th data-key="avg_r" class="sortable">Avg R</th>
+          <th data-key="last_signal_at" class="sortable">Last sig</th>
+        </tr>
+      </thead>
+      <tbody id="rows">
+        <tr><td colspan="12" class="loading">Loading data from Sheets and GitHub…</td></tr>
+      </tbody>
+    </table>
+
+    <footer class="dash-footer">
+      <span>data: Sheets doGet · raw.githubusercontent.com</span>
+      <span style="margin-left:auto;">v1 · auto-refresh 5m</span>
+    </footer>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
