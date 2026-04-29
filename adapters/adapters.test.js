@@ -24,6 +24,10 @@ const fxCodexPort = loadText('../fixtures/codex-portfolio.md');
 const fxCodexLog  = loadText('../fixtures/codex-trade-log.md');
 const fxCodexAggroPort = loadText('../fixtures/codex-aggro-portfolio.md');
 const fxCodexAggroLog  = loadText('../fixtures/codex-aggro-trade-log.md');
+const fxCodexRegimePort = loadText('../fixtures/codex-regime-portfolio.md');
+const fxCodexRegimeLog  = loadText('../fixtures/codex-regime-trade-log.md');
+const fxCodexApexPort = loadText('../fixtures/codex-apex-portfolio.md');
+const fxCodexApexLog  = loadText('../fixtures/codex-apex-trade-log.md');
 
 // ---------- Shape contract every adapter must satisfy ----------
 function assertStrategyRowShape(row, expectedName) {
@@ -222,4 +226,24 @@ test('codex adapter can label aggro row from exported markdown fixtures', () => 
   assert.equal(row.status, 'live');
   assert.equal(row.trades_n, 0);
   assert.equal(row.returns['90d'], 0);
+});
+
+test('codex adapter can label regime row from exported markdown fixtures', () => {
+  const row = adaptCodex(
+    { portfolio: { ok: true, text: fxCodexRegimePort }, tradeLog: { ok: true, text: fxCodexRegimeLog } },
+    { startingCapital: 10000, name: 'CODEX Regime v0' }
+  );
+  assertStrategyRowShape(row, 'CODEX Regime v0');
+  assert.equal(row.status, 'live');
+  assert.equal(row.trades_n, 0);
+});
+
+test('codex adapter can label apex row from exported markdown fixtures', () => {
+  const row = adaptCodex(
+    { portfolio: { ok: true, text: fxCodexApexPort }, tradeLog: { ok: true, text: fxCodexApexLog } },
+    { startingCapital: 10000, name: 'CODEX Apex v0' }
+  );
+  assertStrategyRowShape(row, 'CODEX Apex v0');
+  assert.equal(row.status, 'live');
+  assert.equal(row.trades_n, 0);
 });

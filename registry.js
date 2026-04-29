@@ -97,4 +97,26 @@ export const STRATEGIES = [
     },
     adapter: adaptCodex,
   },
+  {
+    name: 'CODEX Regime v0',
+    starting_capital: 10000,
+    killswitch_dd_pct: 25,
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/regime_portfolio.md',
+      trade_log_path: 'data/codex/regime_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'CODEX Apex v0',
+    starting_capital: 10000,
+    killswitch_dd_pct: 50,
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/apex_portfolio.md',
+      trade_log_path: 'data/codex/apex_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
 ];
