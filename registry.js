@@ -119,4 +119,26 @@ export const STRATEGIES = [
     },
     adapter: adaptCodex,
   },
+  {
+    name: 'CODEX Regime WFO v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 25,
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/regime_wfo_portfolio.md',
+      trade_log_path: 'data/codex/regime_wfo_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'CODEX Apex WFO v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 50,
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/apex_wfo_portfolio.md',
+      trade_log_path: 'data/codex/apex_wfo_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
 ];

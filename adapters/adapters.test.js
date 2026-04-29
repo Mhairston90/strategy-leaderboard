@@ -28,6 +28,10 @@ const fxCodexRegimePort = loadText('../fixtures/codex-regime-portfolio.md');
 const fxCodexRegimeLog  = loadText('../fixtures/codex-regime-trade-log.md');
 const fxCodexApexPort = loadText('../fixtures/codex-apex-portfolio.md');
 const fxCodexApexLog  = loadText('../fixtures/codex-apex-trade-log.md');
+const fxCodexRegimeWfoPort = loadText('../fixtures/codex-regime-wfo-portfolio.md');
+const fxCodexRegimeWfoLog  = loadText('../fixtures/codex-regime-wfo-trade-log.md');
+const fxCodexApexWfoPort = loadText('../fixtures/codex-apex-wfo-portfolio.md');
+const fxCodexApexWfoLog  = loadText('../fixtures/codex-apex-wfo-trade-log.md');
 
 // ---------- Shape contract every adapter must satisfy ----------
 function assertStrategyRowShape(row, expectedName) {
@@ -244,6 +248,26 @@ test('codex adapter can label apex row from exported markdown fixtures', () => {
     { startingCapital: 10000, name: 'CODEX Apex v0' }
   );
   assertStrategyRowShape(row, 'CODEX Apex v0');
+  assert.equal(row.status, 'live');
+  assert.equal(row.trades_n, 0);
+});
+
+test('codex adapter can label regime WFO row from exported markdown fixtures', () => {
+  const row = adaptCodex(
+    { portfolio: { ok: true, text: fxCodexRegimeWfoPort }, tradeLog: { ok: true, text: fxCodexRegimeWfoLog } },
+    { startingCapital: 10000, name: 'CODEX Regime WFO v1' }
+  );
+  assertStrategyRowShape(row, 'CODEX Regime WFO v1');
+  assert.equal(row.status, 'live');
+  assert.equal(row.trades_n, 0);
+});
+
+test('codex adapter can label apex WFO row from exported markdown fixtures', () => {
+  const row = adaptCodex(
+    { portfolio: { ok: true, text: fxCodexApexWfoPort }, tradeLog: { ok: true, text: fxCodexApexWfoLog } },
+    { startingCapital: 10000, name: 'CODEX Apex WFO v1' }
+  );
+  assertStrategyRowShape(row, 'CODEX Apex WFO v1');
   assert.equal(row.status, 'live');
   assert.equal(row.trades_n, 0);
 });
