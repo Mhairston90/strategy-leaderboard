@@ -8,15 +8,16 @@ set SERVER_DIR=%~dp0
 if "%SERVER_DIR:~-1%"=="\" set SERVER_DIR=%SERVER_DIR:~0,-1%
 
 set PORT=8123
-set URL=http://localhost:%PORT%/
+set URL=http://127.0.0.1:%PORT%/
+set SERVER_SCRIPT=%SERVER_DIR%\scripts\serve_leaderboard.py
 
 REM Start server. If port is already in use (server already running), this fails silently —
 REM the existing instance keeps serving and we proceed to open the browser.
 where pythonw >nul 2>&1
 if !ERRORLEVEL! EQU 0 (
-  start "" pythonw -m http.server %PORT% --directory "%SERVER_DIR%"
+  start "" pythonw "%SERVER_SCRIPT%" --port %PORT% --directory "%SERVER_DIR%" --bind 127.0.0.1
 ) else (
-  start "" /MIN python -m http.server %PORT% --directory "%SERVER_DIR%"
+  start "" /MIN python "%SERVER_SCRIPT%" --port %PORT% --directory "%SERVER_DIR%" --bind 127.0.0.1
 )
 
 REM Wait briefly for the server to bind
