@@ -41,6 +41,7 @@ test('quiet server serves index when started without stdio', async () => {
   try {
     const response = await waitForResponse(`http://127.0.0.1:${port}/`);
     assert.equal(response.status, 200);
+    assert.equal(response.headers.get('cache-control'), 'no-store, max-age=0');
     assert.match(await response.text(), /Fixture Leaderboard/);
   } finally {
     child.kill();
