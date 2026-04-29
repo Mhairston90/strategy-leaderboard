@@ -46,6 +46,9 @@
     </footer>
   </div>
 
-  <script type="module" src="app.js"></script>
+  <script type="module">
+    const assetVersion = new URLSearchParams(location.search).get('v') || Date.now().toString();
+    import(`./app.js?v=${encodeURIComponent(assetVersion)}`);
+  </script>
 </body>
 </html>

@@ -17,6 +17,37 @@ test('launcher uses quiet pythonw-compatible server instead of stdlib http.serve
   assert.doesNotMatch(bat, /pythonw\s+-m\s+http\.server/i);
 });
 
+test('launcher opens Chrome app with a cache-busting URL', async () => {
+  const bat = await readFile(path.join(root, 'Open Leaderboard.bat'), 'utf8');
+
+  assert.match(bat, /CACHE_BUSTER/);
+  assert.match(bat, /set URL=http:\/\/127\.0\.0\.1:%PORT%\/\?v=!CACHE_BUSTER!/);
+});
+
+test('launcher isolates the Chrome app from stale default-profile windows', async () => {
+  const bat = await readFile(path.join(root, 'Open Leaderboard.bat'), 'utf8');
+
+  assert.match(bat, /CHROME_USER_DATA_DIR/);
+  assert.match(bat, /--user-data-dir="!CHROME_USER_DATA_DIR!"/);
+  assert.match(bat, /--new-window --app=!URL!/);
+});
+
+test('launcher checks for a healthy existing server before starting another one', async () => {
+  const bat = await readFile(path.join(root, 'Open Leaderboard.bat'), 'utf8');
+
+  assert.match(bat, /START_SERVER=1/);
+  assert.match(bat, /Invoke-WebRequest .*127\.0\.0\.1:%PORT%\/registry\.js/);
+  assert.match(bat, /if !START_SERVER! EQU 1/);
+});
+
+test('index forwards the launcher cache-buster to the app module', async () => {
+  const html = await readFile(path.join(root, 'index.html'), 'utf8');
+
+  assert.match(html, /new URLSearchParams\(location\.search\)\.get\('v'\)/);
+  assert.match(html, /import\(`\.\/app\.js\?v=\$\{encodeURIComponent\(assetVersion\)\}`\)/);
+  assert.doesNotMatch(html, /<script type="module" src="app\.js"><\/script>/);
+});
+
 test('quiet server serves index when started without stdio', async () => {
   const fixtureDir = await mkdtemp(path.join(tmpdir(), 'leaderboard-server-'));
   await writeFile(
