@@ -32,6 +32,13 @@ const fxCodexRegimeWfoPort = loadText('../fixtures/codex-regime-wfo-portfolio.md
 const fxCodexRegimeWfoLog  = loadText('../fixtures/codex-regime-wfo-trade-log.md');
 const fxCodexApexWfoPort = loadText('../fixtures/codex-apex-wfo-portfolio.md');
 const fxCodexApexWfoLog  = loadText('../fixtures/codex-apex-wfo-trade-log.md');
+const fxCodexRoutineStatus = `# CODEX Routine Status
+
+| Routine | Strategy | Timestamp UTC | Status | Data source | Message |
+|---------|----------|---------------|--------|-------------|---------|
+| live-paper | CODEX v0 | 2026-05-04T20:00:00Z | data-unavailable | none | market data unavailable |
+| live-paper | CODEX Aggro v0 | 2026-05-04T20:00:00Z | ok | live | opened=0 closed=0 |
+`;
 
 // ---------- Shape contract every adapter must satisfy ----------
 function assertStrategyRowShape(row, expectedName) {
@@ -209,6 +216,34 @@ test('codex adapter handles missing trade log', () => {
   );
   assert.equal(row.status, 'error');
   assert.ok(row.errors.some(e => e.includes('tradeLog')));
+});
+
+test('codex adapter surfaces routine status warnings', () => {
+  const row = adaptCodex(
+    {
+      portfolio: { ok: true, text: fxCodexPort },
+      tradeLog: { ok: true, text: fxCodexLog },
+      status: { ok: true, text: fxCodexRoutineStatus },
+    },
+    { startingCapital: 10000, name: 'CODEX v0' }
+  );
+
+  assert.equal(row.status, 'live');
+  assert.ok(row.errors.some(e => e.includes('routine: data-unavailable')));
+});
+
+test('codex adapter ignores ok routine status rows', () => {
+  const row = adaptCodex(
+    {
+      portfolio: { ok: true, text: fxCodexAggroPort },
+      tradeLog: { ok: true, text: fxCodexAggroLog },
+      status: { ok: true, text: fxCodexRoutineStatus },
+    },
+    { startingCapital: 10000, name: 'CODEX Aggro v0' }
+  );
+
+  assert.equal(row.status, 'live');
+  assert.equal(row.errors.length, 0);
 });
 
 test('codex adapter still returns row when portfolio is missing but trade log present', () => {

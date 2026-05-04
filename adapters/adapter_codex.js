@@ -10,7 +10,7 @@ import { avgR } from '../lib/metrics.js';
  * Per-trade pnl + R-multiples come from trade_log.md (the source of truth).
  * portfolio.md is currently used only for surfacing errors if missing.
  */
-export default function adaptCodex({ portfolio, tradeLog }, opts) {
+export default function adaptCodex({ portfolio, tradeLog, status }, opts) {
   const name = opts.name || 'CODEX v0';
   const errors = [];
   if (!portfolio || !portfolio.ok) {
@@ -19,6 +19,10 @@ export default function adaptCodex({ portfolio, tradeLog }, opts) {
   if (!tradeLog || !tradeLog.ok) {
     errors.push('tradeLog: ' + (tradeLog?.error || 'missing'));
     return makeErrorRow(name, errors.join(' | '));
+  }
+  const routineWarning = routineStatusWarning(status, name);
+  if (routineWarning) {
+    errors.push(routineWarning);
   }
 
   const rows = parseTradeLog(tradeLog.text);
@@ -47,4 +51,27 @@ export default function adaptCodex({ portfolio, tradeLog }, opts) {
   row.avg_r = avgR(rMultiples);
 
   return row;
+}
+
+
+function routineStatusWarning(status, strategyName) {
+  if (!status || !status.ok || !status.text) {
+    return null;
+  }
+  for (const line of status.text.split(/\r?\n/)) {
+    if (!line.startsWith('| ')) continue;
+    const cells = line.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map(cell => cell.trim());
+    if (cells.length !== 6 || cells[0] === 'Routine' || cells[0].startsWith('-')) {
+      continue;
+    }
+    const [, strategy, timestamp, routineStatus, dataSource, message] = cells;
+    if (strategy !== strategyName) {
+      continue;
+    }
+    if (routineStatus === 'ok' || routineStatus === 'skipped') {
+      return null;
+    }
+    return `routine: ${routineStatus} for ${strategyName} at ${timestamp} (${dataSource}; ${message})`;
+  }
+  return null;
 }

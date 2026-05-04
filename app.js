@@ -5,7 +5,7 @@ import { makeErrorRow } from './lib/strategy_row.js';
 import { healthBucketForSource, healthSeverityForRow, mergeHealth } from './lib/source_health.js';
 
 const REFRESH_MS = 5 * 60 * 1000;
-const CACHE_KEY = 'leaderboard-cache-v5';
+const CACHE_KEY = 'leaderboard-cache-v6';
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 
 const currentSort = { key: 'r90', asc: false };
@@ -30,12 +30,13 @@ async function fetchOne(strategy) {
     );
   }
   if (strategy.source.type === 'codex-local') {
-    const [portfolio, tradeLog] = await Promise.all([
+    const [portfolio, tradeLog, status] = await Promise.all([
       fetchLocalText(strategy.source.portfolio_path),
       fetchLocalText(strategy.source.trade_log_path),
+      fetchLocalText(strategy.source.status_path || 'data/codex/routine_status.md'),
     ]);
     return strategy.adapter(
-      { portfolio, tradeLog },
+      { portfolio, tradeLog, status },
       { startingCapital: strategy.starting_capital, name: strategy.name }
     );
   }
