@@ -152,4 +152,40 @@ export const STRATEGIES = [
     },
     adapter: adaptCodex,
   },
+  // Basket Breakout variants — paper-traded offline by the nightly
+  // `basket_breakout.generate_variant_logs` routine. Specs in
+  // `Claude/Trading Strategy/basket-breakout-{leveraged,aggressive}-vN-spec.md`.
+  {
+    name: 'Basket Breakout Leveraged v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 30,
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/basket_variants/leveraged_v1_portfolio.md',
+      trade_log_path: 'data/basket_variants/leveraged_v1_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'Basket Breakout Aggressive v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 25,
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/basket_variants/aggressive_v1_portfolio.md',
+      trade_log_path: 'data/basket_variants/aggressive_v1_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'Basket Breakout Aggressive v2',
+    starting_capital: 10000,
+    killswitch_dd_pct: 25,
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/basket_variants/aggressive_v2_portfolio.md',
+      trade_log_path: 'data/basket_variants/aggressive_v2_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
 ];

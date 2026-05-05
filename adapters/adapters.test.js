@@ -159,6 +159,63 @@ test('basket adapter ignores REJECTED_HEAT entries', () => {
   assert.equal(row.trades_n, 0);
 });
 
+test('basket adapter handles PARTIAL: half close at partial price + half at exit', () => {
+  // Entry @ 100, stop @ 95 (risk distance 5).
+  // PARTIAL @ 110: r=2.0, frac=0.5 → pnl = 2.0×0.5×$50 = $50
+  // EXIT    @ 115: r=3.0, frac=0.5 → pnl = 3.0×0.5×$50 = $75
+  // Total = $125 → 1.25% return on $10k
+  const synth = { ok: true, rows: [
+    { timestamp: '2026-01-01T10:00:00Z', action: 'ENTRY_REQUEST', heat_status: 'ACCEPTED',
+      symbol: 'BTCUSD', price: 100, stop: 95 },
+    { timestamp: '2026-01-01T12:00:00Z', action: 'PARTIAL', heat_status: 'PARTIAL',
+      symbol: 'BTCUSD', price: 110 },
+    { timestamp: '2026-01-01T15:00:00Z', action: 'EXIT', heat_status: 'EXIT',
+      symbol: 'BTCUSD', price: 115 },
+  ]};
+  const row = adaptBasket(synth, { startingCapital: 10000 });
+  assert.equal(row.trades_n, 2, 'expected 2 closing events (PARTIAL + EXIT)');
+  assert.ok(Math.abs(row.returns.all - 1.25) < 1e-9,
+    `expected 1.25% return, got ${row.returns.all}`);
+});
+
+test('basket adapter flags orphan exits and partials in errors[]', () => {
+  // No matching entries — exit dropped (ETH-style: no stop info usable),
+  // partial without stop info also dropped.
+  const synth = { ok: true, rows: [
+    { timestamp: '2026-01-01T10:00:00Z', action: 'EXIT', heat_status: 'EXIT',
+      symbol: 'ETHUSD', price: 2000 },
+    { timestamp: '2026-01-01T11:00:00Z', action: 'PARTIAL', heat_status: 'PARTIAL',
+      symbol: 'LINKUSD', price: 10 /* no stop */ },
+  ]};
+  const row = adaptBasket(synth, { startingCapital: 10000 });
+  assert.equal(row.trades_n, 0);
+  assert.ok(row.errors.some(e => /orphan exit/.test(e)),
+    `expected orphan exit warning, got ${JSON.stringify(row.errors)}`);
+  assert.ok(row.errors.some(e => /orphan partial/.test(e)),
+    `expected orphan partial warning, got ${JSON.stringify(row.errors)}`);
+});
+
+test('basket adapter recovers orphan PARTIAL via BE-move semantics, then pairs subsequent EXIT', () => {
+  // Pine's PARTIAL alert fires AFTER `stopPrice := entryPrice` (BE move), so the
+  // PARTIAL row's stop equals the entry price. Partial fires at limit = entry+2R.
+  // Reconstructed: entry=100, partial=110 → R=5 (since 110-100=10=2R), stop=95.
+  // PARTIAL trip: +2.0R × 0.5 × $50 = $50.
+  // EXIT @ 105: r = (105-100)/5 = +1.0; trip: +1.0R × 0.5 × $50 = $25.
+  // Total $75 → 0.75% return on $10k.
+  const synth = { ok: true, rows: [
+    { timestamp: '2026-01-01T11:00:00Z', action: 'PARTIAL', heat_status: 'PARTIAL',
+      symbol: 'LINKUSD', price: 110, stop: 100 },
+    { timestamp: '2026-01-01T15:00:00Z', action: 'EXIT', heat_status: 'EXIT',
+      symbol: 'LINKUSD', price: 105 },
+  ]};
+  const row = adaptBasket(synth, { startingCapital: 10000 });
+  assert.equal(row.trades_n, 2, 'expected partial + tail exit pair');
+  assert.ok(Math.abs(row.returns.all - 0.75) < 1e-9,
+    `expected 0.75% return, got ${row.returns.all}`);
+  assert.ok(row.errors.some(e => /recovered/.test(e)),
+    `expected recovery info, got ${JSON.stringify(row.errors)}`);
+});
+
 // ---------- BULL ----------
 test('bull adapter returns normalized row from real fixtures', () => {
   const row = adaptBull(
