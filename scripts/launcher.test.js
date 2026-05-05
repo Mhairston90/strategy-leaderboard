@@ -48,6 +48,12 @@ test('index forwards the launcher cache-buster to the app module', async () => {
   assert.doesNotMatch(html, /<script type="module" src="app\.js"><\/script>/);
 });
 
+test('app cache key is bumped for the Pulse leaderboard shape', async () => {
+  const app = await readFile(path.join(root, 'app.js'), 'utf8');
+
+  assert.match(app, /leaderboard-cache-v7/);
+});
+
 test('quiet server serves index when started without stdio', async () => {
   const fixtureDir = await mkdtemp(path.join(tmpdir(), 'leaderboard-server-'));
   await writeFile(

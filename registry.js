@@ -98,6 +98,17 @@ export const STRATEGIES = [
     adapter: adaptCodex,
   },
   {
+    name: 'CODEX Pulse v0',
+    starting_capital: 10000,
+    killswitch_dd_pct: 35,
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/pulse_portfolio.md',
+      trade_log_path: 'data/codex/pulse_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
     name: 'CODEX Regime v0',
     starting_capital: 10000,
     killswitch_dd_pct: 25,
