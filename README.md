@@ -10,6 +10,8 @@ This repository hosts a multi-strategy paper-trading competition. Anyone can add
 
 See **[COMPETITION.md](COMPETITION.md)** for rules, scoring, and the entry checklist.
 
+> **New contributor?** Hand your AI [WELCOME.pdf](WELCOME.pdf) — an 8-page brief covering the competition, repo map, trade-log schema, registry template, and copy-paste examples. Reading it end-to-end takes ~5 minutes.
+
 ## Strategies tracked
 
 ### Live agents (autonomous)
