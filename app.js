@@ -5,7 +5,7 @@ import { makeErrorRow } from './lib/strategy_row.js';
 import { healthBucketForSource, healthSeverityForRow, mergeHealth } from './lib/source_health.js';
 
 const REFRESH_MS = 5 * 60 * 1000;
-const CACHE_KEY = 'leaderboard-cache-v10';
+const CACHE_KEY = 'leaderboard-cache-v11';
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 
 const currentSort = { key: 'r90', asc: false };

@@ -48,10 +48,10 @@ test('index forwards the launcher cache-buster to the app module', async () => {
   assert.doesNotMatch(html, /<script type="module" src="app\.js"><\/script>/);
 });
 
-test('app cache key is bumped for the stock challenger leaderboard shape', async () => {
+test('app cache key is bumped for the regime hedge leaderboard shape', async () => {
   const app = await readFile(path.join(root, 'app.js'), 'utf8');
 
-  assert.match(app, /leaderboard-cache-v10/);
+  assert.match(app, /leaderboard-cache-v11/);
 });
 
 test('quiet server serves index when started without stdio', async () => {

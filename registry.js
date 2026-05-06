@@ -131,6 +131,17 @@ export const STRATEGIES = [
     adapter: adaptCodex,
   },
   {
+    name: 'CODEX Equities Regime Hedge v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 15,
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/equities_hedge_portfolio.md',
+      trade_log_path: 'data/codex/equities_hedge_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
     name: 'CODEX Regime v0',
     starting_capital: 10000,
     killswitch_dd_pct: 25,
