@@ -188,4 +188,42 @@ export const STRATEGIES = [
     },
     adapter: adaptCodex,
   },
+  // Stocks Basket Breakout family — 1H breakouts on 8 high-vol large-caps
+  // (NVDA, TSLA, AMD, PLTR, META, NFLX, AVGO, AAPL). Spec freeze 2026-05-06,
+  // backfilled paper-trade from 2026-04-16 for leaderboard parity. Live
+  // execution earliest 2026-06-08 (post-PDT-rule effective date).
+  // Specs: strategies/stocks-basket-breakout-*-spec.md
+  {
+    name: 'Stocks Basket Breakout v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 18,
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/stock_variants/stocks_v1_portfolio.md',
+      trade_log_path: 'data/stock_variants/stocks_v1_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'Stocks Basket Breakout Aggressive v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 25,
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/stock_variants/stocks_aggressive_v1_portfolio.md',
+      trade_log_path: 'data/stock_variants/stocks_aggressive_v1_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'Stocks Basket Breakout Aggressive v2',
+    starting_capital: 10000,
+    killswitch_dd_pct: 25,
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/stock_variants/stocks_aggressive_v2_portfolio.md',
+      trade_log_path: 'data/stock_variants/stocks_aggressive_v2_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
 ];

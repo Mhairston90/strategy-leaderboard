@@ -30,16 +30,28 @@ See **[COMPETITION.md](COMPETITION.md)** for rules, scoring, and the entry check
 | Aggro Leader Cont v1 | DOGE | 1H | canary | Sheets `Aggro Leader Continuation Signals` |
 | Analyst HY v1 | SOL | 4H | live | Sheets `Analyst HY v1` |
 
-### Basket Breakout family (1H, 8-symbol crypto basket)
+### Basket Breakout family — Crypto (1H, 8-pair Kraken USD basket)
 
 | Strategy | Variant axis | Status | Source |
 |---|---|---|---|
 | Basket Breakout v1 | parent — 0.5% risk, gate on, partial+trail | live | Sheets `Basket Breakout Signals` |
-| Basket Breakout Leveraged v1 | 5x perp on Binance, same logic | paper (offline-simulated nightly) | local markdown (`data/basket_variants/`) |
-| Basket Breakout Aggressive v1 | wider net — gate dropped, 1.5% risk, heat 8 | paper (offline-simulated nightly) | local markdown (`data/basket_variants/`) |
-| Basket Breakout Aggressive v2 | runner — 2% risk, no partial, wider trail | paper (offline-simulated nightly) | local markdown (`data/basket_variants/`) |
+| Basket Breakout Leveraged v1 | 5x perp on Binance, same logic | paper (offline-simulated nightly) | `data/basket_variants/` |
+| Basket Breakout Aggressive v1 | wider net — gate dropped, 1.5% risk, heat 8 | paper (offline-simulated nightly) | `data/basket_variants/` |
+| Basket Breakout Aggressive v2 | runner — 2% risk, no partial, wider trail | paper (offline-simulated nightly) | `data/basket_variants/` |
 
-Variant specs live in the `Claude/Trading Strategy/basket-breakout-*-spec.md` files in the parent project; nightly regenerator at `Claude/Trading Strategy/basket_breakout/generate_variant_logs.py` writes the trade logs this leaderboard reads.
+### Basket Breakout family — Stocks (1H RTH, 8-symbol US equity basket)
+
+Spec freeze 2026-05-06; live execution earliest 2026-06-08 (post-PDT-rule effective date). All three back-simulated from 2026-04-16 for leaderboard parity with the crypto family.
+
+| Strategy | Variant axis | Status | Source |
+|---|---|---|---|
+| Stocks Basket Breakout v1 | parent port — daily EMA50/200 regime gate, 0.5% risk | paper (offline-simulated nightly) | `data/stock_variants/` |
+| Stocks Basket Breakout Aggressive v1 | wider net — gate dropped, 1.5% risk, heat 8 | paper (offline-simulated nightly) | `data/stock_variants/` |
+| Stocks Basket Breakout Aggressive v2 | runner — 2% risk, no partial, wider trail | paper (offline-simulated nightly) | `data/stock_variants/` |
+
+Universe: NVDA, TSLA, AMD, PLTR, META, NFLX, AVGO, AAPL. Variant specs in `strategies/stocks-basket-breakout-*-spec.md`. Nightly regenerator at `Claude/Trading Strategy/basket_breakout_stocks/generate_logs.py` (yfinance data source, gap-aware stop-fill simulator).
+
+Variant specs (crypto family) live in `Claude/Trading Strategy/basket-breakout-*-spec.md` in the parent project; nightly regenerator at `Claude/Trading Strategy/basket_breakout/generate_variant_logs.py`.
 
 ## Run locally
 
