@@ -6,6 +6,31 @@ import adaptAnalystHY    from './adapters/adapter_analyst_hy.js';
 import adaptBull         from './adapters/adapter_bull.js';
 import adaptCodex        from './adapters/adapter_codex.js';
 
+const CODEX_BACKTEST_STRATEGIES = [
+  ['CODEX v0 4W Backtest', 'codex_4w', 35],
+  ['CODEX Aggro v0 4W Backtest', 'aggro_4w', 45],
+  ['CODEX Pulse v0 4W Backtest', 'pulse_4w', 35],
+  ['CODEX Regime v0 4W Backtest', 'regime_4w', 25],
+  ['CODEX Apex v0 4W Backtest', 'apex_4w', 50],
+  ['CODEX Regime WFO v1 4W Backtest', 'regime_wfo_4w', 25],
+  ['CODEX Apex WFO v1 4W Backtest', 'apex_wfo_4w', 50],
+  ['CODEX Equities Gap Fade v0 4W Backtest', 'equities_gap_4w', 20],
+  ['CODEX Equities Gap Fade v1 4W Backtest', 'equities_gap_v1_4w', 20],
+  ['CODEX Equities Opening Range v1 4W Backtest', 'equities_orb_4w', 20],
+  ['CODEX Equities RS Pullback v1 4W Backtest', 'equities_rs_4w', 20],
+  ['CODEX Equities Breakout Runner v1 4W Backtest', 'equities_breakout_4w', 25],
+].map(([name, fileStem, killswitch]) => ({
+  name,
+  starting_capital: 10000,
+  killswitch_dd_pct: killswitch,
+  source: {
+    type: 'codex-local',
+    portfolio_path: `data/codex/backtests/${fileStem}_portfolio.md`,
+    trade_log_path: `data/codex/backtests/${fileStem}_trade_log.md`,
+  },
+  adapter: adaptCodex,
+}));
+
 /**
  * STRATEGIES registry: defines source, adapter, and per-strategy capital + kill-switch.
  *
@@ -109,6 +134,28 @@ export const STRATEGIES = [
     adapter: adaptCodex,
   },
   {
+    name: 'CODEX Equities Gap Fade v0',
+    starting_capital: 10000,
+    killswitch_dd_pct: 20,
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/equities_gap_portfolio.md',
+      trade_log_path: 'data/codex/equities_gap_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'CODEX Equities Breakout Runner v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 25,
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/equities_breakout_portfolio.md',
+      trade_log_path: 'data/codex/equities_breakout_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
     name: 'CODEX Regime v0',
     starting_capital: 10000,
     killswitch_dd_pct: 25,
@@ -152,6 +199,7 @@ export const STRATEGIES = [
     },
     adapter: adaptCodex,
   },
+  ...CODEX_BACKTEST_STRATEGIES,
   // Basket Breakout variants — paper-traded offline by the nightly
   // `basket_breakout.generate_variant_logs` routine. Specs in
   // `Claude/Trading Strategy/basket-breakout-{leveraged,aggressive}-vN-spec.md`.
