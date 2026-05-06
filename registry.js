@@ -274,4 +274,19 @@ export const STRATEGIES = [
     },
     adapter: adaptCodex,
   },
+  // Stocks Basket Breakout Diversified v1 — same parameters as Stocks v1, new
+  // universe spanning 8 GICS sectors (NVDA, OXY, JPM, LLY, CAT, FCX, NKE, DIS).
+  // Tests whether the breakout edge generalizes across sectors or is
+  // tech-specific. Spec: strategies/stocks-basket-breakout-diversified-v1-spec.md
+  {
+    name: 'Stocks Basket Breakout Diversified v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 18,
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/stock_variants/stocks_diversified_v1_portfolio.md',
+      trade_log_path: 'data/stock_variants/stocks_diversified_v1_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
 ];
