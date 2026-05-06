@@ -248,4 +248,19 @@ export const STRATEGIES = [
     },
     adapter: adaptCodex,
   },
+  // Stocks Mean Reversion v1 — Connors-style RSI(2) oversold-bounce on the
+  // same 8-symbol universe as the breakout family. Explicit anti-breakout
+  // test (does the OPPOSITE signal also have edge?).
+  // Spec: strategies/stocks-mean-reversion-v1-spec.md
+  {
+    name: 'Stocks Mean Reversion v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 18,
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/stock_variants/stocks_mean_reversion_v1_portfolio.md',
+      trade_log_path: 'data/stock_variants/stocks_mean_reversion_v1_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
 ];
