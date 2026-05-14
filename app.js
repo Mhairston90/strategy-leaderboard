@@ -37,7 +37,11 @@ async function fetchOne(strategy) {
     ]);
     return strategy.adapter(
       { portfolio, tradeLog, status },
-      { startingCapital: strategy.starting_capital, name: strategy.name }
+      {
+        startingCapital: strategy.starting_capital,
+        name: strategy.name,
+        liveStartIso: strategy.live_start_iso || null,
+      }
     );
   }
   throw new Error('Unknown source type: ' + strategy.source.type);

@@ -226,10 +226,18 @@ export const STRATEGIES = [
   // backfilled paper-trade from 2026-04-16 for leaderboard parity. Live
   // execution earliest 2026-06-08 (post-PDT-rule effective date).
   // Specs: strategies/stocks-basket-breakout-*-spec.md
+  //
+  // FAIR-CONTEST FILTERING (added 2026-05-14 per user direction): trades whose
+  // OPEN happened before live_start_iso are paper-warmup (parameters were
+  // still being tuned). Adapter excludes them from leaderboard equity so the
+  // BULL-vs-Codex contest doesn't compare backtest-dilated numbers against
+  // live-paper numbers. Pre-live trades remain in the raw trade_log.md for
+  // history; only the leaderboard equity/return excludes them.
   {
     name: 'Stocks Basket Breakout v1',
     starting_capital: 10000,
     killswitch_dd_pct: 18,
+    live_start_iso: '2026-05-06T13:30:00Z',
     source: {
       type: 'codex-local',
       portfolio_path: 'data/stock_variants/stocks_v1_portfolio.md',
@@ -241,6 +249,7 @@ export const STRATEGIES = [
     name: 'Stocks Basket Breakout Aggressive v1',
     starting_capital: 10000,
     killswitch_dd_pct: 25,
+    live_start_iso: '2026-05-06T13:30:00Z',
     source: {
       type: 'codex-local',
       portfolio_path: 'data/stock_variants/stocks_aggressive_v1_portfolio.md',
@@ -252,6 +261,7 @@ export const STRATEGIES = [
     name: 'Stocks Basket Breakout Aggressive v2',
     starting_capital: 10000,
     killswitch_dd_pct: 25,
+    live_start_iso: '2026-05-06T13:30:00Z',
     source: {
       type: 'codex-local',
       portfolio_path: 'data/stock_variants/stocks_aggressive_v2_portfolio.md',
@@ -263,10 +273,13 @@ export const STRATEGIES = [
   // same 8-symbol universe as the breakout family. Explicit anti-breakout
   // test (does the OPPOSITE signal also have edge?).
   // Spec: strategies/stocks-mean-reversion-v1-spec.md
+  // Spec freeze 18:30Z (rather than 13:30Z for breakout family) — separate
+  // freeze ceremony, slightly later in the day.
   {
     name: 'Stocks Mean Reversion v1',
     starting_capital: 10000,
     killswitch_dd_pct: 18,
+    live_start_iso: '2026-05-06T18:30:00Z',
     source: {
       type: 'codex-local',
       portfolio_path: 'data/stock_variants/stocks_mean_reversion_v1_portfolio.md',
@@ -282,6 +295,7 @@ export const STRATEGIES = [
     name: 'Stocks Basket Breakout Diversified v1',
     starting_capital: 10000,
     killswitch_dd_pct: 18,
+    live_start_iso: '2026-05-06T13:30:00Z',
     source: {
       type: 'codex-local',
       portfolio_path: 'data/stock_variants/stocks_diversified_v1_portfolio.md',

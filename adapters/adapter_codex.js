@@ -1,14 +1,20 @@
-import { parseTradeLog } from '../lib/parse_bull_md.js';
+import { parseTradeLog, buildTripsWithEntryTime, filterTripsByLiveStart } from '../lib/parse_bull_md.js';
 import { buildStrategyRow, makeErrorRow } from '../lib/strategy_row.js';
 import { avgR } from '../lib/metrics.js';
 
 /**
  * CODEX adapter. Receives local markdown fetch results.
  *
- *   adaptCodex({ portfolio: {ok, text}, tradeLog: {ok, text} }, { startingCapital })
+ *   adaptCodex({ portfolio, tradeLog }, { startingCapital, name, liveStartIso })
  *
  * Per-trade pnl + R-multiples come from trade_log.md (the source of truth).
  * portfolio.md is currently used only for surfacing errors if missing.
+ *
+ * If opts.liveStartIso is provided, OPEN-CLOSE pairs are built first and trips
+ * whose ENTRY (OPEN row time) is before liveStartIso are excluded. This drops
+ * paper-warmup / pre-spec-freeze backtest trades from leaderboard equity so the
+ * contest only counts trades the strategy actually generated under frozen
+ * rules. The number of dropped trades is surfaced in `errors` as an info note.
  */
 export default function adaptCodex({ portfolio, tradeLog, status }, opts) {
   const name = opts.name || 'CODEX v0';
@@ -26,14 +32,22 @@ export default function adaptCodex({ portfolio, tradeLog, status }, opts) {
   }
 
   const rows = parseTradeLog(tradeLog.text);
-  const closes = rows.filter(r => r.action === 'CLOSE');
 
-  const trips = closes
-    .filter(r => r.pnl != null)
-    .map(r => ({ exit_time: r.time, pnl: r.pnl }));
+  // Pair OPEN/CLOSE rows so we have entry_time for each trip — needed so we
+  // can filter by spec-freeze date (filtering by exit time would let pre-live
+  // trades that closed late slip into the count).
+  const allTrips = buildTripsWithEntryTime(rows);
+  const { filtered: paired, dropped } = filterTripsByLiveStart(allTrips, opts.liveStartIso);
+  if (dropped > 0) {
+    errors.push(`${dropped} pre-live-start trades excluded (live_start_iso=${opts.liveStartIso})`);
+  }
 
-  const rMultiples = closes
-    .map(r => r.r)
+  const trips = paired
+    .filter(t => t.pnl != null)
+    .map(t => ({ exit_time: t.exit_time, pnl: t.pnl }));
+
+  const rMultiples = paired
+    .map(t => t.r)
     .filter(r => r != null && !Number.isNaN(r));
 
   const lastSig = rows.length ? rows[rows.length - 1].time : null;
