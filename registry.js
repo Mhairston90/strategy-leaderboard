@@ -7,6 +7,27 @@ import adaptBull         from './adapters/adapter_bull.js';
 import adaptCodex        from './adapters/adapter_codex.js';
 
 /**
+ * CONTEST_START_ISO — the BULL-vs-Codex contest measurement start.
+ *
+ * Codex's first trade across all its strategies was 2026-05-04T16:00Z. To make
+ * the comparison fair, every strategy is scored only on trades ENTERED on/after
+ * this date — this removes the 4–6 week head start BULL's strategies had
+ * (BULL live 2026-04-20; stocks variants backfilled from 2026-04-16).
+ *
+ * Effective per-strategy cutoff = the LATER of (strategy.live_start_iso,
+ * CONTEST_START_ISO). Codex strategies have no live_start_iso and their data
+ * naturally starts 05-04, so they are unaffected. Stocks variants keep their
+ * stricter 2026-05-06 spec-freeze cutoff (later than contest start).
+ */
+export const CONTEST_START_ISO = '2026-05-04T00:00:00Z';
+
+/** Return the chronologically later of two ISO timestamps (either may be null). */
+export function effectiveCutoff(liveStartIso) {
+  if (!liveStartIso) return CONTEST_START_ISO;
+  return liveStartIso > CONTEST_START_ISO ? liveStartIso : CONTEST_START_ISO;
+}
+
+/**
  * STRATEGIES registry: defines source, adapter, and per-strategy capital + kill-switch.
  *
  * source.type: 'sheets' | 'bull-github' | 'codex-local'
@@ -257,18 +278,7 @@ export const STRATEGIES = [
     },
     adapter: adaptCodex,
   },
-  {
-    name: 'Stocks Basket Breakout Aggressive v2',
-    starting_capital: 10000,
-    killswitch_dd_pct: 25,
-    live_start_iso: '2026-05-06T13:30:00Z',
-    source: {
-      type: 'codex-local',
-      portfolio_path: 'data/stock_variants/stocks_aggressive_v2_portfolio.md',
-      trade_log_path: 'data/stock_variants/stocks_aggressive_v2_trade_log.md',
-    },
-    adapter: adaptCodex,
-  },
+
   // Stocks Mean Reversion v1 — Connors-style RSI(2) oversold-bounce on the
   // same 8-symbol universe as the breakout family. Explicit anti-breakout
   // test (does the OPPOSITE signal also have edge?).
@@ -284,6 +294,72 @@ export const STRATEGIES = [
       type: 'codex-local',
       portfolio_path: 'data/stock_variants/stocks_mean_reversion_v1_portfolio.md',
       trade_log_path: 'data/stock_variants/stocks_mean_reversion_v1_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  // Stocks Mean Reversion v2 — same parameters as v1, diversified GICS-sector
+  // universe (NVDA/OXY/JPM/LLY/CAT/FCX/NKE/DIS). Direct A/B test of whether the
+  // mean-reversion edge generalizes across sectors. Backfill 2026-05-16 showed
+  // OOS PF 4.28 (vs IS 2.95) — OOS BETTER than IS. May 8-15 collapse window
+  // (where breakout family died) booked +$235 PF 5.33.
+  // Spec: strategies/stocks-mean-reversion-v2-spec.md
+  {
+    name: 'Stocks Mean Reversion v2',
+    starting_capital: 10000,
+    killswitch_dd_pct: 18,
+    live_start_iso: '2026-05-06T18:30:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/stock_variants/stocks_mean_reversion_v2_portfolio.md',
+      trade_log_path: 'data/stock_variants/stocks_mean_reversion_v2_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  // Stocks Mean Reversion v2 — RSI threshold sweep siblings. Same diversified
+  // GICS universe + Connors recipe as v2; only the RSI(2) oversold entry
+  // threshold differs. Generated nightly by stocks_mean_reversion since
+  // 2026-05-16 but previously unregistered. Added to leaderboard 2026-05-17
+  // (contest-window perf: rsi15 +$299.60 / 79% win, rsi5 +$204.32 / 90% win).
+  // Same 2026-05-06T18:30Z spec freeze as v1/v2.
+  {
+    name: 'Stocks Mean Reversion v2 (RSI<15)',
+    starting_capital: 10000,
+    killswitch_dd_pct: 18,
+    live_start_iso: '2026-05-06T18:30:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/stock_variants/stocks_mean_reversion_v2_rsi15_portfolio.md',
+      trade_log_path: 'data/stock_variants/stocks_mean_reversion_v2_rsi15_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'Stocks Mean Reversion v2 (RSI<5)',
+    starting_capital: 10000,
+    killswitch_dd_pct: 18,
+    live_start_iso: '2026-05-06T18:30:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/stock_variants/stocks_mean_reversion_v2_rsi5_portfolio.md',
+      trade_log_path: 'data/stock_variants/stocks_mean_reversion_v2_rsi5_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  // Stocks Mean Reversion v3 — widest universe (15 names / 8 GICS sectors,
+  // the v1-tech-8 ∪ v2-GICS-8 superset, all from the shared cache). Pure
+  // breadth-axis extension of the proven v1->v2 result. Built 2026-05-17.
+  // Contest-window perf: +$301.32 / 74% win / 23 trades. Same Connors
+  // RSI(2)<10 recipe + 2026-05-06T18:30Z spec freeze.
+  // Spec: stocks_mean_reversion/config.py "v3"; universe_wide.json
+  {
+    name: 'Stocks Mean Reversion v3 (Wide)',
+    starting_capital: 10000,
+    killswitch_dd_pct: 18,
+    live_start_iso: '2026-05-06T18:30:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/stock_variants/stocks_mean_reversion_v3_portfolio.md',
+      trade_log_path: 'data/stock_variants/stocks_mean_reversion_v3_trade_log.md',
     },
     adapter: adaptCodex,
   },

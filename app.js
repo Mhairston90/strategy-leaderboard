@@ -1,5 +1,7 @@
-import { STRATEGIES } from './registry.js';
+import { STRATEGIES, effectiveCutoff } from './registry.js';
 import { fetchSheetTab, fetchBullFile, fetchLocalText } from './lib/fetch.js';
+import { parseTradeForensicsText, renderTradeForensicsHtml } from './lib/forensics.js';
+import { parseHermesQueueText, renderHermesCockpitHtml, mergeHermesQueues } from './lib/hermes.js';
 import { renderRows, renderHealth, renderUpdatedAt, setupSortHandlers } from './lib/render.js';
 import { makeErrorRow } from './lib/strategy_row.js';
 import { healthBucketForSource, healthSeverityForRow, mergeHealth } from './lib/source_health.js';
@@ -7,6 +9,11 @@ import { healthBucketForSource, healthSeverityForRow, mergeHealth } from './lib/
 const REFRESH_MS = 5 * 60 * 1000;
 const CACHE_KEY = 'leaderboard-cache-v11';
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
+const HERMES_QUEUES = [
+  { path: 'data/codex/hermes_experiment_queue.json', owner: 'codex' },
+  { path: 'data/claude/hermes_experiment_queue.json', owner: 'claude' },
+];
+const TRADE_FORENSICS_PATH = 'data/codex/trade_forensics.md';
 
 const currentSort = { key: 'r90', asc: false };
 let rowsState = [];
@@ -26,7 +33,11 @@ async function fetchOne(strategy) {
     ]);
     return strategy.adapter(
       { portfolio, tradeLog },
-      { startingCapital: strategy.starting_capital, name: strategy.name }
+      {
+        startingCapital: strategy.starting_capital,
+        name: strategy.name,
+        liveStartIso: effectiveCutoff(strategy.live_start_iso),
+      }
     );
   }
   if (strategy.source.type === 'codex-local') {
@@ -40,7 +51,7 @@ async function fetchOne(strategy) {
       {
         startingCapital: strategy.starting_capital,
         name: strategy.name,
-        liveStartIso: strategy.live_start_iso || null,
+        liveStartIso: effectiveCutoff(strategy.live_start_iso),
       }
     );
   }
@@ -87,6 +98,39 @@ async function fetchAll() {
   renderUpdatedAt(lastUpdatedAt);
 }
 
+async function fetchHermes() {
+  const target = document.getElementById('hermes-cockpit');
+  if (!target) return;
+  // Fetch both codex and claude supervisor queues in parallel; tolerate either missing.
+  const results = await Promise.allSettled(
+    HERMES_QUEUES.map(({ path }) => fetchLocalText(path))
+  );
+  const inputs = results.map((res, i) => {
+    const { owner } = HERMES_QUEUES[i];
+    const resp = res.status === 'fulfilled'
+      ? res.value
+      : { ok: false, error: String(res.reason || 'fetch failed') };
+    const queue = parseHermesQueueText(
+      resp.ok ? resp.text : '',
+      { error: resp.error || `${owner} queue unavailable` }
+    );
+    return { queue, owner };
+  });
+  const merged = mergeHermesQueues(inputs);
+  target.innerHTML = renderHermesCockpitHtml(merged);
+}
+
+async function fetchForensics() {
+  const target = document.getElementById('data-quality-panel');
+  if (!target) return;
+  const forensicResp = await fetchLocalText(TRADE_FORENSICS_PATH);
+  const report = parseTradeForensicsText(
+    forensicResp.ok ? forensicResp.text : '',
+    { error: forensicResp.error || 'Trade forensics ledger is unavailable' }
+  );
+  target.innerHTML = renderTradeForensicsHtml(report);
+}
+
 function saveCache(rows, ts) {
   try {
     localStorage.setItem(CACHE_KEY, JSON.stringify({ rows, ts }));
@@ -128,14 +172,20 @@ function init() {
   // Manual refresh button
   document.getElementById('refresh-btn').addEventListener('click', () => {
     fetchAll().catch(e => console.error('manual refresh failed:', e));
+    fetchHermes().catch(e => console.error('manual Hermes refresh failed:', e));
+    fetchForensics().catch(e => console.error('manual forensics refresh failed:', e));
   });
 
   // First live fetch
   fetchAll().catch(e => console.error('initial fetch failed:', e));
+  fetchHermes().catch(e => console.error('initial Hermes fetch failed:', e));
+  fetchForensics().catch(e => console.error('initial forensics fetch failed:', e));
 
   // Periodic refresh
   setInterval(() => {
     fetchAll().catch(e => console.error('scheduled fetch failed:', e));
+    fetchHermes().catch(e => console.error('scheduled Hermes fetch failed:', e));
+    fetchForensics().catch(e => console.error('scheduled forensics fetch failed:', e));
   }, REFRESH_MS);
 
   // Updated-timer tick (every 10s)

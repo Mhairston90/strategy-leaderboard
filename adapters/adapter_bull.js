@@ -1,4 +1,4 @@
-import { parsePortfolio, parseTradeLog } from '../lib/parse_bull_md.js';
+import { parsePortfolio, parseTradeLog, buildTripsWithEntryTime, filterTripsByLiveStart } from '../lib/parse_bull_md.js';
 import { buildStrategyRow, makeErrorRow } from '../lib/strategy_row.js';
 import { avgR } from '../lib/metrics.js';
 
@@ -22,14 +22,21 @@ export default function adaptBull({ portfolio, tradeLog }, opts) {
   }
 
   const rows = parseTradeLog(tradeLog.text);
-  const closes = rows.filter(r => r.action === 'CLOSE');
 
-  const trips = closes
-    .filter(r => r.pnl != null)
-    .map(r => ({ exit_time: r.time, pnl: r.pnl }));
+  // Pair OPEN/CLOSE and filter by entry time so the contest window
+  // (opts.liveStartIso) excludes BULL's pre-contest head-start trades.
+  const allTrips = buildTripsWithEntryTime(rows);
+  const { filtered: paired, dropped } = filterTripsByLiveStart(allTrips, opts.liveStartIso);
+  if (dropped > 0) {
+    errors.push(`${dropped} pre-contest-window trades excluded (cutoff=${opts.liveStartIso})`);
+  }
 
-  const rMultiples = closes
-    .map(r => r.r)
+  const trips = paired
+    .filter(t => t.pnl != null)
+    .map(t => ({ exit_time: t.exit_time, pnl: t.pnl }));
+
+  const rMultiples = paired
+    .map(t => t.r)
     .filter(r => r != null && !Number.isNaN(r));
 
   const lastSig = rows.length ? rows[rows.length - 1].time : null;
