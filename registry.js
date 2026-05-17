@@ -363,6 +363,25 @@ export const STRATEGIES = [
     },
     adapter: adaptCodex,
   },
+  // Stocks Mean Reversion Deep — AGGRESSIVE convex variant (2026-05-17).
+  // Connors RSI(2) < 3 (only the most extreme oversold = highest per-trade
+  // edge) + 8x base risk + 2.5xATR stop on the wide 15-name universe. Under
+  // top-5-winners / losers-ignored scoring the optimal design is convex:
+  // amplify the PROVEN MR edge for magnitude, downside is "free". Contest
+  // window: +$1,278.89 / 86% win / 7 trades. Same 2026-05-06T18:30Z freeze.
+  // Spec: stocks_mean_reversion/config.py "deep".
+  {
+    name: 'Stocks Mean Reversion Deep (Aggressive)',
+    starting_capital: 10000,
+    killswitch_dd_pct: 40,
+    live_start_iso: '2026-05-06T18:30:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/stock_variants/stocks_mean_reversion_deep_portfolio.md',
+      trade_log_path: 'data/stock_variants/stocks_mean_reversion_deep_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
   // Stocks Basket Breakout Diversified v1 — same parameters as Stocks v1, new
   // universe spanning 8 GICS sectors (NVDA, OXY, JPM, LLY, CAT, FCX, NKE, DIS).
   // Tests whether the breakout edge generalizes across sectors or is
