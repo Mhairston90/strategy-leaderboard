@@ -18,27 +18,53 @@
       </div>
     </header>
 
-    <table id="leaderboard">
-      <thead>
-        <tr>
-          <th data-key="name" class="sortable left">Strategy</th>
-          <th data-key="status" class="sortable left">Status</th>
-          <th data-key="r90" class="sortable sorted">90d %</th>
-          <th data-key="r30" class="sortable">30d %</th>
-          <th data-key="r7"  class="sortable">7d %</th>
-          <th data-key="sharpe" class="sortable" title="best-effort, sanity-check vs source">Sharpe</th>
-          <th data-key="pf" class="sortable" title="best-effort, sanity-check vs source">PF</th>
-          <th data-key="max_dd" class="sortable" title="best-effort, sanity-check vs source">Max DD</th>
-          <th data-key="trades_n" class="sortable">Trades</th>
-          <th data-key="win_pct" class="sortable">Win %</th>
-          <th data-key="avg_r" class="sortable">Avg R</th>
-          <th data-key="last_signal_at" class="sortable">Last sig</th>
-        </tr>
-      </thead>
-      <tbody id="rows">
-        <tr><td colspan="12" class="loading">Loading data from Sheets and files…</td></tr>
-      </tbody>
-    </table>
+    <section id="contest-scoreboard" class="contest-scoreboard" aria-label="Contest Scoreboard">
+      <div class="loading">Loading scoreboard…</div>
+    </section>
+
+    <section id="provenance-ledger" class="provenance-ledger" aria-label="Provenance and Legitimacy Ledger">
+      <div class="loading">Loading provenance ledger…</div>
+    </section>
+
+    <section id="command-center" class="command-center" aria-label="Command Center">
+      <div class="loading">Loading command center…</div>
+    </section>
+
+    <section id="hermes-cockpit" class="hermes-cockpit" aria-label="Hermes Cockpit">
+      <div class="loading">Loading Hermes queue…</div>
+    </section>
+
+    <section id="data-quality-panel" class="forensics-panel" aria-label="Data Quality">
+      <div class="loading">Loading data quality…</div>
+    </section>
+
+    <div class="table-scroll">
+      <table id="leaderboard">
+        <thead>
+          <tr>
+            <th data-key="name" class="sortable left">Strategy</th>
+            <th data-key="status" class="sortable left">Status</th>
+            <th data-key="r90" class="sortable sorted">90d %</th>
+            <th data-key="r30" class="sortable">30d %</th>
+            <th data-key="r7"  class="sortable">7d %</th>
+            <th data-key="sharpe" class="sortable" title="best-effort, sanity-check vs source">Sharpe</th>
+            <th data-key="pf" class="sortable" title="best-effort, sanity-check vs source">PF</th>
+            <th data-key="max_dd" class="sortable" title="best-effort, sanity-check vs source">Max DD</th>
+            <th data-key="trades_n" class="sortable">Trades</th>
+            <th data-key="win_pct" class="sortable">Win %</th>
+            <th data-key="avg_r" class="sortable">Avg R</th>
+            <th data-key="last_signal_at" class="sortable">Last sig</th>
+          </tr>
+        </thead>
+        <tbody id="rows">
+          <tr><td colspan="12" class="loading">Loading data from Sheets and files…</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <aside id="strategy-drawer" class="strategy-drawer" aria-label="Strategy Detail">
+      <div class="loading">Loading strategy detail…</div>
+    </aside>
 
     <footer class="dash-footer">
       <span>data: Sheets doGet · raw.githubusercontent.com · local CODEX snapshots</span>
