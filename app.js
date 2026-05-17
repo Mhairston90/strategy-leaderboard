@@ -45,7 +45,10 @@ async function fetchOne(strategy) {
     return {
       strategy,
       sheet: resp,
-      row: strategy.adapter(resp, { startingCapital: strategy.starting_capital }),
+      row: strategy.adapter(resp, {
+        startingCapital: strategy.starting_capital,
+        liveStartIso: effectiveCutoff(strategy.live_start_iso),
+      }),
     };
   }
   if (strategy.source.type === 'bull-github') {

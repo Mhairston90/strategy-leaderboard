@@ -44,20 +44,26 @@ export default function adaptBasketBreakout(rawOrResp, opts) {
     if (Number.isNaN(price) || !symbol || !time) continue;
 
     const stopRaw = Number(r.stop);
+    const openCountAtReceipt = Number(r.open_count_at_receipt);
 
     if (action.includes('ENTRY') && heat === 'ACCEPTED') {
       eventStream.push({
         kind: 'ENTRY',
         time, symbol, price,
         stop: Number.isNaN(stopRaw) ? null : stopRaw,
+        open_count_at_receipt: Number.isNaN(openCountAtReceipt) ? null : openCountAtReceipt,
       });
     } else if (action === 'PARTIAL' || heat === 'PARTIAL') {
       eventStream.push({
         kind: 'PARTIAL', time, symbol, price,
         stop: Number.isNaN(stopRaw) ? null : stopRaw,
+        open_count_at_receipt: Number.isNaN(openCountAtReceipt) ? null : openCountAtReceipt,
       });
     } else if (action === 'EXIT' || heat === 'EXIT') {
-      eventStream.push({ kind: 'EXIT', time, symbol, price });
+      eventStream.push({
+        kind: 'EXIT', time, symbol, price,
+        open_count_at_receipt: Number.isNaN(openCountAtReceipt) ? null : openCountAtReceipt,
+      });
     }
     // ENTRY_REQUEST + REJECTED_HEAT/etc dropped silently
   }
@@ -74,7 +80,12 @@ export default function adaptBasketBreakout(rawOrResp, opts) {
   let orphanExits = 0;
   let orphanPartials = 0;
   let badStopCount = 0;
-  let recoveredOrphans = 0;
+
+  // Contest-window provenance: a trip counts as FORWARD only if its position
+  // was ENTERED on/after the cutoff. Pre-cutoff round-trips are backtest.
+  const cutoff = opts.liveStartIso || null;
+  const inWindow = (entryTime) => !cutoff || (entryTime && entryTime >= cutoff);
+  let provTotal = 0, provFwd = 0, provFwdPnl = 0, provAllPnl = 0;
 
   for (const ev of eventStream) {
     if (ev.kind === 'ENTRY') {
@@ -113,7 +124,6 @@ export default function adaptBasketBreakout(rawOrResp, opts) {
             reconstructed: true,
           };
           openPositions.set(ev.symbol, pos);
-          recoveredOrphans++;
         } else {
           orphanPartials++;
           continue;
@@ -126,8 +136,12 @@ export default function adaptBasketBreakout(rawOrResp, opts) {
       const closeFrac = Math.min(PARTIAL_CLOSE_FRACTION, pos.remaining_fraction);
       const r = (ev.price - pos.entry_price) / stopDist;
       const dollarPnl = r * closeFrac * (opts.startingCapital * RISK_PER_TRADE_FRACTION);
-      trips.push({ exit_time: ev.time, pnl: dollarPnl });
-      rMultiples.push(r);
+      provTotal += 1; provAllPnl += dollarPnl;
+      if (inWindow(pos.entry_time)) {
+        provFwd += 1; provFwdPnl += dollarPnl;
+        trips.push({ exit_time: ev.time, pnl: dollarPnl });
+        rMultiples.push(r);
+      }
       pos.remaining_fraction -= closeFrac;
       if (pos.remaining_fraction <= 0.001) openPositions.delete(ev.symbol);
       continue;
@@ -135,15 +149,27 @@ export default function adaptBasketBreakout(rawOrResp, opts) {
 
     if (ev.kind === 'EXIT') {
       const pos = openPositions.get(ev.symbol);
-      if (!pos) { orphanExits++; continue; }
+      if (!pos) {
+        if (ev.open_count_at_receipt != null && ev.open_count_at_receipt > 0) {
+          // Warm-start artifact: Sheets began after TradingView already had an
+          // open paper position. Dropping the close avoids inventing entry/PnL.
+        } else {
+          orphanExits++;
+        }
+        continue;
+      }
       if (pos.stop == null) { badStopCount++; continue; }
       const stopDist = pos.entry_price - pos.stop;
       if (stopDist <= 0) { badStopCount++; continue; }
 
       const r = (ev.price - pos.entry_price) / stopDist;
       const dollarPnl = r * pos.remaining_fraction * (opts.startingCapital * RISK_PER_TRADE_FRACTION);
-      trips.push({ exit_time: ev.time, pnl: dollarPnl });
-      rMultiples.push(r);
+      provTotal += 1; provAllPnl += dollarPnl;
+      if (inWindow(pos.entry_time)) {
+        provFwd += 1; provFwdPnl += dollarPnl;
+        trips.push({ exit_time: ev.time, pnl: dollarPnl });
+        rMultiples.push(r);
+      }
       openPositions.delete(ev.symbol);
     }
   }
@@ -160,11 +186,11 @@ export default function adaptBasketBreakout(rawOrResp, opts) {
   if (badStopCount > 0) {
     warnings.push(`warning: ${badStopCount} event(s) had missing/invalid stop`);
   }
-  if (recoveredOrphans > 0) {
-    warnings.push(`info: ${recoveredOrphans} orphan partial(s) recovered using BE-move semantics (entry inferred from PARTIAL row stop)`);
+  if (provTotal - provFwd > 0) {
+    warnings.push(`${provTotal - provFwd} pre-cutoff round-trip(s) excluded (entry-time filtered)`);
   }
 
-  return buildStrategyRow({
+  const row = buildStrategyRow({
     name: 'Basket Breakout v1',
     status: 'live',
     trips,
@@ -173,4 +199,14 @@ export default function adaptBasketBreakout(rawOrResp, opts) {
     last_signal_at: latestTime(allTimes),
     errors: warnings,
   });
+  row.provenance = {
+    source: 'sheet-entry-time',
+    total: provTotal,
+    forward: provFwd,
+    backtest: provTotal - provFwd,
+    fwdPnl: provFwdPnl,
+    btPnl: provAllPnl - provFwdPnl,
+    legitimacy: provTotal ? provFwd / provTotal : null,
+  };
+  return row;
 }
