@@ -315,17 +315,16 @@ export const STRATEGIES = [
     },
     adapter: adaptCodex,
   },
-  // Stocks Mean Reversion v2 — RSI threshold sweep siblings. Same diversified
-  // GICS universe + Connors recipe as v2; only the RSI(2) oversold entry
-  // threshold differs. Generated nightly by stocks_mean_reversion since
-  // 2026-05-16 but previously unregistered. Added to leaderboard 2026-05-17
-  // (contest-window perf: rsi15 +$299.60 / 79% win, rsi5 +$204.32 / 90% win).
-  // Same 2026-05-06T18:30Z spec freeze as v1/v2.
+  // Stocks Mean Reversion v2 — RSI threshold sweep siblings. Config first
+  // appeared 2026-05-16 (stocks_mean_reversion docstring "Variants added
+  // 2026-05-16"). live_start_iso = 2026-05-16 (HONEST creation date): any
+  // pre-05-16 P&L is backtest, NOT forward paper. Do not backdate to the
+  // v1/v2 spec freeze — these configs did not exist then.
   {
     name: 'Stocks Mean Reversion v2 (RSI<15)',
     starting_capital: 10000,
     killswitch_dd_pct: 18,
-    live_start_iso: '2026-05-06T18:30:00Z',
+    live_start_iso: '2026-05-16T00:00:00Z',
     source: {
       type: 'codex-local',
       portfolio_path: 'data/stock_variants/stocks_mean_reversion_v2_rsi15_portfolio.md',
@@ -337,7 +336,7 @@ export const STRATEGIES = [
     name: 'Stocks Mean Reversion v2 (RSI<5)',
     starting_capital: 10000,
     killswitch_dd_pct: 18,
-    live_start_iso: '2026-05-06T18:30:00Z',
+    live_start_iso: '2026-05-16T00:00:00Z',  // honest config-creation date; pre-05-16 is backtest
     source: {
       type: 'codex-local',
       portfolio_path: 'data/stock_variants/stocks_mean_reversion_v2_rsi5_portfolio.md',
@@ -345,17 +344,18 @@ export const STRATEGIES = [
     },
     adapter: adaptCodex,
   },
-  // Stocks Mean Reversion v3 — widest universe (15 names / 8 GICS sectors,
-  // the v1-tech-8 ∪ v2-GICS-8 superset, all from the shared cache). Pure
-  // breadth-axis extension of the proven v1->v2 result. Built 2026-05-17.
-  // Contest-window perf: +$301.32 / 74% win / 23 trades. Same Connors
-  // RSI(2)<10 recipe + 2026-05-06T18:30Z spec freeze.
+  // Stocks Mean Reversion v3 — widest universe (15 names / 8 GICS sectors).
+  // CREATED 2026-05-17. live_start_iso = 2026-05-17 (HONEST). Everything
+  // before today is backtest — this config did not exist until 2026-05-17,
+  // so it has ZERO forward-paper trades and contributes ~$0 to the contest
+  // until it trades forward. The +$301 "contest-window" figure was 100%
+  // backtest and must NOT be claimed as competition gains.
   // Spec: stocks_mean_reversion/config.py "v3"; universe_wide.json
   {
     name: 'Stocks Mean Reversion v3 (Wide)',
     starting_capital: 10000,
     killswitch_dd_pct: 18,
-    live_start_iso: '2026-05-06T18:30:00Z',
+    live_start_iso: '2026-05-17T00:00:00Z',
     source: {
       type: 'codex-local',
       portfolio_path: 'data/stock_variants/stocks_mean_reversion_v3_portfolio.md',
@@ -363,18 +363,18 @@ export const STRATEGIES = [
     },
     adapter: adaptCodex,
   },
-  // Stocks Mean Reversion Deep — AGGRESSIVE convex variant (2026-05-17).
-  // Connors RSI(2) < 3 (only the most extreme oversold = highest per-trade
-  // edge) + 8x base risk + 2.5xATR stop on the wide 15-name universe. Under
-  // top-5-winners / losers-ignored scoring the optimal design is convex:
-  // amplify the PROVEN MR edge for magnitude, downside is "free". Contest
-  // window: +$1,278.89 / 86% win / 7 trades. Same 2026-05-06T18:30Z freeze.
+  // Stocks Mean Reversion Deep — AGGRESSIVE convex variant.
+  // CREATED 2026-05-17. live_start_iso = 2026-05-17 (HONEST). The
+  // +$1,278.89 / 86% "contest-window" figure was 100% BACKTEST — this
+  // config did not exist before today, never traded a bar forward, and
+  // contributes ~$0 to the contest until it earns forward-paper results.
+  // It is a HYPOTHESIS entering forward paper now, not realized gains.
   // Spec: stocks_mean_reversion/config.py "deep".
   {
     name: 'Stocks Mean Reversion Deep (Aggressive)',
     starting_capital: 10000,
     killswitch_dd_pct: 40,
-    live_start_iso: '2026-05-06T18:30:00Z',
+    live_start_iso: '2026-05-17T00:00:00Z',
     source: {
       type: 'codex-local',
       portfolio_path: 'data/stock_variants/stocks_mean_reversion_deep_portfolio.md',
