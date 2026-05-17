@@ -307,7 +307,11 @@ export const STRATEGIES = [
     name: 'Stocks Mean Reversion v2',
     starting_capital: 10000,
     killswitch_dd_pct: 18,
-    live_start_iso: '2026-05-06T18:30:00Z',
+    // CORRECTED 2026-05-17: v2's trade log was never git-committed before
+    // today and its config was added 2026-05-16 (docstring). Unlike v1
+    // (git-committed 2026-05-06, genuinely forward), v2 has NO pre-05-16
+    // forward history — its earlier P&L is backtest. Honest date = 05-16.
+    live_start_iso: '2026-05-16T00:00:00Z',
     source: {
       type: 'codex-local',
       portfolio_path: 'data/stock_variants/stocks_mean_reversion_v2_portfolio.md',
