@@ -11,6 +11,7 @@ import { avgR } from '../lib/metrics.js';
  * portfolio.md is parsed but currently used only for surfacing errors if missing.
  */
 export default function adaptBull({ portfolio, tradeLog }, opts) {
+  const name = opts?.name || 'BULL v0';
   const errors = [];
   if (!portfolio || !portfolio.ok) {
     errors.push('portfolio: ' + (portfolio?.error || 'missing'));
@@ -18,7 +19,7 @@ export default function adaptBull({ portfolio, tradeLog }, opts) {
   if (!tradeLog || !tradeLog.ok) {
     errors.push('tradeLog: ' + (tradeLog?.error || 'missing'));
     // Still return a row so user sees something
-    return makeErrorRow('BULL v0', errors.join(' | '));
+    return makeErrorRow(name, errors.join(' | '));
   }
 
   const rows = parseTradeLog(tradeLog.text);
@@ -42,7 +43,7 @@ export default function adaptBull({ portfolio, tradeLog }, opts) {
   const lastSig = rows.length ? rows[rows.length - 1].time : null;
 
   const row = buildStrategyRow({
-    name: 'BULL v0',
+    name,
     status: 'live',
     trips,
     rMultiples,

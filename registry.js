@@ -97,6 +97,24 @@ export const STRATEGIES = [
     adapter: adaptBull,
   },
   {
+    // BULL v0.12-SBD — instrumented paper-paper twin of the live v0.3
+    // synchronized-breakdown rules (Ring-2 W21-F, adopted 2026-05-19).
+    // Tracks the SBD exit-tightening A/B vs the BULL v0 baseline.
+    // live_start_iso = honest variant creation date (2026-05-19); any
+    // earlier P&L would be backtest — it has zero forward trades until
+    // routine #7 simulates it, so it contributes ~$0 until then.
+    name: 'BULL v0.12-SBD (twin)',
+    starting_capital: 10000,
+    killswitch_dd_pct: 25,
+    live_start_iso: '2026-05-19T00:00:00Z',
+    source: {
+      type: 'bull-github',
+      portfolio_path: 'variants/v0.12-sbd-exit/portfolio.md',
+      trade_log_path: 'variants/v0.12-sbd-exit/trade_log.md',
+    },
+    adapter: adaptBull,
+  },
+  {
     name: 'CODEX v0',
     starting_capital: 10000,
     killswitch_dd_pct: 35,
