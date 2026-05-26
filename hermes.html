@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hermes Monitor</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/hermes.css">
+</head>
+<body>
+  <div id="dash" class="hermes-dash">
+    <header class="dash-header">
+      <div class="title">Hermes Monitor</div>
+      <div class="meta">
+        <a class="nav-link" href="./">Leaderboard</a>
+        <span id="updated" class="dim">loading...</span>
+        <button id="refresh-btn" class="refresh-btn" type="button">Refresh</button>
+      </div>
+    </header>
+
+    <main id="hermes-monitor" class="hermes-monitor" aria-label="Hermes Monitor">
+      <div class="loading">Loading Hermes monitor...</div>
+    </main>
+
+    <footer class="dash-footer">
+      <span>data: local CODEX snapshots</span>
+      <span style="margin-left:auto;">review-only monitor · auto-refresh 5m</span>
+    </footer>
+  </div>
+
+  <script type="module">
+    const assetVersion = new URLSearchParams(location.search).get('v') || Date.now().toString();
+    import(`./hermes_app.js?v=${encodeURIComponent(assetVersion)}`);
+  </script>
+</body>
+</html>
