@@ -1,0 +1,100 @@
+{
+  "owner": "claude",
+  "generated_at": "2026-05-28T15:00:02.021Z",
+  "guardrails": [
+    "Review-only: no live routing, position-sizing, or spec files were modified.",
+    "Queue items are research and operational recommendations only.",
+    "Claude Hermes Supervisor does not write trade logs, portfolios, or registry entries."
+  ],
+  "summary": {
+    "queue_items": 8,
+    "collapsing": 1,
+    "fading_winner": 1,
+    "recovering": 1,
+    "stable_profitable": 1,
+    "stable_losing": 4,
+    "insufficient_data": 0
+  },
+  "items": [
+    {
+      "owner": "claude",
+      "strategy": "Stocks Basket Breakout v1",
+      "strategy_id": "stocks-basket-v1",
+      "priority": 1,
+      "type": "experiment",
+      "title": "Address regime collapse in Stocks Basket Breakout v1",
+      "source": "data/codex/basket_oos_audit.md",
+      "requested_action": "OOS PF 0.23 vs IS 2.01; OOS PnL $-258.99. Flags: PF collapse; OOS turned negative; win-rate drop >15pp. Decide within the week: review regime gate, fork v2.1 with halved risk, or archive per spec recovery rules."
+    },
+    {
+      "owner": "claude",
+      "strategy": "Stocks Mean Reversion v2",
+      "strategy_id": "stocks-mean-reversion-v2",
+      "priority": 1,
+      "type": "experiment",
+      "title": "Defend Stocks Mean Reversion v2 — leader but OOS bleeding",
+      "source": "data/codex/basket_oos_audit.md",
+      "requested_action": "Cumulative +7.11% but OOS PnL +$233.35, OOS PF 1.83. Currently on the leaderboard top but losing the most recent window. Options: halve size on new entries, tighten exit, pause pending diagnosis."
+    },
+    {
+      "owner": "claude",
+      "strategy": "Basket Breakout Aggressive v1 (crypto)",
+      "strategy_id": "basket-aggressive-v1-crypto",
+      "priority": 2,
+      "type": "sample_collection",
+      "title": "Confirm Basket Breakout Aggressive v1 (crypto) recovery",
+      "source": "data/codex/basket_oos_audit.md",
+      "requested_action": "Cumulative DD 18.7% but OOS PnL +$76.00, PF 1.06, win 64%. If next 2-week window holds PF >= 1.0, treat as recovered. If it slips below 0.8, escalate to experiment."
+    },
+    {
+      "owner": "claude",
+      "strategy": "Basket Breakout Aggressive v2 (crypto)",
+      "strategy_id": "basket-aggressive-v2-crypto",
+      "priority": 2,
+      "type": "experiment",
+      "title": "Diagnose persistent loss in Basket Breakout Aggressive v2 (crypto)",
+      "source": "data/codex/basket_oos_audit.md",
+      "requested_action": "Losses in both IS and OOS, no acute collapse. Consider: review vs original expected_pf_range, reduce risk to 25% of current sizing, or archive if spec rules warrant."
+    },
+    {
+      "owner": "claude",
+      "strategy": "Basket Breakout Leveraged v1 (crypto)",
+      "strategy_id": "basket-leveraged-v1-crypto",
+      "priority": 2,
+      "type": "experiment",
+      "title": "Diagnose persistent loss in Basket Breakout Leveraged v1 (crypto)",
+      "source": "data/codex/basket_oos_audit.md",
+      "requested_action": "Losses in both IS and OOS, no acute collapse. Consider: review vs original expected_pf_range, reduce risk to 25% of current sizing, or archive if spec rules warrant."
+    },
+    {
+      "owner": "claude",
+      "strategy": "Stocks Basket Breakout Aggressive v1",
+      "strategy_id": "stocks-basket-aggressive-v1",
+      "priority": 2,
+      "type": "experiment",
+      "title": "Diagnose persistent loss in Stocks Basket Breakout Aggressive v1",
+      "source": "data/codex/basket_oos_audit.md",
+      "requested_action": "Losses in both IS and OOS, no acute collapse. Consider: review vs original expected_pf_range, reduce risk to 25% of current sizing, or archive if spec rules warrant."
+    },
+    {
+      "owner": "claude",
+      "strategy": "Stocks Basket Breakout Diversified v1",
+      "strategy_id": "stocks-basket-diversified-v1",
+      "priority": 2,
+      "type": "experiment",
+      "title": "Diagnose persistent loss in Stocks Basket Breakout Diversified v1",
+      "source": "data/codex/basket_oos_audit.md",
+      "requested_action": "Losses in both IS and OOS, no acute collapse. Consider: review vs original expected_pf_range, reduce risk to 25% of current sizing, or archive if spec rules warrant."
+    },
+    {
+      "owner": "claude",
+      "strategy": "Stocks Mean Reversion v1",
+      "strategy_id": "stocks-mean-reversion-v1",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Continue collecting on Stocks Mean Reversion v1",
+      "source": "data/codex/basket_oos_audit.md",
+      "requested_action": "Cumulative +1.61%, OOS PF 1.11, win 65%. Both halves profitable. Defend this strategy — it is the cohort's actual edge."
+    }
+  ]
+}

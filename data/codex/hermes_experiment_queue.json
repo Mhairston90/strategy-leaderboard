@@ -1,0 +1,262 @@
+{
+  "generated_at": "2026-05-27T18:51:49Z",
+  "items": [
+    {
+      "guardrail": "paper-only; no live routing changes",
+      "id": "20260527-experiment-refine-codex-aggro-foundry",
+      "priority": 2,
+      "rationale": "aggro_bank_stop_pct_0.90: return -29.08%, max DD 41.70%, PF 0.13, trades 229, windows 3",
+      "requested_action": "Reduce drawdown through smaller sizing, volatility brakes, or stricter exits.",
+      "source": "memory/overnight_foundry_report.md",
+      "title": "Refine CODEX Aggro Foundry",
+      "type": "experiment"
+    },
+    {
+      "guardrail": "paper-only; no live routing changes",
+      "id": "20260527-experiment-refine-codex-apex-wfo-foundry",
+      "priority": 2,
+      "rationale": "apex_bank_risk_vol_multiplier_0.90: return -2.37%, max DD 3.39%, PF 0.00, trades 3, windows 3",
+      "requested_action": "Find a cleaner entry/exit filter before this family gets more capital.",
+      "source": "memory/overnight_foundry_report.md",
+      "title": "Refine CODEX Apex WFO Foundry",
+      "type": "experiment"
+    },
+    {
+      "guardrail": "paper-only; no live routing changes",
+      "id": "20260527-experiment-refine-codex-crypto-vol-breakout-foundry",
+      "priority": 2,
+      "rationale": "crypto_vol_bank_max_compression_pct_1.10: return 0.56%, max DD 0.17%, PF 7.37, trades 5, windows 3",
+      "requested_action": "Spin a narrower variant family and re-run walk-forward validation.",
+      "source": "memory/overnight_foundry_report.md",
+      "title": "Refine CODEX Crypto Vol Breakout Foundry",
+      "type": "experiment"
+    },
+    {
+      "guardrail": "paper-only; no live routing changes",
+      "id": "20260527-experiment-refine-codex-donchian-iqr-foundry",
+      "priority": 2,
+      "rationale": "donchian_iqr_bank_r0.69_q1.03: return -1.00%, max DD 1.77%, PF 0.00, trades 5, windows 3",
+      "requested_action": "Find a cleaner entry/exit filter before this family gets more capital.",
+      "source": "memory/overnight_foundry_report.md",
+      "title": "Refine CODEX Donchian IQR Foundry",
+      "type": "experiment"
+    },
+    {
+      "guardrail": "paper-only; no live routing changes",
+      "id": "20260527-experiment-refine-codex-equities-breakout-foundry",
+      "priority": 2,
+      "rationale": "eq_break_l30_c0.75_s0.055: return 7.25%, max DD 6.44%, PF 1.10, trades 36, windows 3",
+      "requested_action": "Lift PF above 1.20 while preserving positive OOS return across walk-forward windows.",
+      "source": "memory/overnight_foundry_report.md",
+      "title": "Refine CODEX Equities Breakout Foundry",
+      "type": "experiment"
+    },
+    {
+      "guardrail": "paper-only; no live routing changes",
+      "id": "20260527-experiment-refine-codex-equities-mean-reversion-foundry",
+      "priority": 2,
+      "rationale": "eq_mr_refine_aisemi_late_s0.030_t0.040: return 1.47%, max DD 1.84%, PF 0.38, trades 11, windows 3",
+      "requested_action": "Lift PF above 1.20 while preserving positive OOS return across walk-forward windows.",
+      "source": "memory/overnight_foundry_report.md",
+      "title": "Refine CODEX Equities Mean Reversion Foundry",
+      "type": "experiment"
+    },
+    {
+      "guardrail": "paper-only; no live routing changes",
+      "id": "20260527-experiment-refine-codex-pulse-foundry",
+      "priority": 2,
+      "rationale": "pulse_bank_momentum_threshold_0.90: return -9.13%, max DD 14.03%, PF 0.50, trades 235, windows 3",
+      "requested_action": "Reduce drawdown through smaller sizing, volatility brakes, or stricter exits.",
+      "source": "memory/overnight_foundry_report.md",
+      "title": "Refine CODEX Pulse Foundry",
+      "type": "experiment"
+    },
+    {
+      "guardrail": "paper-only; no live routing changes",
+      "id": "20260527-experiment-refine-codex-pulse-session-foundry",
+      "priority": 2,
+      "rationale": "pulse_session_t0.009_h13-21_p0.040: return -1.78%, max DD 5.15%, PF 0.33, trades 111, windows 3",
+      "requested_action": "Find a cleaner entry/exit filter before this family gets more capital.",
+      "source": "memory/overnight_foundry_report.md",
+      "title": "Refine CODEX Pulse Session Foundry",
+      "type": "experiment"
+    },
+    {
+      "guardrail": "paper-only; no live routing changes",
+      "id": "20260527-experiment-refine-codex-regime-wfo-foundry",
+      "priority": 2,
+      "rationale": "regime_bank_vol_skip_threshold_0.90: return -3.85%, max DD 5.33%, PF 0.00, trades 18, windows 3",
+      "requested_action": "Find a cleaner entry/exit filter before this family gets more capital.",
+      "source": "memory/overnight_foundry_report.md",
+      "title": "Refine CODEX Regime WFO Foundry",
+      "type": "experiment"
+    },
+    {
+      "guardrail": "paper-only; no live routing changes",
+      "id": "20260527-sample_collection-keep-collecting-sample-for-codex-aggro-quality-v3",
+      "priority": 3,
+      "rationale": "CODEX Aggro Quality v3 has 0 closed trades and 0.0 observed weeks; gates require 30 trades and 6 weeks for interesting status.",
+      "requested_action": "Keep in paper rotation and avoid promotion decisions until sample gates are met.",
+      "source": "memory/goal_status.md",
+      "title": "Keep collecting sample for CODEX Aggro Quality v3",
+      "type": "sample_collection"
+    },
+    {
+      "guardrail": "paper-only; no live routing changes",
+      "id": "20260527-sample_collection-keep-collecting-sample-for-codex-aggro-v0",
+      "priority": 3,
+      "rationale": "CODEX Aggro v0 has 10 closed trades and 3.0 observed weeks; gates require 30 trades and 6 weeks for interesting status.",
+      "requested_action": "Keep in paper rotation and avoid promotion decisions until sample gates are met.",
+      "source": "memory/goal_status.md",
+      "title": "Keep collecting sample for CODEX Aggro v0",
+      "type": "sample_collection"
+    },
+    {
+      "guardrail": "paper-only; no live routing changes",
+      "id": "20260527-sample_collection-keep-collecting-sample-for-codex-apex-v0",
+      "priority": 3,
+      "rationale": "CODEX Apex v0 has 4 closed trades and 1.9 observed weeks; gates require 30 trades and 6 weeks for interesting status.",
+      "requested_action": "Keep in paper rotation and avoid promotion decisions until sample gates are met.",
+      "source": "memory/goal_status.md",
+      "title": "Keep collecting sample for CODEX Apex v0",
+      "type": "sample_collection"
+    },
+    {
+      "guardrail": "paper-only; no live routing changes",
+      "id": "20260527-sample_collection-keep-collecting-sample-for-codex-apex-wfo-v1",
+      "priority": 3,
+      "rationale": "CODEX Apex WFO v1 has 4 closed trades and 1.9 observed weeks; gates require 30 trades and 6 weeks for interesting status.",
+      "requested_action": "Keep in paper rotation and avoid promotion decisions until sample gates are met.",
+      "source": "memory/goal_status.md",
+      "title": "Keep collecting sample for CODEX Apex WFO v1",
+      "type": "sample_collection"
+    },
+    {
+      "guardrail": "paper-only; no live routing changes",
+      "id": "20260527-sample_collection-keep-collecting-sample-for-codex-convex-crypto-scout-v1",
+      "priority": 3,
+      "rationale": "CODEX Convex Crypto Scout v1 has 0 closed trades and 0.0 observed weeks; gates require 30 trades and 6 weeks for interesting status.",
+      "requested_action": "Keep in paper rotation and avoid promotion decisions until sample gates are met.",
+      "source": "memory/goal_status.md",
+      "title": "Keep collecting sample for CODEX Convex Crypto Scout v1",
+      "type": "sample_collection"
+    },
+    {
+      "guardrail": "paper-only; no live routing changes",
+      "id": "20260527-sample_collection-keep-collecting-sample-for-codex-equities-breakout-runner-v1",
+      "priority": 3,
+      "rationale": "CODEX Equities Breakout Runner v1 has 0 closed trades and 0.0 observed weeks; gates require 30 trades and 6 weeks for interesting status.",
+      "requested_action": "Keep in paper rotation and avoid promotion decisions until sample gates are met.",
+      "source": "memory/goal_status.md",
+      "title": "Keep collecting sample for CODEX Equities Breakout Runner v1",
+      "type": "sample_collection"
+    },
+    {
+      "guardrail": "paper-only; no live routing changes",
+      "id": "20260527-sample_collection-keep-collecting-sample-for-codex-equities-connors-mr-v1",
+      "priority": 3,
+      "rationale": "CODEX Equities Connors MR v1 has 0 closed trades and 0.1 observed weeks; gates require 30 trades and 6 weeks for interesting status.",
+      "requested_action": "Keep in paper rotation and avoid promotion decisions until sample gates are met.",
+      "source": "memory/goal_status.md",
+      "title": "Keep collecting sample for CODEX Equities Connors MR v1",
+      "type": "sample_collection"
+    },
+    {
+      "guardrail": "paper-only; no live routing changes",
+      "id": "20260527-sample_collection-keep-collecting-sample-for-codex-equities-gap-fade-v0",
+      "priority": 3,
+      "rationale": "CODEX Equities Gap Fade v0 has 2 closed trades and 0.9 observed weeks; gates require 30 trades and 6 weeks for interesting status.",
+      "requested_action": "Keep in paper rotation and avoid promotion decisions until sample gates are met.",
+      "source": "memory/goal_status.md",
+      "title": "Keep collecting sample for CODEX Equities Gap Fade v0",
+      "type": "sample_collection"
+    },
+    {
+      "guardrail": "paper-only; no live routing changes",
+      "id": "20260527-sample_collection-keep-collecting-sample-for-codex-equities-mean-reversion-v1",
+      "priority": 3,
+      "rationale": "CODEX Equities Mean Reversion v1 has 1 closed trades and 0.7 observed weeks; gates require 30 trades and 6 weeks for interesting status.",
+      "requested_action": "Keep in paper rotation and avoid promotion decisions until sample gates are met.",
+      "source": "memory/goal_status.md",
+      "title": "Keep collecting sample for CODEX Equities Mean Reversion v1",
+      "type": "sample_collection"
+    },
+    {
+      "guardrail": "paper-only; no live routing changes",
+      "id": "20260527-sample_collection-keep-collecting-sample-for-codex-equities-mr-quality-v2",
+      "priority": 3,
+      "rationale": "CODEX Equities MR Quality v2 has 0 closed trades and 0.0 observed weeks; gates require 30 trades and 6 weeks for interesting status.",
+      "requested_action": "Keep in paper rotation and avoid promotion decisions until sample gates are met.",
+      "source": "memory/goal_status.md",
+      "title": "Keep collecting sample for CODEX Equities MR Quality v2",
+      "type": "sample_collection"
+    },
+    {
+      "guardrail": "paper-only; no live routing changes",
+      "id": "20260527-sample_collection-keep-collecting-sample-for-codex-equities-near-breakout-pullback-v1",
+      "priority": 3,
+      "rationale": "CODEX Equities Near-Breakout Pullback v1 has 0 closed trades and 0.0 observed weeks; gates require 30 trades and 6 weeks for interesting status.",
+      "requested_action": "Keep in paper rotation and avoid promotion decisions until sample gates are met.",
+      "source": "memory/goal_status.md",
+      "title": "Keep collecting sample for CODEX Equities Near-Breakout Pullback v1",
+      "type": "sample_collection"
+    },
+    {
+      "guardrail": "paper-only; no live routing changes",
+      "id": "20260527-sample_collection-keep-collecting-sample-for-codex-equities-regime-hedge-v1",
+      "priority": 3,
+      "rationale": "CODEX Equities Regime Hedge v1 has 1 closed trades and 0.9 observed weeks; gates require 30 trades and 6 weeks for interesting status.",
+      "requested_action": "Keep in paper rotation and avoid promotion decisions until sample gates are met.",
+      "source": "memory/goal_status.md",
+      "title": "Keep collecting sample for CODEX Equities Regime Hedge v1",
+      "type": "sample_collection"
+    },
+    {
+      "guardrail": "paper-only; no live routing changes",
+      "id": "20260527-sample_collection-keep-collecting-sample-for-codex-pulse-v0",
+      "priority": 3,
+      "rationale": "CODEX Pulse v0 has 20 closed trades and 3.1 observed weeks; gates require 30 trades and 6 weeks for interesting status.",
+      "requested_action": "Keep in paper rotation and avoid promotion decisions until sample gates are met.",
+      "source": "memory/goal_status.md",
+      "title": "Keep collecting sample for CODEX Pulse v0",
+      "type": "sample_collection"
+    },
+    {
+      "guardrail": "paper-only; no live routing changes",
+      "id": "20260527-sample_collection-keep-collecting-sample-for-codex-regime-v0",
+      "priority": 3,
+      "rationale": "CODEX Regime v0 has 6 closed trades and 3.1 observed weeks; gates require 30 trades and 6 weeks for interesting status.",
+      "requested_action": "Keep in paper rotation and avoid promotion decisions until sample gates are met.",
+      "source": "memory/goal_status.md",
+      "title": "Keep collecting sample for CODEX Regime v0",
+      "type": "sample_collection"
+    },
+    {
+      "guardrail": "paper-only; no live routing changes",
+      "id": "20260527-sample_collection-keep-collecting-sample-for-codex-regime-wfo-v1",
+      "priority": 3,
+      "rationale": "CODEX Regime WFO v1 has 6 closed trades and 1.1 observed weeks; gates require 30 trades and 6 weeks for interesting status.",
+      "requested_action": "Keep in paper rotation and avoid promotion decisions until sample gates are met.",
+      "source": "memory/goal_status.md",
+      "title": "Keep collecting sample for CODEX Regime WFO v1",
+      "type": "sample_collection"
+    },
+    {
+      "guardrail": "paper-only; no live routing changes",
+      "id": "20260527-sample_collection-keep-collecting-sample-for-codex-v0",
+      "priority": 3,
+      "rationale": "CODEX v0 has 4 closed trades and 3.1 observed weeks; gates require 30 trades and 6 weeks for interesting status.",
+      "requested_action": "Keep in paper rotation and avoid promotion decisions until sample gates are met.",
+      "source": "memory/goal_status.md",
+      "title": "Keep collecting sample for CODEX v0",
+      "type": "sample_collection"
+    }
+  ],
+  "mode": "paper-only",
+  "sources": [
+    "memory/overnight_foundry_report.md",
+    "memory/goal_status.md",
+    "memory/leaderboard_smoke_latest.txt"
+  ],
+  "version": 1
+}

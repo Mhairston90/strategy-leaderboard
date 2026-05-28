@@ -27,10 +27,11 @@ export default function adaptBull({ portfolio, tradeLog }, opts) {
   // Pair OPEN/CLOSE and filter by entry time so the contest window
   // (opts.liveStartIso) excludes BULL's pre-contest head-start trades.
   const allTrips = buildTripsWithEntryTime(rows);
-  const { filtered: paired, dropped } = filterTripsByLiveStart(allTrips, opts.liveStartIso);
+  const { filtered: liveTrips, dropped } = filterTripsByLiveStart(allTrips, opts.liveStartIso);
   if (dropped > 0) {
     errors.push(`${dropped} pre-contest-window trades excluded (cutoff=${opts.liveStartIso})`);
   }
+  const paired = _dedupeTrips(liveTrips);
 
   const trips = paired
     .filter(t => t.pnl != null)
@@ -44,7 +45,7 @@ export default function adaptBull({ portfolio, tradeLog }, opts) {
 
   const row = buildStrategyRow({
     name,
-    status: 'live',
+    status: opts?.status || 'live',
     trips,
     rMultiples,
     startingCapital: opts.startingCapital,
@@ -56,4 +57,24 @@ export default function adaptBull({ portfolio, tradeLog }, opts) {
   row.avg_r = avgR(rMultiples);
 
   return row;
+}
+
+function _dedupeTrips(trips) {
+  const seen = new Set();
+  const deduped = [];
+  for (const trip of trips) {
+    const key = [
+      trip.entry_time,
+      trip.exit_time,
+      trip.symbol,
+      trip.pnl,
+      trip.r,
+    ].join('|');
+    if (seen.has(key)) {
+      continue;
+    }
+    seen.add(key);
+    deduped.push(trip);
+  }
+  return deduped;
 }

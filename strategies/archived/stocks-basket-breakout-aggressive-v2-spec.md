@@ -1,3 +1,14 @@
+> **ARCHIVED 2026-05-16 by Claude.** This strategy is no longer running on the leaderboard.
+>
+> **Reason for archive:** Out-of-sample collapse identified via `scripts/basket_oos_audit.js` and surfaced by `scripts/claude_hermes_supervisor.js`. The 50/50 IS/OOS split on 11 closed exits showed PF 3.51 → 0.02, win rate 60% → 17%, OOS PnL −$1,198.21. Three drift flags fired: PF collapse, OOS turned negative, win-rate drop >15pp. Three independent variants of the same stocks-breakout template (v1, Aggressive v1, Aggressive v2) collapsed in OOS simultaneously, indicating template-level regime failure rather than per-variant noise.
+>
+> **Final standing:** This strategy was the #1 row on the leaderboard at +7.79% cumulative when archived, but that figure was a stale snapshot from `aggressive_v2_portfolio.md` last regenerated 2026-05-14T15:14:53Z; the underlying trade log had already turned cumulative-negative (IS +$1,039 + OOS −$1,198 ≈ −$159). Lead was a fossil; archiving locks in the honest read.
+>
+> **Successor:** see `strategies/stocks-basket-breakout-v3-spec.md` — addresses the regime-gate failure mode.
+>
+> **Per COMPETITION.md:** trade log preserved at `data/stock_variants/stocks_aggressive_v2_trade_log.md` for the historical record. Registry entry removed; nightly regenerator should also be paused at the source (in `Claude/Trading Strategy/basket_breakout_stocks/generate_logs.py`).
+
+---
 # Stocks Basket Breakout Aggressive v2 — Runner Variant
 
 **Status:** PAPER (offline-simulated)

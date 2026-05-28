@@ -47,9 +47,31 @@ Spec freeze 2026-05-06; live execution earliest 2026-06-08 (post-PDT-rule effect
 |---|---|---|---|
 | Stocks Basket Breakout v1 | parent port — daily EMA50/200 regime gate, 0.5% risk | paper (offline-simulated nightly) | `data/stock_variants/` |
 | Stocks Basket Breakout Aggressive v1 | wider net — gate dropped, 1.5% risk, heat 8 | paper (offline-simulated nightly) | `data/stock_variants/` |
-| Stocks Basket Breakout Aggressive v2 | runner — 2% risk, no partial, wider trail | paper (offline-simulated nightly) | `data/stock_variants/` |
+| Stocks Basket Breakout Diversified v1 | same params as v1, 8 GICS sectors (NVDA/OXY/JPM/LLY/CAT/FCX/NKE/DIS) | paper (offline-simulated nightly) | `data/stock_variants/` |
 
-Universe: NVDA, TSLA, AMD, PLTR, META, NFLX, AVGO, AAPL. Variant specs in `strategies/stocks-basket-breakout-*-spec.md`. Nightly regenerator at `Claude/Trading Strategy/basket_breakout_stocks/generate_logs.py` (yfinance data source, gap-aware stop-fill simulator).
+Universe (tech): NVDA, TSLA, AMD, PLTR, META, NFLX, AVGO, AAPL. Universe (diversified): NVDA, OXY, JPM, LLY, CAT, FCX, NKE, DIS. Variant specs in `strategies/stocks-basket-breakout-*-spec.md` (including `v3-spec.md` PARKED 2026-05-16). Nightly regenerator at `Claude/Trading Strategy/basket_breakout_stocks/generate_logs.py` (yfinance data source, gap-aware stop-fill simulator).
+
+### Mean Reversion family — Stocks (1H RTH, anti-breakout test)
+
+Connors-style RSI(2)<10 oversold-bounce, daily EMA50>EMA200 regime gate + close>EMA50 dip filter. Explicit test of whether the OPPOSITE signal type (mean reversion vs breakout) has edge on the same paper-trade infrastructure. Both variants currently OOS PF > 2, classified `stable_profitable` by the Hermes supervisor.
+
+| Strategy | Variant axis | Status | Source |
+|---|---|---|---|
+| Stocks Mean Reversion v1 | RSI(2) oversold-bounce on tech basket | paper (offline-simulated nightly) | `data/stock_variants/` |
+| Stocks Mean Reversion v2 | RSI(2) oversold-bounce on 8 GICS sectors | paper (offline-simulated nightly) | `data/stock_variants/` |
+
+Specs: `strategies/stocks-mean-reversion-{v1,v2}-spec.md`. Nightly regenerator at `Claude/Trading Strategy/stocks_mean_reversion/generate_log.py` — multi-variant via `--variant {v1, v2, ...}`, shares yfinance data with basket_breakout_stocks.
+
+**Opus 4.8 expansion (2026-05-28):** five diversified-8 grid-fill variants — `v2_fast` (Connors RSI>50 fast exit), `v2_heat8` (heat cap 8), `v2_bal` (the missing 1.5% mid-risk tier), `v2_rsi5_agg` (RSI<5 × 3% sizing), and `deep_div` (RSI<3 / 4% on diversified-8, A/B vs wide-15 `deep`). Pure config variants of the frozen signal engine. Spec: `strategies/stocks-mean-reversion-2026-05-28-opus48-expansion-design.md`.
+
+### Mean Reversion family — Crypto (Kraken USD spot, 4H regime gate)
+
+The same Connors recipe ported to crypto. **Transparent commission-challenged experiment** — the full backfill lost to Kraken's 0.52% round-trip taker fee (vs 0.10% for equities); wired in honestly as a forward test in a new asset class. Spec: `strategies/crypto-mean-reversion-v1-spec.md`. Generator: `Claude/Trading Strategy/crypto_mean_reversion/generate_log.py`.
+
+| Strategy | Variant axis | Status | Source |
+|---|---|---|---|
+| Crypto Mean Reversion v1 | RSI(2)<10 oversold-bounce, 8 Kraken USD pairs | paper (offline-simulated nightly) | `data/crypto_variants/` |
+| Crypto Mean Reversion Aggressive | RSI(2)<3 extreme-dip, 3% sizing (commission-drag fix hypothesis) | paper (offline-simulated nightly) | `data/crypto_variants/` |
 
 Variant specs (crypto family) live in `Claude/Trading Strategy/basket-breakout-*-spec.md` in the parent project; nightly regenerator at `Claude/Trading Strategy/basket_breakout/generate_variant_logs.py`.
 

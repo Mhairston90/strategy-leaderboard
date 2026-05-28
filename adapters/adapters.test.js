@@ -118,6 +118,7 @@ test('V7 adapter on missing tab returns research status, no error status', () =>
   assertStrategyRowShape(row, 'HY v7-Best BTC TG');
   assert.equal(row.status, 'research');
   assert.equal(row.trades_n, 0);
+  assert.deepEqual(row.errors, []);
 });
 
 test('V7 adapter on synthetic data with rows works like other adapters', () => {
@@ -127,6 +128,17 @@ test('V7 adapter on synthetic data with rows works like other adapters', () => {
   const row = adaptV7BtcTG(synth, { startingCapital: 2000 });
   assert.equal(row.status, 'research');
   assert.equal(row.trades_n, 1);
+});
+
+// ---------- BULL ----------
+test('BULL adapter can mark counterfactual replay rows as research', () => {
+  const row = adaptBull(
+    { portfolio: { ok: true, text: fxBullPort }, tradeLog: { ok: true, text: fxBullLog } },
+    { startingCapital: 10000, name: 'BULL v0 Replay', status: 'research' }
+  );
+
+  assertStrategyRowShape(row, 'BULL v0 Replay');
+  assert.equal(row.status, 'research');
 });
 
 // ---------- Basket Breakout ----------
@@ -157,6 +169,24 @@ test('basket adapter ignores REJECTED_HEAT entries', () => {
   ]};
   const row = adaptBasket(synth, { startingCapital: 10000 });
   assert.equal(row.trades_n, 0);
+});
+
+test('basket adapter treats warm-start pre-window exits as non-actionable', () => {
+  const synth = { ok: true, rows: [
+    { timestamp: '2026-01-01T10:00:00Z', action: 'ENTRY_REQUEST', heat_status: 'REJECTED_HEAT',
+      symbol: 'ETHUSD', price: 100, stop: 95, open_count_at_receipt: 4, notes: 'open=4 >= cap=4' },
+    { timestamp: '2026-01-01T10:00:04Z', action: 'EXIT', heat_status: 'EXIT',
+      symbol: 'ETHUSD', price: 100, stop: 95, open_count_at_receipt: 4 },
+    { timestamp: '2026-01-02T10:00:00Z', action: 'ENTRY_REQUEST', heat_status: 'ACCEPTED',
+      symbol: 'LINKUSD', price: 10, stop: 9 },
+    { timestamp: '2026-01-02T12:00:00Z', action: 'EXIT', heat_status: 'EXIT',
+      symbol: 'LINKUSD', price: 11 },
+  ]};
+
+  const row = adaptBasket(synth, { startingCapital: 10000 });
+
+  assert.equal(row.trades_n, 1);
+  assert.equal(row.errors.length, 0);
 });
 
 test('basket adapter handles PARTIAL: half close at partial price + half at exit', () => {
@@ -212,8 +242,7 @@ test('basket adapter recovers orphan PARTIAL via BE-move semantics, then pairs s
   assert.equal(row.trades_n, 2, 'expected partial + tail exit pair');
   assert.ok(Math.abs(row.returns.all - 0.75) < 1e-9,
     `expected 0.75% return, got ${row.returns.all}`);
-  assert.ok(row.errors.some(e => /recovered/.test(e)),
-    `expected recovery info, got ${JSON.stringify(row.errors)}`);
+  assert.equal(row.errors.length, 0);
 });
 
 // ---------- BULL ----------
@@ -233,6 +262,26 @@ test('bull adapter avg_r computed from trade log r-multiples', () => {
     { startingCapital: 10000 }
   );
   assert.equal(typeof row.avg_r, 'number');
+});
+
+test('bull adapter counts duplicated replay rows only once', () => {
+  const duplicatedReplayLog = `
+| Timestamp (UTC) | Event | Pair | Side | Size | Price | Stop | Target | R at exit | Realized PnL | Reason tag | Sleeve |
+|-----------------|-------|------|------|------|-------|------|--------|-----------|--------------|------------|--------|
+| 2026-05-20T13:00:00Z | OPEN | HYPE/USD | long | 10 | 50.00 | 48.00 | 58.00 | - | - | replay-entry | missed_scheduler_replay |
+| 2026-05-21T08:00:00Z | CLOSE | HYPE/USD | long | 10 | 58.00 | - | - | +4.00 | +100.00 | exit-4R-target | missed_scheduler_replay |
+| 2026-05-20T13:00:00Z | OPEN | HYPE/USD | long | 10 | 50.00 | 48.00 | 58.00 | - | - | replay-entry | missed_scheduler_replay |
+| 2026-05-21T08:00:00Z | CLOSE | HYPE/USD | long | 10 | 58.00 | - | - | +4.00 | +100.00 | exit-4R-target | missed_scheduler_replay |
+`;
+
+  const row = adaptBull(
+    { portfolio: { ok: true, text: fxBullPort }, tradeLog: { ok: true, text: duplicatedReplayLog } },
+    { startingCapital: 10000, liveStartIso: '2026-05-04T00:00:00Z' }
+  );
+
+  assert.equal(row.trades_n, 1);
+  assert.equal(row.returns.all, 1);
+  assert.equal(row.avg_r, 4);
 });
 
 test('bull adapter handles missing trade log', () => {
@@ -362,4 +411,34 @@ test('codex adapter can label apex WFO row from exported markdown fixtures', () 
   assertStrategyRowShape(row, 'CODEX Apex WFO v1');
   assert.equal(row.status, 'live');
   assert.equal(row.trades_n, 0);
+});
+
+test('codex adapter can label markov directional row from exported markdown snapshots', () => {
+  const row = adaptCodex(
+    {
+      portfolio: { ok: true, text: loadText('../data/codex/markov_directional_portfolio.md') },
+      tradeLog: { ok: true, text: loadText('../data/codex/markov_directional_trade_log.md') },
+    },
+    { startingCapital: 10000, name: 'CODEX Markov Directional v1' }
+  );
+
+  assertStrategyRowShape(row, 'CODEX Markov Directional v1');
+  assert.equal(row.status, 'live');
+  assert.equal(row.trades_n, 0);
+  assert.equal(row.returns['90d'], 0);
+});
+
+test('codex adapter can label markov gate row from exported markdown snapshots', () => {
+  const row = adaptCodex(
+    {
+      portfolio: { ok: true, text: loadText('../data/codex/markov_gate_portfolio.md') },
+      tradeLog: { ok: true, text: loadText('../data/codex/markov_gate_trade_log.md') },
+    },
+    { startingCapital: 10000, name: 'CODEX Markov Gate v1' }
+  );
+
+  assertStrategyRowShape(row, 'CODEX Markov Gate v1');
+  assert.equal(row.status, 'live');
+  assert.equal(row.trades_n, 0);
+  assert.equal(row.returns['90d'], 0);
 });

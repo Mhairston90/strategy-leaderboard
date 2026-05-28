@@ -6,12 +6,12 @@
 ## Account
 
 - Starting equity: **$10,000.00**
-- Cash: **$10,000.00**
-- Realized PnL (all-time): **$0.00**
+- Cash: **$10,598.44**
+- Realized PnL (all-time): **$598.44**
 - Unrealized PnL: **$0.00**
 - Position values (MTM): **$0.00**
-- Current equity: **$10,000.00**
-- Equity peak: **$10,000.00**
+- Current equity: **$10,598.44**
+- Equity peak: **$10,598.44**
 - Drawdown from peak: **0.00%**
 
 ## Open positions
@@ -25,8 +25,8 @@ No open positions.
 
 | Sleeve | Equity allocated | Exposure | Realized PnL | Closed trades | Score |
 |--------|------------------|----------|--------------|---------------|-------|
-| aggro_momentum | $0.00 | $0.00 | $0.00 | 0 | $0.00 |
-| cash | $10,000.00 | $0.00 | $0.00 | 0 | $0.00 |
+| aggro_momentum | $0.00 | $0.00 | $598.44 | 10 | $598.44 |
+| cash | $10,598.44 | $0.00 | $0.00 | 0 | $0.00 |
 
 ## Active guardrail state
 
