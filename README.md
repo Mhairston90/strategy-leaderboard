@@ -73,6 +73,15 @@ The same Connors recipe ported to crypto. **Transparent commission-challenged ex
 | Crypto Mean Reversion v1 | RSI(2)<10 oversold-bounce, 8 Kraken USD pairs | paper (offline-simulated nightly) | `data/crypto_variants/` |
 | Crypto Mean Reversion Aggressive | RSI(2)<3 extreme-dip, 3% sizing (commission-drag fix hypothesis) | paper (offline-simulated nightly) | `data/crypto_variants/` |
 
+### Trend Momentum sleeve — Stocks (1H, wide-15, the MR regime-diversifier)
+
+The deliberate counterweight to the mean-reversion family: a **trend-follower** that earns when MR struggles (strong trends) and is gated out of chop by a daily ADX filter. Confirmed-trend continuation entry; rides with no partial + a wide ATR trailing stop activated at +1R (magnitude-heavy, built for the "total profit of top 3" scoring). Reuses the breakout family's trailing-stop engine. Spec: `strategies/stocks-trend-momentum-2026-05-28-spec.md`. Generator: `Claude/Trading Strategy/stocks_momentum/generate_log.py`.
+
+| Strategy | Variant axis | Status | Source |
+|---|---|---|---|
+| Stocks Trend Momentum v1 | 1% risk, 3×ATR trail | paper (offline-simulated nightly) | `data/stock_variants/` |
+| Stocks Trend Momentum Aggressive | 2.5% risk, 3.5×ATR trail (magnitude) | paper (offline-simulated nightly) | `data/stock_variants/` |
+
 Variant specs (crypto family) live in `Claude/Trading Strategy/basket-breakout-*-spec.md` in the parent project; nightly regenerator at `Claude/Trading Strategy/basket_breakout/generate_variant_logs.py`.
 
 ## Run locally

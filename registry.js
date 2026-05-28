@@ -838,4 +838,42 @@ export const STRATEGIES = [
     },
     adapter: adaptCodex,
   },
+  // ----- Trend Momentum sleeve — 2026-05-28 (Opus 4.8) -----
+  // The deliberate REGIME-DIVERSIFIER to the mean-reversion family. MR earns in
+  // chop and bleeds in trends; this earns in trends and is gated out of chop by
+  // a daily ADX filter (the discriminator the failing breakout family lacks).
+  // Entry: confirmed-trend continuation (daily EMA50>EMA200 + daily ADX>20 +
+  // 1h EMA20>EMA50 + 40-bar close-momentum high). Exit: no partial, wide 3×ATR
+  // trailing stop activated at +1R — ride the fat tail. Convex, magnitude-heavy:
+  // built to be a strong TOP-3-PROFIT leg when a sustained trend appears, and
+  // to bleed only slowly (ADX-gated) while waiting. Reuses the proven
+  // basket_breakout_stocks trailing-stop engine. live_start = 2026-05-28
+  // (honest); pre-today is backtest, excluded by the adapter.
+  // HONEST NOTE: a trend-follower is EXPECTED to look flat/quiet in the current
+  // chop regime — its payoff is conditional on a trend showing up.
+  // Spec: strategies/stocks-trend-momentum-2026-05-28-spec.md
+  {
+    name: 'Stocks Trend Momentum v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 20,
+    live_start_iso: '2026-05-28T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/stock_variants/stocks_trend_core_portfolio.md',
+      trade_log_path: 'data/stock_variants/stocks_trend_core_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'Stocks Trend Momentum Aggressive',
+    starting_capital: 10000,
+    killswitch_dd_pct: 40,
+    live_start_iso: '2026-05-28T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/stock_variants/stocks_trend_agg_portfolio.md',
+      trade_log_path: 'data/stock_variants/stocks_trend_agg_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
 ];

@@ -323,6 +323,35 @@ test('registry wires in the Crypto Mean Reversion family with an honest forward 
   }
 });
 
+test('registry includes the Trend Momentum sleeve (regime-diversifier) rows', () => {
+  const expected = [
+    [
+      'Stocks Trend Momentum v1',
+      'data/stock_variants/stocks_trend_core_portfolio.md',
+      'data/stock_variants/stocks_trend_core_trade_log.md',
+      20,
+    ],
+    [
+      'Stocks Trend Momentum Aggressive',
+      'data/stock_variants/stocks_trend_agg_portfolio.md',
+      'data/stock_variants/stocks_trend_agg_trade_log.md',
+      40,
+    ],
+  ];
+
+  for (const [name, portfolioPath, tradeLogPath, dd] of expected) {
+    const row = STRATEGIES.find(strategy => strategy.name === name);
+
+    assert.ok(row, `${name} missing from registry`);
+    assert.equal(row.source.type, 'codex-local');
+    assert.equal(row.source.portfolio_path, portfolioPath);
+    assert.equal(row.source.trade_log_path, tradeLogPath);
+    assert.equal(row.starting_capital, 10000);
+    assert.equal(row.killswitch_dd_pct, dd);
+    assert.equal(row.live_start_iso, '2026-05-28T00:00:00Z');
+  }
+});
+
 test('registry includes CODEX Markov regime strategy rows', () => {
   const expected = [
     [
