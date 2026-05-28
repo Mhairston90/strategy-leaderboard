@@ -4,23 +4,41 @@
 //
 // Run with: node scripts/smoke.js
 
-import { STRATEGIES } from '../registry.js';
+import { STRATEGIES, effectiveCutoff } from '../registry.js';
 import { fetchSheetTab, fetchBullFile, fetchLocalText } from '../lib/fetch.js';
 
 async function fetchOne(strategy) {
   if (strategy.source.type === 'sheets') {
     const resp = await fetchSheetTab(strategy.source.tab);
-    return strategy.adapter(resp, { startingCapital: strategy.starting_capital });
+    return strategy.adapter(resp, {
+      startingCapital: strategy.starting_capital,
+      liveStartIso: effectiveCutoff(strategy.live_start_iso),
+    });
   }
   if (strategy.source.type === 'bull-github') {
-    const [portfolio, tradeLog] = await Promise.all([
+    const [portfolio, tradeLog, overlayTradeLog] = await Promise.all([
       fetchBullFile(strategy.source.portfolio_path),
       fetchBullFile(strategy.source.trade_log_path),
+      strategy.source.overlay_trade_log_path
+        ? fetchLocalText(strategy.source.overlay_trade_log_path)
+        : Promise.resolve(null),
     ]);
-    return strategy.adapter(
-      { portfolio, tradeLog },
-      { startingCapital: strategy.starting_capital, name: strategy.name }
+    const effectiveTradeLog = overlayTradeLog?.ok
+      ? { ...tradeLog, text: `${tradeLog.text}\n${overlayTradeLog.text}` }
+      : tradeLog;
+    const row = strategy.adapter(
+      { portfolio, tradeLog: effectiveTradeLog },
+      {
+        startingCapital: strategy.starting_capital,
+        name: strategy.name,
+        status: strategy.status,
+        liveStartIso: effectiveCutoff(strategy.live_start_iso),
+      }
     );
+    if (overlayTradeLog && !overlayTradeLog.ok) {
+      row.errors.push(`overlayTradeLog: ${overlayTradeLog.error || 'missing'}`);
+    }
+    return row;
   }
   if (strategy.source.type === 'codex-local') {
     const [portfolio, tradeLog] = await Promise.all([
@@ -29,7 +47,12 @@ async function fetchOne(strategy) {
     ]);
     return strategy.adapter(
       { portfolio, tradeLog },
-      { startingCapital: strategy.starting_capital, name: strategy.name }
+      {
+        startingCapital: strategy.starting_capital,
+        name: strategy.name,
+        status: strategy.status,
+        liveStartIso: effectiveCutoff(strategy.live_start_iso),
+      }
     );
   }
   throw new Error('Unknown source type: ' + strategy.source.type);

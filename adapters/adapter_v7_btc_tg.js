@@ -13,9 +13,10 @@ export default function adaptV7BtcTG(rawOrResp, opts) {
 
   if (!resp.ok) {
     // Research-only tabs may legitimately not exist — return research row with no data
+    const expectedMissingTab = /tab not found/i.test(resp.error || '');
     return {
       ...makeErrorRow('HY v7-Best BTC TG', null, 'research'),
-      errors: resp.error ? [`source unavailable: ${resp.error}`] : [],
+      errors: resp.error && !expectedMissingTab ? [`source unavailable: ${resp.error}`] : [],
     };
   }
 

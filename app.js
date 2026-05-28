@@ -16,12 +16,13 @@ import { makeErrorRow } from './lib/strategy_row.js';
 import { healthBucketForSource, healthSeverityForRow, mergeHealth } from './lib/source_health.js';
 
 const REFRESH_MS = 5 * 60 * 1000;
-const CACHE_KEY = 'leaderboard-cache-v12';
+const CACHE_KEY = 'leaderboard-cache-v13';
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 const HERMES_QUEUES = [
   { path: 'data/codex/hermes_experiment_queue.json', owner: 'codex' },
   { path: 'data/claude/hermes_experiment_queue.json', owner: 'claude' },
 ];
+const HERMES_HYPOTHESIS_LEDGER_PATH = 'data/codex/hypothesis_ledger.md';
 const TRADE_FORENSICS_PATH = 'data/codex/trade_forensics.md';
 const GOAL_STATUS_PATH = 'data/codex/goal_status.md';
 const SHADOW_REPORT_PATH = 'data/codex/regime_session_shadow_report.md';
@@ -52,19 +53,29 @@ async function fetchOne(strategy) {
     };
   }
   if (strategy.source.type === 'bull-github') {
-    const [portfolio, tradeLog] = await Promise.all([
+    const [portfolio, tradeLog, overlayTradeLog] = await Promise.all([
       fetchBullFile(strategy.source.portfolio_path),
       fetchBullFile(strategy.source.trade_log_path),
+      strategy.source.overlay_trade_log_path
+        ? fetchLocalText(strategy.source.overlay_trade_log_path)
+        : Promise.resolve(null),
     ]);
+    const effectiveTradeLog = overlayTradeLog?.ok
+      ? { ...tradeLog, text: `${tradeLog.text}\n${overlayTradeLog.text}` }
+      : tradeLog;
     const row = strategy.adapter(
-      { portfolio, tradeLog },
+      { portfolio, tradeLog: effectiveTradeLog },
       {
         startingCapital: strategy.starting_capital,
         name: strategy.name,
+        status: strategy.status,
         liveStartIso: effectiveCutoff(strategy.live_start_iso),
       }
     );
-    return { strategy, portfolio, tradeLog, row };
+    if (overlayTradeLog && !overlayTradeLog.ok) {
+      row.errors.push(`overlayTradeLog: ${overlayTradeLog.error || 'missing'}`);
+    }
+    return { strategy, portfolio, tradeLog: effectiveTradeLog, overlayTradeLog, row };
   }
   if (strategy.source.type === 'codex-local') {
     const [portfolio, tradeLog, status] = await Promise.all([
@@ -77,6 +88,7 @@ async function fetchOne(strategy) {
       {
         startingCapital: strategy.starting_capital,
         name: strategy.name,
+        status: strategy.status,
         liveStartIso: effectiveCutoff(strategy.live_start_iso),
       }
     );
@@ -138,9 +150,13 @@ async function fetchHermes() {
   const target = document.getElementById('hermes-cockpit');
   if (!target) return;
   // Fetch both codex and claude supervisor queues in parallel; tolerate either missing.
-  const results = await Promise.allSettled(
-    HERMES_QUEUES.map(({ path }) => fetchLocalText(path))
-  );
+  const [results, ledgerResp] = await Promise.all([
+    Promise.allSettled(HERMES_QUEUES.map(({ path }) => fetchLocalText(path))),
+    fetchLocalText(HERMES_HYPOTHESIS_LEDGER_PATH).catch(error => ({
+      ok: false,
+      error: String(error || 'ledger fetch failed'),
+    })),
+  ]);
   const inputs = results.map((res, i) => {
     const { owner } = HERMES_QUEUES[i];
     const resp = res.status === 'fulfilled'
@@ -154,7 +170,9 @@ async function fetchHermes() {
   });
   const merged = mergeHermesQueues(inputs);
   hermesState = merged;
-  target.innerHTML = renderHermesCockpitHtml(merged);
+  target.innerHTML = renderHermesCockpitHtml(merged, {
+    ledgerText: ledgerResp.ok ? ledgerResp.text : '',
+  });
   renderCommandCenter();
   renderDrawer();
 }

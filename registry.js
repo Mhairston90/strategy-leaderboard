@@ -33,6 +33,7 @@ export function effectiveCutoff(liveStartIso) {
  * source.type: 'sheets' | 'bull-github' | 'codex-local'
  *   - 'sheets':       single-tab fetch, source.tab = tab name
  *   - 'bull-github':  dual-fetch portfolio.md + trade_log.md
+ *                    optional source.overlay_trade_log_path appends a local audit log
  *   - 'codex-local':  dual-fetch local markdown snapshots
  *
  * starting_capital: paper-account size used for % return normalization.
@@ -137,6 +138,109 @@ export const STRATEGIES = [
     adapter: adaptCodex,
   },
   {
+    name: 'CODEX Convex Crypto Scout v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 35,
+    live_start_iso: '2026-05-25T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/convex_crypto_scout_portfolio.md',
+      trade_log_path: 'data/codex/convex_crypto_scout_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'CODEX Markov Directional v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 30,
+    live_start_iso: '2026-05-26T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/markov_directional_portfolio.md',
+      trade_log_path: 'data/codex/markov_directional_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'CODEX Markov Gate v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 20,
+    live_start_iso: '2026-05-26T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/markov_gate_portfolio.md',
+      trade_log_path: 'data/codex/markov_gate_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'CODEX Aggro Quality v3',
+    starting_capital: 10000,
+    killswitch_dd_pct: 35,
+    live_start_iso: '2026-05-25T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/aggro_quality_portfolio.md',
+      trade_log_path: 'data/codex/aggro_quality_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'CODEX Aggro Plus v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 50,
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/aggro_plus_portfolio.md',
+      trade_log_path: 'data/codex/aggro_plus_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'CODEX Aggro Short Plus v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 50,
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/aggro_short_plus_portfolio.md',
+      trade_log_path: 'data/codex/aggro_short_plus_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'CODEX Aggro Plus L/S v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 60,
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/aggro_plus_ls_portfolio.md',
+      trade_log_path: 'data/codex/aggro_plus_ls_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'CODEX Aggro Short Plus Quality v2',
+    starting_capital: 10000,
+    killswitch_dd_pct: 50,
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/aggro_short_plus_quality_portfolio.md',
+      trade_log_path: 'data/codex/aggro_short_plus_quality_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'CODEX Aggro Plus L/S Quality v2',
+    starting_capital: 10000,
+    killswitch_dd_pct: 60,
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/aggro_plus_ls_quality_portfolio.md',
+      trade_log_path: 'data/codex/aggro_plus_ls_quality_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
     name: 'CODEX Pulse v0',
     starting_capital: 10000,
     killswitch_dd_pct: 35,
@@ -159,6 +263,30 @@ export const STRATEGIES = [
     adapter: adaptCodex,
   },
   {
+    name: 'CODEX Equities Opening Range v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 20,
+    live_start_iso: '2026-05-28T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/equities_orb_portfolio.md',
+      trade_log_path: 'data/codex/equities_orb_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'CODEX Equities RS Pullback v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 20,
+    live_start_iso: '2026-05-28T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/equities_rs_portfolio.md',
+      trade_log_path: 'data/codex/equities_rs_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
     name: 'CODEX Equities Breakout Runner v1',
     starting_capital: 10000,
     killswitch_dd_pct: 25,
@@ -166,6 +294,18 @@ export const STRATEGIES = [
       type: 'codex-local',
       portfolio_path: 'data/codex/equities_breakout_portfolio.md',
       trade_log_path: 'data/codex/equities_breakout_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'CODEX Equities VWAP Reversal v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 20,
+    live_start_iso: '2026-05-28T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/equities_vwap_portfolio.md',
+      trade_log_path: 'data/codex/equities_vwap_trade_log.md',
     },
     adapter: adaptCodex,
   },
@@ -181,6 +321,58 @@ export const STRATEGIES = [
     adapter: adaptCodex,
   },
   {
+    name: 'CODEX Equities Mean Reversion v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 15,
+    live_start_iso: '2026-05-17T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/equities_mean_reversion_portfolio.md',
+      trade_log_path: 'data/codex/equities_mean_reversion_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  // CODEX Equities Connors MR v1 — Codex-owned diversified RSI(2)
+  // oversold-bounce variant inspired by Claude's MR v2, but with explicit
+  // cash/notional caps and a fresh forward start.
+  // Spec: strategies/codex-equities-connors-mr-v1-spec.md
+  {
+    name: 'CODEX Equities Connors MR v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 15,
+    live_start_iso: '2026-05-26T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/equities_connors_mr_portfolio.md',
+      trade_log_path: 'data/codex/equities_connors_mr_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'CODEX Equities MR Quality v2',
+    starting_capital: 10000,
+    killswitch_dd_pct: 15,
+    live_start_iso: '2026-05-25T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/equities_mean_reversion_quality_portfolio.md',
+      trade_log_path: 'data/codex/equities_mean_reversion_quality_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'CODEX Equities Near-Breakout Pullback v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 20,
+    live_start_iso: '2026-05-25T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/equities_near_breakout_pullback_portfolio.md',
+      trade_log_path: 'data/codex/equities_near_breakout_pullback_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
     name: 'CODEX Regime v0',
     starting_capital: 10000,
     killswitch_dd_pct: 25,
@@ -188,6 +380,39 @@ export const STRATEGIES = [
       type: 'codex-local',
       portfolio_path: 'data/codex/regime_portfolio.md',
       trade_log_path: 'data/codex/regime_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'CODEX Regime Plus v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 25,
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/regime_plus_portfolio.md',
+      trade_log_path: 'data/codex/regime_plus_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'CODEX Regime Short Plus v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 25,
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/regime_short_plus_portfolio.md',
+      trade_log_path: 'data/codex/regime_short_plus_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'CODEX Regime Plus L/S v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 30,
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/regime_plus_ls_portfolio.md',
+      trade_log_path: 'data/codex/regime_plus_ls_trade_log.md',
     },
     adapter: adaptCodex,
   },
@@ -385,15 +610,21 @@ export const STRATEGIES = [
     },
     adapter: adaptCodex,
   },
-  // Stocks Mean Reversion Deep — AGGRESSIVE convex variant.
+  // Stocks Mean Reversion Deep — extreme-oversold (RSI(2)<3) convex variant.
   // CREATED 2026-05-17. live_start_iso = 2026-05-17 (HONEST). The
   // +$1,278.89 / 86% "contest-window" figure was 100% BACKTEST — this
   // config did not exist before today, never traded a bar forward, and
   // contributes ~$0 to the contest until it earns forward-paper results.
   // It is a HYPOTHESIS entering forward paper now, not realized gains.
   // Spec: stocks_mean_reversion/config.py "deep".
+  //
+  // NAME 2026-05-27: renamed from "(Aggressive)" to "(RSI<3)" to match the
+  // config's display_name. The (Aggressive) suffix described the sizing
+  // (4% risk/trade, 8x base) but the trade RATE is dominated by the
+  // RSI(2)<3 entry filter, which is extremely rare. RSI is what makes
+  // this variant signal-quiet vs its siblings, not sizing.
   {
-    name: 'Stocks Mean Reversion Deep (Aggressive)',
+    name: 'Stocks Mean Reversion Deep (RSI<3)',
     starting_capital: 10000,
     killswitch_dd_pct: 40,
     live_start_iso: '2026-05-17T00:00:00Z',
@@ -401,6 +632,77 @@ export const STRATEGIES = [
       type: 'codex-local',
       portfolio_path: 'data/stock_variants/stocks_mean_reversion_deep_portfolio.md',
       trade_log_path: 'data/stock_variants/stocks_mean_reversion_deep_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  // Stocks Mean Reversion Aggressive — concentrated high-risk sibling of
+  // Deep. Same proven RSI(2)<10 entry trigger as v1/v2/v3 but with 3%
+  // risk/trade (6x base), max_concurrent=2, RSI exit 85 (let winners run),
+  // 2.5×ATR stops, 10% daily loss circuit. Designed for top-5-winners
+  // contest scoring where right-tail magnitude matters more than win rate.
+  // CREATED 2026-05-17 alongside Deep; live_start_iso = creation date
+  // (HONEST): pre-05-17 P&L would be backtest, not forward paper.
+  // Spec: stocks_mean_reversion/config.py "agg".
+  {
+    name: 'Stocks Mean Reversion Aggressive',
+    starting_capital: 10000,
+    killswitch_dd_pct: 40,
+    live_start_iso: '2026-05-17T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/stock_variants/stocks_mean_reversion_agg_portfolio.md',
+      trade_log_path: 'data/stock_variants/stocks_mean_reversion_agg_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  // ----- 2026-05-27 three-variant expansion -----
+  // Spec: strategies/stocks-mean-reversion-2026-05-27-three-variants-design.md
+  // live_start_iso = 2026-05-27 (HONEST creation date). Pre-today P&L is
+  // backtest only and excluded from contest equity by the adapter; these
+  // contribute ~$0 to the leaderboard contest until they accrue forward
+  // trades. They are HYPOTHESES entering forward paper today.
+  //
+  // v2_agg, v2_rsi15_agg: User-requested. Mirror the proven `agg` template
+  // (3% risk, max_concurrent=2, RSI exit 85, 2.5×ATR stop, 10% daily
+  // circuit) onto the diversified-8 universe. Goal: scale typical winners
+  // from ~$50 (0.5% risk) to ~$300 (3% risk). Direct A/B vs wide-15 `agg`.
+  //
+  // v3_rsi15: Research variant filling the open cell in universe×RSI grid.
+  // wide-15 universe + RSI<15 entry, standard sizing. Tests whether breadth
+  // and relaxed-entry advantages stack or cancel.
+  {
+    name: 'Stocks Mean Reversion v2 Aggressive',
+    starting_capital: 10000,
+    killswitch_dd_pct: 40,
+    live_start_iso: '2026-05-27T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/stock_variants/stocks_mean_reversion_v2_agg_portfolio.md',
+      trade_log_path: 'data/stock_variants/stocks_mean_reversion_v2_agg_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'Stocks Mean Reversion v2 (RSI<15) Aggressive',
+    starting_capital: 10000,
+    killswitch_dd_pct: 40,
+    live_start_iso: '2026-05-27T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/stock_variants/stocks_mean_reversion_v2_rsi15_agg_portfolio.md',
+      trade_log_path: 'data/stock_variants/stocks_mean_reversion_v2_rsi15_agg_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'Stocks Mean Reversion v3 (Wide RSI<15)',
+    starting_capital: 10000,
+    killswitch_dd_pct: 18,
+    live_start_iso: '2026-05-27T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/stock_variants/stocks_mean_reversion_v3_rsi15_portfolio.md',
+      trade_log_path: 'data/stock_variants/stocks_mean_reversion_v3_rsi15_trade_log.md',
     },
     adapter: adaptCodex,
   },
@@ -417,6 +719,160 @@ export const STRATEGIES = [
       type: 'codex-local',
       portfolio_path: 'data/stock_variants/stocks_diversified_v1_portfolio.md',
       trade_log_path: 'data/stock_variants/stocks_diversified_v1_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  // ============================================================
+  // Opus 4.8 expansion — 2026-05-28
+  // Five diversified-8 Stocks Mean Reversion grid-fill variants + the
+  // previously-built-but-unwired Crypto Mean Reversion family. All built on
+  // the leaderboard's strongest validated systematic edge (Connors RSI(2)
+  // oversold-bounce; Stocks MR v2 carries PF 22 / Sharpe 16 / 71% win on the
+  // contest window). live_start_iso = 2026-05-28 (HONEST creation date): every
+  // pre-today trade in their logs is BACKTEST and is excluded from contest
+  // equity by the adapter, so each contributes ~$0 until it accrues forward
+  // paper trades. Generators auto-regenerate nightly via run-stock-nightly.bat.
+  // Specs: strategies/stocks-mean-reversion-2026-05-28-opus48-expansion-design.md
+  //        strategies/crypto-mean-reversion-v1-spec.md
+  //
+  // v2_fast — Connors fast exit (RSI>50): closes winners early, higher win
+  // rate / more turnover. Occupies the exit-speed axis no variant held.
+  {
+    name: 'Stocks Mean Reversion v2 Fast-Exit',
+    starting_capital: 10000,
+    killswitch_dd_pct: 18,
+    live_start_iso: '2026-05-28T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/stock_variants/stocks_mean_reversion_v2_fast_portfolio.md',
+      trade_log_path: 'data/stock_variants/stocks_mean_reversion_v2_fast_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  // v2_heat8 — same proven 0.5%-risk v2 with heat cap 8 (not 4): captures more
+  // simultaneous oversold dips in broad selloffs (MR's best regime).
+  {
+    name: 'Stocks Mean Reversion v2 Broad-Heat',
+    starting_capital: 10000,
+    killswitch_dd_pct: 18,
+    live_start_iso: '2026-05-28T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/stock_variants/stocks_mean_reversion_v2_heat8_portfolio.md',
+      trade_log_path: 'data/stock_variants/stocks_mean_reversion_v2_heat8_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  // v2_bal — the missing MIDDLE risk tier (1.5%, 2.25×ATR stop, 6% circuit)
+  // between v2's 0.5% and agg's 3%. Best full-backfill PnL of the new set.
+  {
+    name: 'Stocks Mean Reversion v2 Balanced (1.5%)',
+    starting_capital: 10000,
+    killswitch_dd_pct: 25,
+    live_start_iso: '2026-05-28T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/stock_variants/stocks_mean_reversion_v2_bal_portfolio.md',
+      trade_log_path: 'data/stock_variants/stocks_mean_reversion_v2_bal_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  // v2_rsi5_agg — extreme entry (RSI<5) × aggressive sizing (3%) on the best
+  // universe. The open RSI5×aggressive cell; most convex single-cell bet.
+  {
+    name: 'Stocks Mean Reversion v2 (RSI<5) Aggressive',
+    starting_capital: 10000,
+    killswitch_dd_pct: 40,
+    live_start_iso: '2026-05-28T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/stock_variants/stocks_mean_reversion_v2_rsi5_agg_portfolio.md',
+      trade_log_path: 'data/stock_variants/stocks_mean_reversion_v2_rsi5_agg_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  // deep_div — A/B partner of `deep`: the identical RSI<3 / 4%-risk extreme
+  // convex recipe, run on diversified-8 instead of wide-15.
+  {
+    name: 'Stocks Mean Reversion Deep Diversified (RSI<3)',
+    starting_capital: 10000,
+    killswitch_dd_pct: 40,
+    live_start_iso: '2026-05-28T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/stock_variants/stocks_mean_reversion_deep_div_portfolio.md',
+      trade_log_path: 'data/stock_variants/stocks_mean_reversion_deep_div_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  // Crypto Mean Reversion — the proven stocks Connors recipe ported to Kraken
+  // USD spot (4H regime gate, 24/7). Built 2026-05-17, never wired into the
+  // contest until now. HONEST NOTE: full backfill LOST to Kraken commission
+  // drag (0.52% round-trip × many small trades); wired in as a transparent
+  // forward experiment on whether a regime-gated oversold bounce clears spot
+  // fees in a fresh forward regime. New asset class — uncorrelated with the
+  // equity rows. Spec documents the backfill loss (no cherry-picking).
+  {
+    name: 'Crypto Mean Reversion v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 18,
+    live_start_iso: '2026-05-28T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/crypto_variants/crypto_mean_reversion_v1_portfolio.md',
+      trade_log_path: 'data/crypto_variants/crypto_mean_reversion_v1_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  // Crypto MR Aggressive — the commission-drag fix hypothesis: only RSI<3
+  // extreme dips fire (far fewer trades), sized 6× larger, wider 3×ATR stop.
+  {
+    name: 'Crypto Mean Reversion Aggressive',
+    starting_capital: 10000,
+    killswitch_dd_pct: 40,
+    live_start_iso: '2026-05-28T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/crypto_variants/crypto_mean_reversion_agg_portfolio.md',
+      trade_log_path: 'data/crypto_variants/crypto_mean_reversion_agg_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  // ----- Trend Momentum sleeve — 2026-05-28 (Opus 4.8) -----
+  // The deliberate REGIME-DIVERSIFIER to the mean-reversion family. MR earns in
+  // chop and bleeds in trends; this earns in trends and is gated out of chop by
+  // a daily ADX filter (the discriminator the failing breakout family lacks).
+  // Entry: confirmed-trend continuation (daily EMA50>EMA200 + daily ADX>20 +
+  // 1h EMA20>EMA50 + 40-bar close-momentum high). Exit: no partial, wide 3×ATR
+  // trailing stop activated at +1R — ride the fat tail. Convex, magnitude-heavy:
+  // built to be a strong TOP-3-PROFIT leg when a sustained trend appears, and
+  // to bleed only slowly (ADX-gated) while waiting. Reuses the proven
+  // basket_breakout_stocks trailing-stop engine. live_start = 2026-05-28
+  // (honest); pre-today is backtest, excluded by the adapter.
+  // HONEST NOTE: a trend-follower is EXPECTED to look flat/quiet in the current
+  // chop regime — its payoff is conditional on a trend showing up.
+  // Spec: strategies/stocks-trend-momentum-2026-05-28-spec.md
+  {
+    name: 'Stocks Trend Momentum v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 20,
+    live_start_iso: '2026-05-28T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/stock_variants/stocks_trend_core_portfolio.md',
+      trade_log_path: 'data/stock_variants/stocks_trend_core_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'Stocks Trend Momentum Aggressive',
+    starting_capital: 10000,
+    killswitch_dd_pct: 40,
+    live_start_iso: '2026-05-28T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/stock_variants/stocks_trend_agg_portfolio.md',
+      trade_log_path: 'data/stock_variants/stocks_trend_agg_trade_log.md',
     },
     adapter: adaptCodex,
   },

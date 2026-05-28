@@ -4,6 +4,7 @@
 
 # Local preview servers
 .server-*.log
+local/
 
 # Node
 node_modules/
