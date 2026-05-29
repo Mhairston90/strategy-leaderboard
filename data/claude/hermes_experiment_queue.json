@@ -1,6 +1,6 @@
 {
   "owner": "claude",
-  "generated_at": "2026-05-28T15:00:02.021Z",
+  "generated_at": "2026-05-29T15:00:02.175Z",
   "guardrails": [
     "Review-only: no live routing, position-sizing, or spec files were modified.",
     "Queue items are research and operational recommendations only.",
@@ -24,7 +24,7 @@
       "type": "experiment",
       "title": "Address regime collapse in Stocks Basket Breakout v1",
       "source": "data/codex/basket_oos_audit.md",
-      "requested_action": "OOS PF 0.23 vs IS 2.01; OOS PnL $-258.99. Flags: PF collapse; OOS turned negative; win-rate drop >15pp. Decide within the week: review regime gate, fork v2.1 with halved risk, or archive per spec recovery rules."
+      "requested_action": "OOS PF 0.37 vs IS 2.01; OOS PnL $-210.46. Flags: PF collapse; OOS turned negative; win-rate drop >15pp. Decide within the week: review regime gate, fork v2.1 with halved risk, or archive per spec recovery rules."
     },
     {
       "owner": "claude",
@@ -34,7 +34,7 @@
       "type": "experiment",
       "title": "Defend Stocks Mean Reversion v2 — leader but OOS bleeding",
       "source": "data/codex/basket_oos_audit.md",
-      "requested_action": "Cumulative +7.11% but OOS PnL +$233.35, OOS PF 1.83. Currently on the leaderboard top but losing the most recent window. Options: halve size on new entries, tighten exit, pause pending diagnosis."
+      "requested_action": "Cumulative +7.09% but OOS PnL +$233.35, OOS PF 1.83. Currently on the leaderboard top but losing the most recent window. Options: halve size on new entries, tighten exit, pause pending diagnosis."
     },
     {
       "owner": "claude",

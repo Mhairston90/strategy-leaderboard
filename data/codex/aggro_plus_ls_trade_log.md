@@ -44,3 +44,6 @@
 | 2026-05-26T12:00:00Z | CLOSE | ADA/USD | long | 9504.841959 | 0.2442 | - | - | -0.60 | -45.27 | time-stop | aggro_plus_ls_long_momentum |
 | 2026-05-26T12:00:00Z | CLOSE | LINK/USD | long | 243.931055 | 9.5760 | - | - | -0.41 | -30.67 | time-stop | aggro_plus_ls_long_momentum |
 | 2026-05-28T16:00:00Z | OPEN | XRP/USD | long | 1733.119543 | 1.3316 | 1.2890 | 1.4381 | - | - | aggro_plus_ls_long_fast_momentum | aggro_plus_ls_long_momentum |
+| 2026-05-29T12:00:00Z | CLOSE | XRP/USD | long | 1733.119543 | 1.3186 | - | - | -0.47 | -34.52 | time-stop | aggro_plus_ls_long_momentum |
+| 2026-05-29T12:00:00Z | OPEN | ETH/USD | long | 1.136063 | 2026.4075 | 1961.5625 | 2188.5201 | - | - | aggro_plus_ls_long_near_breakout | aggro_plus_ls_long_momentum |
+| 2026-05-29T12:00:00Z | OPEN | LTC/USD | long | 44.232196 | 52.0464 | 50.3809 | 56.2101 | - | - | aggro_plus_ls_long_near_breakout | aggro_plus_ls_long_momentum |
