@@ -247,6 +247,47 @@ test('registry includes CODEX counter-Bull canary rows', () => {
   }
 });
 
+test('registry includes CODEX sprint rows with honest forward starts', () => {
+  const expected = [
+    [
+      'CODEX Crypto Sprint Momentum',
+      'data/codex/crypto_sprint_momentum_portfolio.md',
+      'data/codex/crypto_sprint_momentum_trade_log.md',
+      35,
+    ],
+    [
+      'CODEX Crypto Sprint Reversal',
+      'data/codex/crypto_sprint_reversal_portfolio.md',
+      'data/codex/crypto_sprint_reversal_trade_log.md',
+      30,
+    ],
+    [
+      'CODEX Equities MR Sprint',
+      'data/codex/equities_mr_sprint_portfolio.md',
+      'data/codex/equities_mr_sprint_trade_log.md',
+      25,
+    ],
+    [
+      'CODEX Equities Breakout Sprint',
+      'data/codex/equities_breakout_sprint_portfolio.md',
+      'data/codex/equities_breakout_sprint_trade_log.md',
+      30,
+    ],
+  ];
+
+  for (const [name, portfolioPath, tradeLogPath, dd] of expected) {
+    const row = STRATEGIES.find(strategy => strategy.name === name);
+
+    assert.ok(row, `${name} missing from registry`);
+    assert.equal(row.source.type, 'codex-local');
+    assert.equal(row.source.portfolio_path, portfolioPath);
+    assert.equal(row.source.trade_log_path, tradeLogPath);
+    assert.equal(row.starting_capital, 10000);
+    assert.equal(row.killswitch_dd_pct, dd);
+    assert.equal(row.live_start_iso, '2026-05-29T00:00:00Z');
+  }
+});
+
 test('registry includes the Opus 4.8 diversified-8 Mean Reversion expansion rows', () => {
   const expected = [
     [

@@ -1,18 +1,18 @@
-# CODEX Regime Short Plus v1 Portfolio State
+# CODEX Equities MR Sprint Portfolio State
 
-> Rebuilt from `memory/regime_short_plus_trade_log.md`.
+> Rebuilt from `memory/equities_mr_sprint_trade_log.md`.
 > Last rebuild: automated.
 
 ## Account
 
 - Starting equity: **$10,000.00**
-- Cash: **$9,984.28**
-- Realized PnL (all-time): **$-15.72**
+- Cash: **$10,000.00**
+- Realized PnL (all-time): **$0.00**
 - Unrealized PnL: **$0.00**
 - Position values (MTM): **$0.00**
-- Current equity: **$9,984.28**
+- Current equity: **$10,000.00**
 - Equity peak: **$10,000.00**
-- Drawdown from peak: **0.16%**
+- Drawdown from peak: **0.00%**
 
 ## Open positions
 
@@ -25,14 +25,13 @@ No open positions.
 
 | Sleeve | Equity allocated | Exposure | Realized PnL | Closed trades | Score |
 |--------|------------------|----------|--------------|---------------|-------|
-| regime_short_plus_trend | $0.00 | $0.00 | $0.00 | 0 | $0.00 |
-| regime_short_plus_failed_rally | $0.00 | $0.00 | $-15.72 | 1 | $-15.72 |
-| cash | $9,984.28 | $0.00 | $0.00 | 0 | $0.00 |
+| equities_mr_sprint | $0.00 | $0.00 | $0.00 | 0 | $0.00 |
+| cash | $10,000.00 | $0.00 | $0.00 | 0 | $0.00 |
 
 ## Active guardrail state
 
-- Gross exposure: **0.00%** (cap 75%)
-- Largest asset exposure: **0.00%** (cap 25%)
-- Largest sleeve exposure: **0.00%** (cap 75%)
+- Gross exposure: **0.00%** (cap 100%)
+- Largest asset exposure: **0.00%** (cap 30%)
+- Largest sleeve exposure: **0.00%** (cap 100%)
 - Daily hard stop: **clear**
 - Validation: **not yet run**

@@ -2,11 +2,11 @@
 
 > Local paper-trade risk scan for stale exits, near stops, cap drift, and stale snapshots.
 
-- Generated UTC: 2026-05-29T15:54:19Z
+- Generated UTC: 2026-05-29T16:58:57Z
 - Status: warn
 - Errors: 0
 - Warnings: 2
-- Open positions scanned: 16
+- Open positions scanned: 15
 
 | Severity | Strategy | Pair | Finding |
 |----------|----------|------|---------|

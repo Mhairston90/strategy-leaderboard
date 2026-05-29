@@ -1,6 +1,6 @@
 # CODEX Goal Status
 
-> Generated: 2026-05-29T15:47:10Z
+> Generated: 2026-05-29T16:58:57Z
 > Paper-only. Built from local markdown trade logs and portfolios.
 
 ## Mission
@@ -21,11 +21,11 @@ Improve each active CODEX paper strategy until it has a meaningful sample with c
 | CODEX v0 | collecting | 5 | 3.4 | 0.22 | -11.96 | 5.68% | 8.00% | needs 25 more closed trades; needs 2.6 more observed weeks |
 | CODEX Aggro v0 | collecting | 10 | 3.0 | 3.95 | 6.55 | 0.00% | 10.00% | needs 20 more closed trades; needs 3.0 more observed weeks |
 | CODEX Aggro Quality v3 | collecting | 0 | 0.0 | n/a | n/a | 0.00% | 10.00% | needs 30 more closed trades; needs 6.0 more observed weeks |
-| CODEX Aggro Plus v1 | collecting | 5 | 0.7 | 0.00 | -19.76 | 1.91% | 15.00% | needs 25 more closed trades; needs 5.3 more observed weeks |
+| CODEX Aggro Plus v1 | collecting | 6 | 0.9 | 0.00 | -19.65 | 2.28% | 15.00% | needs 24 more closed trades; needs 5.1 more observed weeks |
 | CODEX Aggro Short Plus v1 | collecting | 6 | 0.4 | 0.00 | n/a | 4.02% | 15.00% | needs 24 more closed trades; needs 5.6 more observed weeks |
-| CODEX Aggro Plus L/S v1 | collecting | 17 | 1.0 | 0.02 | -20.10 | 7.71% | 20.00% | needs 13 more closed trades; needs 5.0 more observed weeks |
+| CODEX Aggro Plus L/S v1 | collecting | 18 | 1.1 | 0.02 | -16.85 | 8.07% | 20.00% | needs 12 more closed trades; needs 4.9 more observed weeks |
 | CODEX Aggro Short Plus Quality v2 | collecting | 0 | 0.0 | n/a | n/a | 0.00% | 15.00% | needs 30 more closed trades; needs 6.0 more observed weeks |
-| CODEX Aggro Plus L/S Quality v2 | collecting | 4 | 0.6 | 0.00 | n/a | 1.17% | 20.00% | needs 26 more closed trades; needs 5.4 more observed weeks |
+| CODEX Aggro Plus L/S Quality v2 | collecting | 6 | 0.7 | 0.00 | -32.52 | 1.61% | 20.00% | needs 24 more closed trades; needs 5.3 more observed weeks |
 | CODEX Convex Crypto Scout v1 | collecting | 0 | 0.0 | n/a | n/a | 0.00% | 8.00% | needs 30 more closed trades; needs 6.0 more observed weeks |
 | CODEX Markov Directional v1 | collecting | 0 | 0.0 | n/a | n/a | 0.00% | 12.00% | needs 30 more closed trades; needs 6.0 more observed weeks |
 | CODEX Markov Gate v1 | collecting | 0 | 0.0 | n/a | n/a | 0.00% | 10.00% | needs 30 more closed trades; needs 6.0 more observed weeks |

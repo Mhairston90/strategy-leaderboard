@@ -13,10 +13,14 @@
 | live-paper | CODEX Apex WFO v1 | 2026-05-28T18:15:16Z | skipped | cache | cycle already recorded |
 | live-paper | CODEX Apex v0 | 2026-05-28T18:15:16Z | skipped | cache | cycle already recorded |
 | live-paper | CODEX Convex Crypto Scout v1 | 2026-05-28T18:15:14Z | skipped | cache | cycle already recorded |
+| live-paper | CODEX Crypto Sprint Momentum | 2026-05-29T16:57:26Z | ok | live | opened=4 closed=0 |
+| live-paper | CODEX Crypto Sprint Reversal | 2026-05-29T16:57:33Z | ok | live | opened=0 closed=0 |
 | live-paper | CODEX Equities Breakout Runner v1 | 2026-05-28T18:13:49Z | ok | live | opened=2 closed=0 |
+| live-paper | CODEX Equities Breakout Sprint | 2026-05-29T16:57:44Z | ok | live | opened=0 closed=0 |
 | live-paper | CODEX Equities Connors MR v1 | 2026-05-28T18:13:56Z | ok | live | opened=1 closed=0 |
 | live-paper | CODEX Equities Gap Fade v0 | 2026-05-28T18:13:42Z | ok | live | opened=0 closed=0 |
 | live-paper | CODEX Equities MR Quality v2 | 2026-05-28T18:14:00Z | ok | live | opened=0 closed=0 |
+| live-paper | CODEX Equities MR Sprint | 2026-05-29T16:57:40Z | ok | live | opened=0 closed=0 |
 | live-paper | CODEX Equities Mean Reversion v1 | 2026-05-28T18:13:52Z | ok | live | opened=0 closed=0 |
 | live-paper | CODEX Equities Near-Breakout Pullback v1 | 2026-05-28T18:14:03Z | ok | live | opened=0 closed=0 |
 | live-paper | CODEX Equities Opening Range v1 | 2026-05-28T18:13:44Z | ok | live | opened=0 closed=0 |
@@ -29,6 +33,6 @@
 | live-paper | CODEX Regime WFO v1 | 2026-05-28T18:15:16Z | skipped | cache | cycle already recorded |
 | live-paper | CODEX Regime v0 | 2026-05-28T18:15:15Z | skipped | cache | cycle already recorded |
 | live-paper | CODEX v0 | 2026-05-28T18:15:14Z | skipped | cache | cycle already recorded |
-| open-trade-health | CODEX Open Trade Health | 2026-05-29T15:54:19Z | warn | local | errors=0 warnings=2 open_positions=16 |
+| open-trade-health | CODEX Open Trade Health | 2026-05-29T16:58:57Z | warn | local | errors=0 warnings=2 open_positions=15 |
 | overnight-foundry | CODEX Overnight Foundry | 2026-05-28T11:14:00Z | ok | cache | review=1 rejected=8 |
 | weekly-optimizer | CODEX Weekly Optimizer | 2026-05-25T13:54:56Z | ok | cache | promoted=CODEX Regime WFO v1 |

@@ -174,6 +174,30 @@ export const STRATEGIES = [
     adapter: adaptCodex,
   },
   {
+    name: 'CODEX Crypto Sprint Momentum',
+    starting_capital: 10000,
+    killswitch_dd_pct: 35,
+    live_start_iso: '2026-05-29T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/crypto_sprint_momentum_portfolio.md',
+      trade_log_path: 'data/codex/crypto_sprint_momentum_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'CODEX Crypto Sprint Reversal',
+    starting_capital: 10000,
+    killswitch_dd_pct: 30,
+    live_start_iso: '2026-05-29T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/crypto_sprint_reversal_portfolio.md',
+      trade_log_path: 'data/codex/crypto_sprint_reversal_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
     name: 'CODEX Aggro Quality v3',
     starting_capital: 10000,
     killswitch_dd_pct: 35,
@@ -332,6 +356,18 @@ export const STRATEGIES = [
     },
     adapter: adaptCodex,
   },
+  {
+    name: 'CODEX Equities MR Sprint',
+    starting_capital: 10000,
+    killswitch_dd_pct: 25,
+    live_start_iso: '2026-05-29T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/equities_mr_sprint_portfolio.md',
+      trade_log_path: 'data/codex/equities_mr_sprint_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
   // CODEX Equities Connors MR v1 — Codex-owned diversified RSI(2)
   // oversold-bounce variant inspired by Claude's MR v2, but with explicit
   // cash/notional caps and a fresh forward start.
@@ -369,6 +405,18 @@ export const STRATEGIES = [
       type: 'codex-local',
       portfolio_path: 'data/codex/equities_near_breakout_pullback_portfolio.md',
       trade_log_path: 'data/codex/equities_near_breakout_pullback_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'CODEX Equities Breakout Sprint',
+    starting_capital: 10000,
+    killswitch_dd_pct: 30,
+    live_start_iso: '2026-05-29T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/codex/equities_breakout_sprint_portfolio.md',
+      trade_log_path: 'data/codex/equities_breakout_sprint_trade_log.md',
     },
     adapter: adaptCodex,
   },
