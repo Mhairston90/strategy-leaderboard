@@ -32,11 +32,16 @@ test('launcher isolates the Chrome app from stale default-profile windows', asyn
   assert.match(bat, /--new-window --app=!URL!/);
 });
 
-test('launcher checks for a healthy existing server before starting another one', async () => {
+test('launcher reuses only a server serving this directory', async () => {
   const bat = await readFile(path.join(root, 'Open Leaderboard.bat'), 'utf8');
 
   assert.match(bat, /START_SERVER=1/);
-  assert.match(bat, /Invoke-WebRequest .*127\.0\.0\.1:%PORT%\/registry\.js/);
+  assert.match(bat, /EXPECTED_DIR=%SERVER_DIR%/);
+  assert.match(bat, /Get-NetTCPConnection -LocalPort %PORT%/);
+  assert.match(bat, /Get-CimInstance Win32_Process/);
+  assert.match(bat, /CommandLine/);
+  assert.match(bat, /Contains\(\$d\.ToLower\(\)\)/);
+  assert.match(bat, /Stop-Process -Id \$c\.OwningProcess -Force/);
   assert.match(bat, /if !START_SERVER! EQU 1/);
 });
 
