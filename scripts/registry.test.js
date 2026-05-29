@@ -422,6 +422,33 @@ test('registry includes the Markov-gated Codex cross-pollination rows', () => {
   }
 });
 
+test('registry includes the aggressive (3%) Markov-gated siblings', () => {
+  const expected = [
+    [
+      'Stocks Trend Momentum (Markov-Gated) Aggressive',
+      'data/stock_variants/stocks_trend_markov_agg_portfolio.md',
+      'data/stock_variants/stocks_trend_markov_agg_trade_log.md',
+    ],
+    [
+      'Stocks Mean Reversion v2 (Markov-Gated) Aggressive',
+      'data/stock_variants/stocks_mean_reversion_v2_markov_agg_portfolio.md',
+      'data/stock_variants/stocks_mean_reversion_v2_markov_agg_trade_log.md',
+    ],
+  ];
+
+  for (const [name, portfolioPath, tradeLogPath] of expected) {
+    const row = STRATEGIES.find(strategy => strategy.name === name);
+
+    assert.ok(row, `${name} missing from registry`);
+    assert.equal(row.source.type, 'codex-local');
+    assert.equal(row.source.portfolio_path, portfolioPath);
+    assert.equal(row.source.trade_log_path, tradeLogPath);
+    assert.equal(row.starting_capital, 10000);
+    assert.equal(row.killswitch_dd_pct, 40);
+    assert.equal(row.live_start_iso, '2026-05-29T00:00:00Z');
+  }
+});
+
 test('registry includes CODEX Markov regime strategy rows', () => {
   const expected = [
     [

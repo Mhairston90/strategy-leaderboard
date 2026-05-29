@@ -68,6 +68,17 @@ allow entry only when  signal ≥ 0  AND  P(next = bear) ≤ 0.40
 - `npm test` green (adds 1 registry test block).
 - `npm run smoke` — both rows valid `StrategyRow` shape, flat at launch with pre-2026-05-29 backtest correctly excluded.
 
+## 6b. Aggressive (3% risk) siblings — added 2026-05-29
+
+Magnitude versions for the top-3-*profit* metric, pairing the Markov gate with the proven aggressive-sizing template. Thesis: the regime gate should keep the bigger 3% sizing out of the worst regimes, so the large-size losers are fewer than an ungated aggressive variant.
+
+| Variant | Key params | Backfill (informational) |
+|---|---|---|
+| **Stocks Trend Momentum (Markov-Gated) Aggressive** (`trend_markov_agg`) | 3% risk, 3.0×ATR stop, 3.5×ATR trail, max 3, Markov ≥+0.10 | 10 trades, **80% win, avg R +1.48, +$4,649** |
+| **Stocks Mean Reversion v2 (Markov-Gated) Aggressive** (`v2_markov_agg`) | 3% risk, RSI exit 85, 2.5×ATR stop, max 2, 10% circuit, Markov falling-knife gate | 26 trades, 69% win, avg R +0.35, **+$2,513** |
+
+Both `killswitch_dd_pct: 40`, `live_start 2026-05-29`. Same caveats as §7 — bigger sizing means a deeper drawdown profile, and the backfill is a small, benign-window sample.
+
 ## 7. Known risks / honesty notes
 
 1. **No forward history at launch** — flat until trades accrue; the backfill numbers are informational only.

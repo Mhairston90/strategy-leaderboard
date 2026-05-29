@@ -966,4 +966,32 @@ export const STRATEGIES = [
     },
     adapter: adaptCodex,
   },
+  // Aggressive (3% risk) siblings of the Markov-gated pair — 2026-05-29.
+  // Magnitude plays for top-3 profit: the Markov regime gate is meant to keep
+  // the bigger 3% sizing out of the worst regimes. Backfill (informational):
+  // trend_markov_agg 80% win / avg R +1.48 / +$4,649; v2_markov_agg +$2,513.
+  {
+    name: 'Stocks Trend Momentum (Markov-Gated) Aggressive',
+    starting_capital: 10000,
+    killswitch_dd_pct: 40,
+    live_start_iso: '2026-05-29T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/stock_variants/stocks_trend_markov_agg_portfolio.md',
+      trade_log_path: 'data/stock_variants/stocks_trend_markov_agg_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'Stocks Mean Reversion v2 (Markov-Gated) Aggressive',
+    starting_capital: 10000,
+    killswitch_dd_pct: 40,
+    live_start_iso: '2026-05-29T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/stock_variants/stocks_mean_reversion_v2_markov_agg_portfolio.md',
+      trade_log_path: 'data/stock_variants/stocks_mean_reversion_v2_markov_agg_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
 ];
