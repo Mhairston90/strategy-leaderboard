@@ -924,4 +924,46 @@ export const STRATEGIES = [
     },
     adapter: adaptCodex,
   },
+  // ============================================================
+  // Codex cross-pollination — 2026-05-29 (Opus 4.8)
+  // Mirror of what Codex did with Claude's mean-reversion: these take Codex's
+  // genuinely novel idea — the MARKOV regime classifier (lib/markov_regime.js,
+  // bull/bear/sideways from 20d returns -> transition matrix -> signal =
+  // P(next=bull)-P(next=bear)) — ported to Python and applied as a regime gate
+  // over Claude's two proven equity edges. live_start 2026-05-29 (honest); pre
+  // today is backtest, excluded by the adapter.
+  // Specs: strategies/markov-gated-variants-2026-05-29-spec.md
+  //
+  // Trend Momentum (Markov-Gated): same confirmed-trend entries as Trend
+  // Momentum v1, but the daily chop filter is Codex's Markov signal>=+0.10
+  // INSTEAD of ADX>20. A/B test of which regime filter is better for momentum.
+  {
+    name: 'Stocks Trend Momentum (Markov-Gated)',
+    starting_capital: 10000,
+    killswitch_dd_pct: 20,
+    live_start_iso: '2026-05-29T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/stock_variants/stocks_trend_markov_portfolio.md',
+      trade_log_path: 'data/stock_variants/stocks_trend_markov_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  // Mean Reversion v2 (Markov-Gated): proven diversified-8 Connors MR with
+  // Codex's Markov gate as a falling-knife filter — block the oversold dip-buy
+  // when next-state odds favour bear (signal<0 or P(next=bear)>0.40). On backfill
+  // it raised win rate (67%->70%) and avg R (+0.36->+0.40) by skipping dips in
+  // deteriorating regimes.
+  {
+    name: 'Stocks Mean Reversion v2 (Markov-Gated)',
+    starting_capital: 10000,
+    killswitch_dd_pct: 18,
+    live_start_iso: '2026-05-29T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/stock_variants/stocks_mean_reversion_v2_markov_portfolio.md',
+      trade_log_path: 'data/stock_variants/stocks_mean_reversion_v2_markov_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
 ];
