@@ -19,3 +19,5 @@
 | 2026-05-26T12:00:00Z | CLOSE | LINK/USD | long | 228.427761 | 9.5760 | - | - | -0.41 | -28.72 | time-stop | aggro_plus_ls_quality_long_momentum |
 | 2026-05-28T16:00:00Z | OPEN | SOL/USD | long | 26.308482 | 82.6678 | 80.0225 | 89.2813 | - | - | aggro_plus_ls_quality_long_moderate_momentum | aggro_plus_ls_quality_long_momentum |
 | 2026-05-28T16:00:00Z | OPEN | DOT/USD | long | 1779.824469 | 1.2220 | 1.1829 | 1.3197 | - | - | aggro_plus_ls_quality_long_moderate_momentum | aggro_plus_ls_quality_long_momentum |
+| 2026-05-29T12:00:00Z | CLOSE | SOL/USD | long | 26.308482 | 82.3000 | - | - | -0.30 | -20.96 | time-stop | aggro_plus_ls_quality_long_momentum |
+| 2026-05-29T12:00:00Z | CLOSE | DOT/USD | long | 1779.824469 | 1.2136 | - | - | -0.38 | -26.22 | time-stop | aggro_plus_ls_quality_long_momentum |

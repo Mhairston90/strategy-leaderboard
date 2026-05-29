@@ -4,7 +4,8 @@
       "blockers": [
         "OOS PF below gate (0.11 < 1.20)",
         "OOS drawdown above gate (39.63% > 12.00%)",
-        "OOS return is not positive (-27.47%)"
+        "OOS return is not positive (-27.47%)",
+        "score delta +0.00 below 0.50"
       ],
       "champion": {
         "decision": "REJECTED",
@@ -28,7 +29,7 @@
         "updated_at": "2026-05-28T11:14:00Z",
         "variant": "aggro_bank_move_threshold_0.90"
       },
-      "decision": "refine",
+      "decision": "reject",
       "display_name": "CODEX Aggro Foundry",
       "family_key": "aggro",
       "gates": {
@@ -67,26 +68,26 @@
         "decision": "REJECTED",
         "family_key": "aggro",
         "metrics": {
-          "max_drawdown_pct": 46.501014630818084,
-          "profit_factor": 0.11538135306571531,
-          "return_pct": -26.273145246894547,
-          "score": -40.86414302448135,
-          "trades": 244
+          "max_drawdown_pct": 39.63328446149152,
+          "profit_factor": 0.11430547105366383,
+          "return_pct": -27.473330395553987,
+          "score": -39.86116055488252,
+          "trades": 214
         },
         "params": {
           "channel_lookback": 12,
           "long_entry_slippage": 1.0005,
           "move_lookback": 7,
-          "move_threshold": 0.059895,
+          "move_threshold": 0.085945,
           "short_entry_slippage": 0.9995,
-          "stop_pct": 0.045,
-          "target_pct": 0.055
+          "stop_pct": 0.040095,
+          "target_pct": 0.0495
         },
-        "updated_at": "2026-05-16T09:32:22Z",
-        "variant": "aggro_bank_move_threshold_1.10"
+        "updated_at": "2026-05-28T11:14:00Z",
+        "variant": "aggro_bank_move_threshold_0.90"
       },
       "promotion_candidate": false,
-      "score_delta": 1.0,
+      "score_delta": 0.0,
       "strategy": "CODEX Aggro v0"
     },
     "apex_wfo": {
@@ -457,7 +458,7 @@
         "variant": "eq_break_l30_c0.75_s0.055"
       },
       "notes": [
-        "Goal status: collecting, 0 trades, 0.0 weeks",
+        "Goal status: collecting, 0 trades, 0.1 weeks",
         "Hermes queued: Lift PF above 1.20 while preserving positive OOS return across walk-forward windows."
       ],
       "previous_champion": {
@@ -786,7 +787,8 @@
       "blockers": [
         "OOS trades below gate (16 < 30)",
         "OOS PF below gate (0.08 < 1.20)",
-        "OOS return is not positive (-2.13%)"
+        "OOS return is not positive (-2.13%)",
+        "score delta +0.00 below 0.50"
       ],
       "champion": {
         "decision": "REJECTED",
@@ -811,7 +813,7 @@
         "updated_at": "2026-05-28T11:14:00Z",
         "variant": "regime_bank_vol_skip_threshold_0.90"
       },
-      "decision": "refine",
+      "decision": "reject",
       "display_name": "CODEX Regime WFO Foundry",
       "family_key": "regime_wfo",
       "gates": {
@@ -851,11 +853,11 @@
         "decision": "REJECTED",
         "family_key": "regime_wfo",
         "metrics": {
-          "max_drawdown_pct": 5.327091202152497,
-          "profit_factor": 0.0,
-          "return_pct": -3.4331092374951844,
-          "score": -5.184257824915225,
-          "trades": 17
+          "max_drawdown_pct": 4.982245647127048,
+          "profit_factor": 0.08273085818602643,
+          "return_pct": -2.131320554753396,
+          "score": -3.7270744354881833,
+          "trades": 16
         },
         "params": {
           "confidence_base": 0.55,
@@ -865,17 +867,17 @@
           "risk_vol_multiplier": 2.88,
           "target_r": 2.1,
           "trend_threshold": 0.159441,
-          "vol_skip_threshold": 0.022964
+          "vol_skip_threshold": 0.016741
         },
-        "updated_at": "2026-05-23T17:29:53Z",
-        "variant": "regime_bank_trend_threshold_1.10"
+        "updated_at": "2026-05-28T11:14:00Z",
+        "variant": "regime_bank_vol_skip_threshold_0.90"
       },
       "promotion_candidate": false,
-      "score_delta": 1.46,
+      "score_delta": 0.0,
       "strategy": "CODEX Regime WFO v1"
     }
   },
-  "generated_at": "2026-05-28T11:15:00Z",
+  "generated_at": "2026-05-29T13:55:01Z",
   "guardrail": "Research-only: no live routing, trade logs, or optimizer configs were changed.",
   "mode": "paper-only research",
   "sources": [
@@ -887,8 +889,8 @@
   "summary": {
     "families": 9,
     "promotion_candidates": 0,
-    "refine": 5,
-    "reject": 4,
+    "refine": 3,
+    "reject": 6,
     "watch": 0
   },
   "version": 1

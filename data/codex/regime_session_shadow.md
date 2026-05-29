@@ -179,3 +179,8 @@
 | 2026-05-28T18:14:12Z | CODEX Apex v0 | 2026-05-28T16:00:00Z | crypto | - | - | - | us_overlap | trend_down | observe | no candidate generated | no | - | - |
 | 2026-05-28T18:14:14Z | CODEX Regime WFO v1 | 2026-05-28T16:00:00Z | crypto | - | - | - | us_overlap | trend_down | observe | no candidate generated | no | - | - |
 | 2026-05-28T18:14:17Z | CODEX Apex WFO v1 | 2026-05-28T16:00:00Z | crypto | - | - | - | us_overlap | trend_down | observe | no candidate generated | no | - | - |
+| 2026-05-29T15:47:01Z | CODEX Pulse v0 | 2026-05-29T15:00:00Z | crypto | ETH/USD | pulse_momentum | long | us_overlap | compression | block | momentum regime not confirmed | yes | pulse_long_intraday_momentum | 0.64 |
+| 2026-05-29T15:47:01Z | CODEX Pulse v0 | 2026-05-29T15:00:00Z | crypto | XRP/USD | pulse_momentum | long | us_overlap | compression | block | momentum regime not confirmed | yes | pulse_long_intraday_momentum | 0.64 |
+| 2026-05-29T15:47:01Z | CODEX Pulse v0 | 2026-05-29T15:00:00Z | crypto | LTC/USD | pulse_momentum | long | us_overlap | compression | block | momentum regime not confirmed | yes | pulse_long_intraday_momentum | 0.62 |
+| 2026-05-29T15:47:01Z | CODEX Pulse v0 | 2026-05-29T15:00:00Z | crypto | AVAX/USD | pulse_momentum | long | us_overlap | chop | block | momentum regime not confirmed | no | pulse_long_intraday_momentum | 0.61 |
+| 2026-05-29T15:47:01Z | CODEX Pulse v0 | 2026-05-29T15:00:00Z | crypto | BTC/USD | pulse_momentum | long | us_overlap | compression | block | momentum regime not confirmed | no | pulse_long_intraday_momentum | 0.61 |

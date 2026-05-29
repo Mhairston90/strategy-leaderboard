@@ -238,3 +238,4 @@
 | 2026-05-28T18:14:12Z | CODEX Apex v0 | 2026-05-28T16:00:00Z | live | ok | ADA/USD; AVAX/USD; BTC/USD; DOGE/USD; DOT/USD; ETH/USD; LINK/USD; LTC/USD; SOL/USD; XRP/USD | - | - | 0 | 0 | - | - | 0 |
 | 2026-05-28T18:14:14Z | CODEX Regime WFO v1 | 2026-05-28T16:00:00Z | live | ok | AVAX/USD; BTC/USD; ETH/USD; LINK/USD; LTC/USD; SOL/USD | - | - | 0 | 0 | - | - | 0 |
 | 2026-05-28T18:14:17Z | CODEX Apex WFO v1 | 2026-05-28T16:00:00Z | live | ok | ADA/USD; AVAX/USD; BTC/USD; DOGE/USD; DOT/USD; ETH/USD; LINK/USD; LTC/USD; SOL/USD; XRP/USD | - | - | 0 | 0 | - | - | 0 |
+| 2026-05-29T15:47:01Z | CODEX Pulse v0 | 2026-05-29T15:00:00Z | live | ok | AVAX/USD; BTC/USD; DOGE/USD; ETH/USD; LINK/USD; LTC/USD; SOL/USD; XRP/USD | - | - | 3 | 4 | pulse_long_intraday_momentum; pulse_long_intraday_momentum; pulse_long_intraday_momentum | time-stop; time-stop; time-stop; time-stop | 5 |

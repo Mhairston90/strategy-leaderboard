@@ -55,3 +55,10 @@
 | 2026-05-28T18:00:00Z | OPEN | SOL/USD | long | 28.691070 | 82.6931 | 80.8738 | 85.3392 | - | - | pulse_long_intraday_momentum | pulse_momentum |
 | 2026-05-28T18:00:00Z | OPEN | LINK/USD | long | 261.858919 | 9.0604 | 8.8611 | 9.3504 | - | - | pulse_long_intraday_momentum | pulse_momentum |
 | 2026-05-28T18:00:00Z | OPEN | DOGE/USD | long | 23670.449299 | 0.1002 | 0.0980 | 0.1034 | - | - | pulse_long_intraday_momentum | pulse_momentum |
+| 2026-05-29T15:00:00Z | CLOSE | AVAX/USD | long | 262.345560 | 8.8900 | - | - | -1.01 | -52.53 | time-stop | pulse_momentum |
+| 2026-05-29T15:00:00Z | CLOSE | SOL/USD | long | 28.691070 | 82.3700 | - | - | -0.41 | -21.58 | time-stop | pulse_momentum |
+| 2026-05-29T15:00:00Z | CLOSE | LINK/USD | long | 261.858919 | 9.0526 | - | - | -0.28 | -14.38 | time-stop | pulse_momentum |
+| 2026-05-29T15:00:00Z | CLOSE | DOGE/USD | long | 23670.449299 | 0.1002 | - | - | -0.24 | -12.73 | time-stop | pulse_momentum |
+| 2026-05-29T15:00:00Z | OPEN | ETH/USD | long | 1.158750 | 2028.3110 | 1983.6882 | 2093.2170 | - | - | pulse_long_intraday_momentum | pulse_momentum |
+| 2026-05-29T15:00:00Z | OPEN | XRP/USD | long | 1778.354377 | 1.3216 | 1.2925 | 1.3639 | - | - | pulse_long_intraday_momentum | pulse_momentum |
+| 2026-05-29T15:00:00Z | OPEN | LTC/USD | long | 45.154068 | 52.0508 | 50.9057 | 53.7164 | - | - | pulse_long_intraday_momentum | pulse_momentum |

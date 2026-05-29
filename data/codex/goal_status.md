@@ -1,6 +1,6 @@
 # CODEX Goal Status
 
-> Generated: 2026-05-28T18:21:09Z
+> Generated: 2026-05-29T15:47:10Z
 > Paper-only. Built from local markdown trade logs and portfolios.
 
 ## Mission
@@ -29,7 +29,7 @@ Improve each active CODEX paper strategy until it has a meaningful sample with c
 | CODEX Convex Crypto Scout v1 | collecting | 0 | 0.0 | n/a | n/a | 0.00% | 8.00% | needs 30 more closed trades; needs 6.0 more observed weeks |
 | CODEX Markov Directional v1 | collecting | 0 | 0.0 | n/a | n/a | 0.00% | 12.00% | needs 30 more closed trades; needs 6.0 more observed weeks |
 | CODEX Markov Gate v1 | collecting | 0 | 0.0 | n/a | n/a | 0.00% | 10.00% | needs 30 more closed trades; needs 6.0 more observed weeks |
-| CODEX Pulse v0 | collecting | 21 | 3.4 | 0.18 | -12.02 | 5.13% | 15.00% | needs 9 more closed trades; needs 2.6 more observed weeks |
+| CODEX Pulse v0 | collecting | 25 | 3.6 | 0.16 | -13.54 | 6.14% | 15.00% | needs 5 more closed trades; needs 2.4 more observed weeks |
 | CODEX Equities Gap Fade v0 | collecting | 2 | 0.9 | 0.00 | n/a | 3.70% | 12.00% | needs 28 more closed trades; needs 5.1 more observed weeks |
 | CODEX Equities Opening Range v1 | collecting | 0 | 0.0 | n/a | n/a | 0.00% | 10.00% | needs 30 more closed trades; needs 6.0 more observed weeks |
 | CODEX Equities RS Pullback v1 | collecting | 0 | 0.0 | n/a | n/a | 0.00% | 10.00% | needs 30 more closed trades; needs 6.0 more observed weeks |
