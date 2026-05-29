@@ -68,8 +68,19 @@ export const STRATEGIES = [
     // size declared. $10k chosen to mirror BULL's account for visual symmetry.
     starting_capital: 10000,
     killswitch_dd_pct: 18,
-    source: { type: 'sheets', tab: 'Basket Breakout Signals' },
-    adapter: adaptBasket,
+    // CONVERTED 2026-05-29 from sheets -> offline-simulated. The live
+    // TradingView->Google Sheet feed died 2026-05-10 (only 9 signals ever,
+    // last 05-10, all LINK/ETH), freezing this row at 1 stale contest trade
+    // while its same-logic simulated twin (Leveraged v1) showed 21. Now
+    // regenerated nightly from the frozen v1 spec by basket_breakout.VARIANTS["v1"],
+    // exactly like its leveraged/aggressive siblings. Scored on the default
+    // CONTEST_START cutoff (no live_start_iso) for parity with that family.
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/basket_variants/v1_portfolio.md',
+      trade_log_path: 'data/basket_variants/v1_trade_log.md',
+    },
+    adapter: adaptCodex,
   },
   {
     name: 'Aggro Leader Continuation v1',
