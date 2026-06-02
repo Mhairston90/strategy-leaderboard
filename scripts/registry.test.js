@@ -449,6 +449,17 @@ test('registry includes the aggressive (3%) Markov-gated siblings', () => {
   }
 });
 
+test('registry includes the market-neutral cross-sectional L/S momentum row', () => {
+  const row = STRATEGIES.find(s => s.name === 'Stocks Cross-Sectional L/S Momentum v1');
+  assert.ok(row, 'Cross-Sectional L/S Momentum v1 missing from registry');
+  assert.equal(row.source.type, 'codex-local');
+  assert.equal(row.source.portfolio_path, 'data/longshort/xsec_momentum_v1_portfolio.md');
+  assert.equal(row.source.trade_log_path, 'data/longshort/xsec_momentum_v1_trade_log.md');
+  assert.equal(row.starting_capital, 10000);
+  assert.equal(row.killswitch_dd_pct, 20);
+  assert.equal(row.live_start_iso, '2026-06-01T00:00:00Z');
+});
+
 test('registry includes CODEX Markov regime strategy rows', () => {
   const expected = [
     [

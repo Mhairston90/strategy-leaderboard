@@ -1005,4 +1005,25 @@ export const STRATEGIES = [
     },
     adapter: adaptCodex,
   },
+  // ----- Market-neutral uncorrelated earner — 2026-06-01 (Opus 4.8) -----
+  // The first genuinely direction-NEUTRAL Claude strategy: dollar-neutral
+  // cross-sectional momentum (long top-3 / short bottom-3 of the wide-15 by 10d
+  // return, rebalanced every 5d). Earns on dispersion, not market level, so it
+  // can be a top-3-profit leg when the long-only MR/momentum book is flat or
+  // bleeding. (A pairs/stat-arb sibling was built + tested same day but SHELVED
+  // — the semis spreads trended rather than reverted, no edge. Cross-sectional
+  // momentum is what the same dispersion data favors; backfill +6.5%, avg R +0.28.)
+  // Engine: xsec_momentum (new long/short paper sim). Spec: strategies/xsec-momentum-2026-06-01-spec.md
+  {
+    name: 'Stocks Cross-Sectional L/S Momentum v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 20,
+    live_start_iso: '2026-06-01T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/longshort/xsec_momentum_v1_portfolio.md',
+      trade_log_path: 'data/longshort/xsec_momentum_v1_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
 ];
