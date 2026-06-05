@@ -1,8 +1,49 @@
 # Crypto Short Failed-Rally — Design (2026-06-05)
 
-**Status:** DESIGN — approved, not yet implemented
+**Status:** ❌ SHELVED — NEGATIVE RESULT (built, tested, not registered). See §0.
 **Author:** Claude (BULL side), paired with Mhair
 **Motivation:** Plug the structural long-bias hole in the BULL book (see §1).
+
+---
+
+## 0. Outcome — NEGATIVE RESULT (2026-06-05)
+
+The module was fully built (`crypto_short_mr/`: config, signals, short-aware
+simulator, generator, unit tests — all passing) and backfilled against the live
+crypto cache. **It was NOT registered on the leaderboard because it has no edge.**
+
+Two exit designs were tried; both are net-negative after honest Kraken
+margin-short costs (0.52% round-trip + funding), on the 8-coin majors universe,
+backfilled 2026-04-16 → 2026-06-05:
+
+| Exit design | Closed | Win % | Gross avg R | Net P&L (standard 0.5%) |
+|---|---|---|---|---|
+| RSI-cover (snap-back) | 125 | 53.6% | +0.087 | **−$1,936** |
+| Chandelier trail (trend-hold) | 118 | 25.4% | −0.026 | **−$2,420** |
+
+(Aggressive 3% variant: −$4,783 and −$4,516 respectively — same negative edge at 6× size.)
+
+**Root cause:** the ENTRY is the problem, not the exit. Shorting overbought RSI>90
+*rips* is shorting strength and betting on reversion — the hard side of the trade,
+with no robust edge on crypto majors net of costs. The RSI-cover version had a
+marginal gross edge that trading costs erased (same commission-drag that hurts the
+long crypto MR). The chandelier version got shaken out on 1H noise (108/118 exits
+were trail-stops), turning even the gross edge negative.
+
+**What this rules out / points to:** crypto mean-reversion *shorting* is not the way
+to plug the long-bias hole. What demonstrably works (Codex's profitable shorts) is a
+different class — TREND-following shorts of *weakness* (breakdowns / failed-rally
+continuation in a confirmed downtrend, multi-day holds), not 1H mean-reversion. A
+trend-short deserves its own design pass; it can reuse this module's short-aware
+simulator (`crypto_short_mr/portfolio.py`, chandelier trail) unchanged.
+
+Stopped after two principled attempts rather than tuning a third — further parameter
+search would be curve-fitting a tiny sample (the exact overfitting flagged in the
+Codex audit). The code + tests remain on disk as reusable scaffolding.
+
+---
+
+_The original design below is retained for the record._
 
 ---
 
