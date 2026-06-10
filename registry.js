@@ -132,7 +132,7 @@ export const STRATEGIES = [
     // 20-EMA vs main's 50-EMA; tests post-crash recovery capture.
     // live_start_iso = spin-up date; contributes $0 until routine #7
     // simulates forward trades. No backtest seed data.
-    name: 'BULL v0.14-Recovery (LAB)',
+    name: 'FABLE BULL v0.14-Recovery (LAB)',
     starting_capital: 10000,
     killswitch_dd_pct: 25,
     live_start_iso: '2026-06-09T00:00:00Z',
@@ -148,7 +148,7 @@ export const STRATEGIES = [
     // 2026-06-09, user-approved registry add 2026-06-09). v0.8's RSI<30
     // floor + no entries during synchronized breakdowns; A/B isolates
     // the guard. live_start_iso = spin-up date; no backtest seed data.
-    name: 'BULL v0.15-MR-Guarded (LAB)',
+    name: 'FABLE BULL v0.15-MR-Guarded (LAB)',
     starting_capital: 10000,
     killswitch_dd_pct: 25,
     live_start_iso: '2026-06-09T00:00:00Z',
@@ -1154,4 +1154,5 @@ export const STRATEGIES = [
     adapter: adaptCodex,
   },
 ];
+
 
