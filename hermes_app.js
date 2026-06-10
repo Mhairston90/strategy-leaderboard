@@ -14,6 +14,8 @@ const PATHS = {
   contract: 'data/codex/hermes_contract.md',
   review: 'data/codex/hermes_review.md',
   ledger: 'data/codex/hypothesis_ledger.md',
+  staleTradeSentinel: 'data/codex/hermes_stale_trade_sentinel.json',
+  staleTradeSentinelMarkdown: 'data/codex/hermes_stale_trade_sentinel.md',
 };
 
 async function loadMonitor() {
@@ -31,6 +33,8 @@ async function loadMonitor() {
     contractResp,
     reviewResp,
     ledgerResp,
+    staleTradeSentinelResp,
+    staleTradeSentinelMarkdownResp,
   ] = await Promise.all([
     fetchLocalText(PATHS.codexQueue),
     fetchLocalText(PATHS.claudeQueue),
@@ -41,6 +45,8 @@ async function loadMonitor() {
     fetchLocalText(PATHS.contract),
     fetchLocalText(PATHS.review),
     fetchLocalText(PATHS.ledger),
+    fetchLocalText(PATHS.staleTradeSentinel),
+    fetchLocalText(PATHS.staleTradeSentinelMarkdown),
   ]);
 
   const model = buildHermesMonitorModel({
@@ -59,6 +65,8 @@ async function loadMonitor() {
     contractText: contractResp.ok ? contractResp.text : '',
     reviewText: reviewResp.ok ? reviewResp.text : '',
     ledgerText: ledgerResp.ok ? ledgerResp.text : '',
+    staleTradeSentinelText: staleTradeSentinelResp.ok ? staleTradeSentinelResp.text : '',
+    staleTradeSentinelMarkdownText: staleTradeSentinelMarkdownResp.ok ? staleTradeSentinelMarkdownResp.text : '',
     lastUpdatedAt: new Date().toISOString(),
   });
 
