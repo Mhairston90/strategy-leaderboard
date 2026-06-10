@@ -1,0 +1,141 @@
+{
+  "audits": [
+    {
+      "cycle_time": "2026-06-10T20:00:00Z",
+      "data_status": "ok",
+      "errors": 0,
+      "evaluated": true,
+      "evidence": [
+        {
+          "message": "opened=0 closed=0; fetch warnings=10",
+          "quality": "routine",
+          "status": "cache",
+          "timestamp": "2026-06-10T17:57:18Z"
+        }
+      ],
+      "expected_closes": 0,
+      "expected_opens": 0,
+      "forensics_message": "trade_forensics.md missing or no row for strategy",
+      "forensics_quality": "missing",
+      "matched_closes": 0,
+      "matched_opens": 0,
+      "replay_status": "ok",
+      "routine_message": "opened=0 closed=0; fetch warnings=10",
+      "routine_status": "cache",
+      "strategy": "regime_plus",
+      "strategy_name": "CODEX Regime Plus v1",
+      "trade_log": "C:\\trading\\trading-codex\\.worktrees\\codex-regime-plus\\memory\\regime_plus_trade_log.md",
+      "warnings": 0
+    },
+    {
+      "cycle_time": "2026-06-10T20:00:00Z",
+      "data_status": "ok",
+      "errors": 0,
+      "evaluated": true,
+      "evidence": [
+        {
+          "message": "cycle already recorded",
+          "quality": "routine",
+          "status": "skipped",
+          "timestamp": "2026-06-10T18:57:46Z"
+        }
+      ],
+      "expected_closes": 0,
+      "expected_opens": 1,
+      "forensics_message": "trade_forensics.md missing or no row for strategy",
+      "forensics_quality": "missing",
+      "matched_closes": 0,
+      "matched_opens": 0,
+      "replay_status": "ok",
+      "routine_message": "cycle already recorded",
+      "routine_status": "skipped",
+      "strategy": "regime_short_plus",
+      "strategy_name": "CODEX Regime Short Plus v1",
+      "trade_log": "C:\\trading\\trading-codex\\.worktrees\\codex-regime-plus\\memory\\regime_short_plus_trade_log.md",
+      "warnings": 2
+    },
+    {
+      "cycle_time": "2026-06-10T20:00:00Z",
+      "data_status": "ok",
+      "errors": 0,
+      "evaluated": true,
+      "evidence": [
+        {
+          "message": "cycle already recorded",
+          "quality": "routine",
+          "status": "skipped",
+          "timestamp": "2026-06-10T18:58:12Z"
+        }
+      ],
+      "expected_closes": 0,
+      "expected_opens": 1,
+      "forensics_message": "trade_forensics.md missing or no row for strategy",
+      "forensics_quality": "missing",
+      "matched_closes": 0,
+      "matched_opens": 0,
+      "replay_status": "ok",
+      "routine_message": "cycle already recorded",
+      "routine_status": "skipped",
+      "strategy": "regime_plus_ls",
+      "strategy_name": "CODEX Regime Plus L/S v1",
+      "trade_log": "C:\\trading\\trading-codex\\.worktrees\\codex-regime-plus\\memory\\regime_plus_ls_trade_log.md",
+      "warnings": 2
+    }
+  ],
+  "errors": 0,
+  "findings": [
+    {
+      "action": "OPEN",
+      "cycle_time": "2026-06-10T20:00:00Z",
+      "evidence": "no matching trade-log row",
+      "message": "expected open was not found in the strategy trade log",
+      "pair": "ADA/USD",
+      "reason": "regime_short_plus_trend",
+      "severity": "warn",
+      "sleeve": "regime_short_plus_trend",
+      "strategy": "regime_short_plus",
+      "strategy_name": "CODEX Regime Short Plus v1"
+    },
+    {
+      "action": "EVIDENCE",
+      "cycle_time": "2026-06-10T18:57:46Z",
+      "evidence": "routine:skipped",
+      "message": "cycle already recorded",
+      "pair": "-",
+      "reason": "skipped",
+      "severity": "warn",
+      "sleeve": "-",
+      "strategy": "regime_short_plus",
+      "strategy_name": "CODEX Regime Short Plus v1"
+    },
+    {
+      "action": "OPEN",
+      "cycle_time": "2026-06-10T20:00:00Z",
+      "evidence": "no matching trade-log row",
+      "message": "expected open was not found in the strategy trade log",
+      "pair": "ADA/USD",
+      "reason": "regime_plus_ls_short_trend",
+      "severity": "warn",
+      "sleeve": "regime_plus_ls_short_trend",
+      "strategy": "regime_plus_ls",
+      "strategy_name": "CODEX Regime Plus L/S v1"
+    },
+    {
+      "action": "EVIDENCE",
+      "cycle_time": "2026-06-10T18:58:12Z",
+      "evidence": "routine:skipped",
+      "message": "cycle already recorded",
+      "pair": "-",
+      "reason": "skipped",
+      "severity": "warn",
+      "sleeve": "-",
+      "strategy": "regime_plus_ls",
+      "strategy_name": "CODEX Regime Plus L/S v1"
+    }
+  ],
+  "generated_at": "2026-06-10T21:11:59Z",
+  "scanned": 3,
+  "status": "warn",
+  "version": 1,
+  "warnings": 4
+}
