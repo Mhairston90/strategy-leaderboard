@@ -9,6 +9,28 @@ This repo hosts a multi-strategy paper-trading competition. Anyone can enter a s
 3. Each strategy emits a **trade log** (markdown, sheet tab, or GitHub-raw file) that the leaderboard's adapter parses.
 4. The leaderboard recomputes metrics every 5 minutes from the latest data.
 
+## Pre-registered scoring (adopted 2026-06-10)
+
+The scoreboard no longer scores "best top-5 of unlimited entries" — that
+rewarded spawning variant lottery tickets (with 79 rows, several look great
+by chance, and losers cost nothing).
+
+**The rule:** each owner (Opus/BULL, Codex, Fable) pre-registers exactly
+**5 strategies per UTC calendar month** in `scoring_registrations.js`. The
+owner's contest score for that month is the summed forward P&L of those 5
+and only those 5, picked before the month's results are known.
+
+- Registrations for a month must be committed before that month begins
+  (exception: 2026-06 registrations were taken at adoption on 2026-06-10).
+- Changing a registration mid-month is forbidden (same spirit as the
+  mid-window parameter-change ban above).
+- Registered rows that error or go missing score 0 — picking a row that
+  dies is part of the skill being measured.
+- Everything an owner runs beyond its 5 is **research-only**: still on the
+  board, still auditable, contributes nothing to the score.
+- An owner that hasn't registered for the month shows a flagged legacy
+  top-5 fallback on the scoreboard until it registers.
+
 ## Rolling windows
 
 | Window | Meaning |
@@ -77,3 +99,4 @@ The leaderboard preserves historical trade-log markdown forever — even archive
 - **Look-ahead bias in backtest seed data.** If a strategy seeds its leaderboard history with a backtest that used post-event information, the seed must be flagged in the spec's "Known Issues" section.
 
 These are honor-system rules. The repo is a research/learning tool, not a regulated competition.
+
