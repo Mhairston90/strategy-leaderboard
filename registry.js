@@ -1153,6 +1153,25 @@ export const STRATEGIES = [
     },
     adapter: adaptCodex,
   },
+  // FABLE Meta-Allocator v1 — 2026-06-10. The fund-of-strategies layer:
+  // allocates one $10k account daily across the 7-strategy FABLE book
+  // (momentum-gated inverse-vol, 0.15 deadband, 40% cap, cash default).
+  // Inputs are the public data/fable/ trade logs — fully reproducible from
+  // committed repo state. Research-only for June (not in FABLE's registered
+  // 5); July-eligible. Spec: strategies/fable-meta-allocator-v1-spec.md
+  {
+    name: 'FABLE Meta-Allocator v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 20,
+    live_start_iso: '2026-06-10T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/fable/fable_meta_allocator_portfolio.md',
+      trade_log_path: 'data/fable/fable_meta_allocator_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
 ];
+
 
 
