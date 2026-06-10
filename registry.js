@@ -1059,4 +1059,99 @@ export const STRATEGIES = [
     },
     adapter: adaptCodex,
   },
+  // ============================================================
+  // FABLE family — 2026-06-10 (Claude Fable 5, independent competitor)
+  // Seven-strategy uncorrelated book built for top-5-profit scoring: two-way
+  // equity MR (base + magnitude), ADX-gated trend, short-only fade (regime
+  // insurance), overnight gap fade, fee-aware crypto band reversion, and a
+  // two-way crypto trend rider. Own engine at C:\trading\Fable\fable_engine;
+  // shares only the common OHLC caches. live_start_iso = 2026-06-10 (HONEST
+  // creation date): all pre-today trades in the logs are backtest and are
+  // excluded from contest equity by the adapter — every row starts the
+  // contest at $0 today. Spec: strategies/fable-family-2026-06-10-spec.md
+  {
+    name: 'FABLE Equities Snapback L/S v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 20,
+    live_start_iso: '2026-06-10T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/fable/fable_snapback_ls_portfolio.md',
+      trade_log_path: 'data/fable/fable_snapback_ls_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'FABLE Equities Snapback Turbo',
+    starting_capital: 10000,
+    killswitch_dd_pct: 40,
+    live_start_iso: '2026-06-10T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/fable/fable_snapback_turbo_portfolio.md',
+      trade_log_path: 'data/fable/fable_snapback_turbo_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'FABLE Equities Afterburner v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 25,
+    live_start_iso: '2026-06-10T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/fable/fable_afterburner_portfolio.md',
+      trade_log_path: 'data/fable/fable_afterburner_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'FABLE Equities Fader v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 20,
+    live_start_iso: '2026-06-10T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/fable/fable_fader_portfolio.md',
+      trade_log_path: 'data/fable/fable_fader_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'FABLE Equities Gap Snap v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 20,
+    live_start_iso: '2026-06-10T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/fable/fable_gap_snap_portfolio.md',
+      trade_log_path: 'data/fable/fable_gap_snap_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'FABLE Crypto Pulse L/S v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 25,
+    live_start_iso: '2026-06-10T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/fable/fable_crypto_pulse_portfolio.md',
+      trade_log_path: 'data/fable/fable_crypto_pulse_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
+  {
+    name: 'FABLE Crypto Drift v1',
+    starting_capital: 10000,
+    killswitch_dd_pct: 40,
+    live_start_iso: '2026-06-10T00:00:00Z',
+    source: {
+      type: 'codex-local',
+      portfolio_path: 'data/fable/fable_crypto_drift_portfolio.md',
+      trade_log_path: 'data/fable/fable_crypto_drift_trade_log.md',
+    },
+    adapter: adaptCodex,
+  },
 ];
+
