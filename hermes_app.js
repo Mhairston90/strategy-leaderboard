@@ -7,6 +7,8 @@ const REFRESH_MS = 5 * 60 * 1000;
 const PATHS = {
   codexQueue: 'data/codex/hermes_experiment_queue.json',
   claudeQueue: 'data/claude/hermes_experiment_queue.json',
+  fableQueue: 'data/fable/hermes_experiment_queue.json',
+  cacheHealth: 'data/health/cache_health.md',
   routineStatus: 'data/codex/routine_status.md',
   automationHealth: 'data/codex/automation_health.md',
   supervisorReport: 'data/codex/hermes_supervisor_report.md',
@@ -27,6 +29,8 @@ async function loadMonitor() {
   const [
     codexQueueResp,
     claudeQueueResp,
+    fableQueueResp,
+    cacheHealthResp,
     routineResp,
     automationResp,
     supervisorResp,
@@ -40,6 +44,8 @@ async function loadMonitor() {
   ] = await Promise.all([
     fetchLocalText(PATHS.codexQueue),
     fetchLocalText(PATHS.claudeQueue),
+    fetchLocalText(PATHS.fableQueue),
+    fetchLocalText(PATHS.cacheHealth),
     fetchLocalText(PATHS.routineStatus),
     fetchLocalText(PATHS.automationHealth),
     fetchLocalText(PATHS.supervisorReport),
@@ -61,6 +67,11 @@ async function loadMonitor() {
       claudeQueueResp.ok ? claudeQueueResp.text : '',
       { error: claudeQueueResp.error || 'Claude queue unavailable' }
     ),
+    fableQueue: parseHermesQueueText(
+      fableQueueResp.ok ? fableQueueResp.text : '',
+      { error: fableQueueResp.error || 'FABLE queue unavailable' }
+    ),
+    cacheHealthText: cacheHealthResp.ok ? cacheHealthResp.text : '',
     routineStatusText: routineResp.ok ? routineResp.text : '',
     automationHealthText: automationResp.ok ? automationResp.text : '',
     supervisorReportText: supervisorResp.ok ? supervisorResp.text : '',
