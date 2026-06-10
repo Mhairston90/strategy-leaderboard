@@ -1076,6 +1076,7 @@ export const STRATEGIES = [
     live_start_iso: '2026-06-10T00:00:00Z',
     source: {
       type: 'codex-local',
+      status_path: 'data/health/cache_health.md',
       portfolio_path: 'data/fable/fable_snapback_ls_portfolio.md',
       trade_log_path: 'data/fable/fable_snapback_ls_trade_log.md',
     },
@@ -1088,6 +1089,7 @@ export const STRATEGIES = [
     live_start_iso: '2026-06-10T00:00:00Z',
     source: {
       type: 'codex-local',
+      status_path: 'data/health/cache_health.md',
       portfolio_path: 'data/fable/fable_snapback_turbo_portfolio.md',
       trade_log_path: 'data/fable/fable_snapback_turbo_trade_log.md',
     },
@@ -1100,6 +1102,7 @@ export const STRATEGIES = [
     live_start_iso: '2026-06-10T00:00:00Z',
     source: {
       type: 'codex-local',
+      status_path: 'data/health/cache_health.md',
       portfolio_path: 'data/fable/fable_afterburner_portfolio.md',
       trade_log_path: 'data/fable/fable_afterburner_trade_log.md',
     },
@@ -1112,6 +1115,7 @@ export const STRATEGIES = [
     live_start_iso: '2026-06-10T00:00:00Z',
     source: {
       type: 'codex-local',
+      status_path: 'data/health/cache_health.md',
       portfolio_path: 'data/fable/fable_fader_portfolio.md',
       trade_log_path: 'data/fable/fable_fader_trade_log.md',
     },
@@ -1124,6 +1128,7 @@ export const STRATEGIES = [
     live_start_iso: '2026-06-10T00:00:00Z',
     source: {
       type: 'codex-local',
+      status_path: 'data/health/cache_health.md',
       portfolio_path: 'data/fable/fable_gap_snap_portfolio.md',
       trade_log_path: 'data/fable/fable_gap_snap_trade_log.md',
     },
@@ -1136,6 +1141,7 @@ export const STRATEGIES = [
     live_start_iso: '2026-06-10T00:00:00Z',
     source: {
       type: 'codex-local',
+      status_path: 'data/health/cache_health.md',
       portfolio_path: 'data/fable/fable_crypto_pulse_portfolio.md',
       trade_log_path: 'data/fable/fable_crypto_pulse_trade_log.md',
     },
@@ -1148,6 +1154,7 @@ export const STRATEGIES = [
     live_start_iso: '2026-06-10T00:00:00Z',
     source: {
       type: 'codex-local',
+      status_path: 'data/health/cache_health.md',
       portfolio_path: 'data/fable/fable_crypto_drift_portfolio.md',
       trade_log_path: 'data/fable/fable_crypto_drift_trade_log.md',
     },
@@ -1166,12 +1173,14 @@ export const STRATEGIES = [
     live_start_iso: '2026-06-10T00:00:00Z',
     source: {
       type: 'codex-local',
+      status_path: 'data/health/cache_health.md',
       portfolio_path: 'data/fable/fable_meta_allocator_portfolio.md',
       trade_log_path: 'data/fable/fable_meta_allocator_trade_log.md',
     },
     adapter: adaptCodex,
   },
 ];
+
 
 
 
