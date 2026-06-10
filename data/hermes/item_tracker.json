@@ -1,0 +1,545 @@
+{
+  "items": {
+    "||experiment|refine codex aggro foundry": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 2,
+      "type": "experiment",
+      "title": "Refine CODEX Aggro Foundry"
+    },
+    "||experiment|refine codex apex wfo foundry": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 2,
+      "type": "experiment",
+      "title": "Refine CODEX Apex WFO Foundry"
+    },
+    "||experiment|refine codex crypto vol breakout foundry": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 2,
+      "type": "experiment",
+      "title": "Refine CODEX Crypto Vol Breakout Foundry"
+    },
+    "||experiment|refine codex donchian iqr foundry": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 2,
+      "type": "experiment",
+      "title": "Refine CODEX Donchian IQR Foundry"
+    },
+    "||experiment|refine codex equities breakout foundry": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 2,
+      "type": "experiment",
+      "title": "Refine CODEX Equities Breakout Foundry"
+    },
+    "||experiment|refine codex equities mean reversion foundry": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 2,
+      "type": "experiment",
+      "title": "Refine CODEX Equities Mean Reversion Foundry"
+    },
+    "||experiment|refine codex pulse foundry": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 2,
+      "type": "experiment",
+      "title": "Refine CODEX Pulse Foundry"
+    },
+    "||experiment|refine codex pulse session foundry": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 2,
+      "type": "experiment",
+      "title": "Refine CODEX Pulse Session Foundry"
+    },
+    "||experiment|refine codex regime wfo foundry": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 2,
+      "type": "experiment",
+      "title": "Refine CODEX Regime WFO Foundry"
+    },
+    "||experiment|repair weak edge for codex aggro plus l/s v1": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 2,
+      "type": "experiment",
+      "title": "Repair weak edge for CODEX Aggro Plus L/S v1"
+    },
+    "||experiment|repair weak edge for codex pulse v0": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 2,
+      "type": "experiment",
+      "title": "Repair weak edge for CODEX Pulse v0"
+    },
+    "||sample_collection|keep collecting sample for codex aggro plus l/s quality v2": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting sample for CODEX Aggro Plus L/S Quality v2"
+    },
+    "||sample_collection|keep collecting sample for codex aggro plus v1": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting sample for CODEX Aggro Plus v1"
+    },
+    "||sample_collection|keep collecting sample for codex aggro quality v3": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting sample for CODEX Aggro Quality v3"
+    },
+    "||sample_collection|keep collecting sample for codex aggro short plus quality v2": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting sample for CODEX Aggro Short Plus Quality v2"
+    },
+    "||sample_collection|keep collecting sample for codex aggro short plus v1": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting sample for CODEX Aggro Short Plus v1"
+    },
+    "||sample_collection|keep collecting sample for codex aggro v0": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting sample for CODEX Aggro v0"
+    },
+    "||sample_collection|keep collecting sample for codex apex v0": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting sample for CODEX Apex v0"
+    },
+    "||sample_collection|keep collecting sample for codex apex wfo v1": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting sample for CODEX Apex WFO v1"
+    },
+    "||sample_collection|keep collecting sample for codex convex crypto scout v1": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting sample for CODEX Convex Crypto Scout v1"
+    },
+    "||sample_collection|keep collecting sample for codex equities breakout runner v1": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting sample for CODEX Equities Breakout Runner v1"
+    },
+    "||sample_collection|keep collecting sample for codex equities connors mr v1": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting sample for CODEX Equities Connors MR v1"
+    },
+    "||sample_collection|keep collecting sample for codex equities gap fade v0": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting sample for CODEX Equities Gap Fade v0"
+    },
+    "||sample_collection|keep collecting sample for codex equities mean reversion v1": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting sample for CODEX Equities Mean Reversion v1"
+    },
+    "||sample_collection|keep collecting sample for codex equities mr quality v2": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting sample for CODEX Equities MR Quality v2"
+    },
+    "||sample_collection|keep collecting sample for codex equities near-breakout pullback v1": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting sample for CODEX Equities Near-Breakout Pullback v1"
+    },
+    "||sample_collection|keep collecting sample for codex equities opening range v1": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting sample for CODEX Equities Opening Range v1"
+    },
+    "||sample_collection|keep collecting sample for codex equities regime hedge v1": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting sample for CODEX Equities Regime Hedge v1"
+    },
+    "||sample_collection|keep collecting sample for codex equities rs pullback v1": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting sample for CODEX Equities RS Pullback v1"
+    },
+    "||sample_collection|keep collecting sample for codex equities vwap reversal v1": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting sample for CODEX Equities VWAP Reversal v1"
+    },
+    "||sample_collection|keep collecting sample for codex markov directional v1": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting sample for CODEX Markov Directional v1"
+    },
+    "||sample_collection|keep collecting sample for codex markov gate v1": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting sample for CODEX Markov Gate v1"
+    },
+    "||sample_collection|keep collecting sample for codex regime plus l/s v1": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting sample for CODEX Regime Plus L/S v1"
+    },
+    "||sample_collection|keep collecting sample for codex regime plus v1": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting sample for CODEX Regime Plus v1"
+    },
+    "||sample_collection|keep collecting sample for codex regime short plus v1": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting sample for CODEX Regime Short Plus v1"
+    },
+    "||sample_collection|keep collecting sample for codex regime v0": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting sample for CODEX Regime v0"
+    },
+    "||sample_collection|keep collecting sample for codex regime wfo v1": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting sample for CODEX Regime WFO v1"
+    },
+    "||sample_collection|keep collecting sample for codex v0": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "",
+      "strategy": "",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting sample for CODEX v0"
+    },
+    "claude|stocks basket breakout v1|experiment|address regime collapse in stocks basket breakout v1": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "claude",
+      "strategy": "Stocks Basket Breakout v1",
+      "priority": 1,
+      "type": "experiment",
+      "title": "Address regime collapse in Stocks Basket Breakout v1"
+    },
+    "claude|stocks mean reversion v1|experiment|defend stocks mean reversion v1 \u2014 leader but oos bleeding": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "claude",
+      "strategy": "Stocks Mean Reversion v1",
+      "priority": 1,
+      "type": "experiment",
+      "title": "Defend Stocks Mean Reversion v1 \u2014 leader but OOS bleeding"
+    },
+    "claude|stocks mean reversion v2|experiment|defend stocks mean reversion v2 \u2014 leader but oos bleeding": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "claude",
+      "strategy": "Stocks Mean Reversion v2",
+      "priority": 1,
+      "type": "experiment",
+      "title": "Defend Stocks Mean Reversion v2 \u2014 leader but OOS bleeding"
+    },
+    "claude|basket breakout aggressive v1 (crypto)|sample_collection|confirm basket breakout aggressive v1 (crypto) recovery": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "claude",
+      "strategy": "Basket Breakout Aggressive v1 (crypto)",
+      "priority": 2,
+      "type": "sample_collection",
+      "title": "Confirm Basket Breakout Aggressive v1 (crypto) recovery"
+    },
+    "claude|basket breakout aggressive v2 (crypto)|experiment|diagnose persistent loss in basket breakout aggressive v2 (crypto)": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "claude",
+      "strategy": "Basket Breakout Aggressive v2 (crypto)",
+      "priority": 2,
+      "type": "experiment",
+      "title": "Diagnose persistent loss in Basket Breakout Aggressive v2 (crypto)"
+    },
+    "claude|basket breakout leveraged v1 (crypto)|experiment|diagnose persistent loss in basket breakout leveraged v1 (crypto)": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "claude",
+      "strategy": "Basket Breakout Leveraged v1 (crypto)",
+      "priority": 2,
+      "type": "experiment",
+      "title": "Diagnose persistent loss in Basket Breakout Leveraged v1 (crypto)"
+    },
+    "claude|stocks basket breakout aggressive v1|experiment|diagnose persistent loss in stocks basket breakout aggressive v1": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "claude",
+      "strategy": "Stocks Basket Breakout Aggressive v1",
+      "priority": 2,
+      "type": "experiment",
+      "title": "Diagnose persistent loss in Stocks Basket Breakout Aggressive v1"
+    },
+    "claude|stocks basket breakout diversified v1|experiment|diagnose persistent loss in stocks basket breakout diversified v1": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "claude",
+      "strategy": "Stocks Basket Breakout Diversified v1",
+      "priority": 2,
+      "type": "experiment",
+      "title": "Diagnose persistent loss in Stocks Basket Breakout Diversified v1"
+    },
+    "fable|fable crypto drift v1|sample_collection|keep collecting forward sample for fable crypto drift v1": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "fable",
+      "strategy": "FABLE Crypto Drift v1",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting forward sample for FABLE Crypto Drift v1"
+    },
+    "fable|fable crypto pulse l/s v1|sample_collection|keep collecting forward sample for fable crypto pulse l/s v1": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "fable",
+      "strategy": "FABLE Crypto Pulse L/S v1",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting forward sample for FABLE Crypto Pulse L/S v1"
+    },
+    "fable|fable equities afterburner v1|sample_collection|keep collecting forward sample for fable equities afterburner v1": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "fable",
+      "strategy": "FABLE Equities Afterburner v1",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting forward sample for FABLE Equities Afterburner v1"
+    },
+    "fable|fable equities fader v1|sample_collection|keep collecting forward sample for fable equities fader v1": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "fable",
+      "strategy": "FABLE Equities Fader v1",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting forward sample for FABLE Equities Fader v1"
+    },
+    "fable|fable equities gap snap v1|sample_collection|keep collecting forward sample for fable equities gap snap v1": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "fable",
+      "strategy": "FABLE Equities Gap Snap v1",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting forward sample for FABLE Equities Gap Snap v1"
+    },
+    "fable|fable equities snapback l/s v1|sample_collection|keep collecting forward sample for fable equities snapback l/s v1": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "fable",
+      "strategy": "FABLE Equities Snapback L/S v1",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting forward sample for FABLE Equities Snapback L/S v1"
+    },
+    "fable|fable equities snapback turbo|sample_collection|keep collecting forward sample for fable equities snapback turbo": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "fable",
+      "strategy": "FABLE Equities Snapback Turbo",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting forward sample for FABLE Equities Snapback Turbo"
+    },
+    "fable|fable meta-allocator v1|sample_collection|keep collecting forward sample for fable meta-allocator v1": {
+      "first_seen": "2026-06-10T22:58:06Z",
+      "last_seen": "2026-06-10T22:58:06Z",
+      "resolved_at": null,
+      "owner": "fable",
+      "strategy": "FABLE Meta-Allocator v1",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting forward sample for FABLE Meta-Allocator v1"
+    }
+  },
+  "generated_at": "2026-06-10T22:58:06Z"
+}
