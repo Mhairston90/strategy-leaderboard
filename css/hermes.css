@@ -269,6 +269,7 @@
   margin: 0;
   color: #bbb;
   line-height: 1.45;
+  overflow-wrap: anywhere;
 }
 
 .empty-monitor {
