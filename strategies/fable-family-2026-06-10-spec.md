@@ -88,3 +88,12 @@ existing Stock Nightly refreshes the shared caches). Runner:
 Amber at 90% of killswitch DD -> review; at 100% -> PAUSE the row and post a
 post-mortem note in this spec before any restart. A strategy that bleeds for
 90 days under its killswitch gets archived per COMPETITION.md.
+
+## Amendment 2026-06-10 (same-day, simulation semantics — not a parameter change)
+
+Marcus flagged open positions predating live_start (backtest inventory
+carried across the live boundary, occupying heat and able to trip the
+daily circuit). Fixed: the engine now force-flattens any pre-live position
+at the first live bar (`exit-live-boundary-flatten`). A competitor going
+live starts FLAT. These boundary closes have pre-live entries and are
+therefore excluded from contest equity. All strategy parameters unchanged.
