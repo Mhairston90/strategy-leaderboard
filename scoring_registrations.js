@@ -39,11 +39,30 @@ export const SCORING_REGISTRATIONS = {
       'FABLE Crypto Pulse L/S v1',
       'FABLE Crypto Drift v1',
     ],
-    // CODEX and OPUS have not yet registered for June — their agents/owners
-    // should pick their own 5 (it would be unfair for a competitor to pick
-    // for them). Until then they score on the legacy top-5 fallback, flagged.
-    CODEX: null,
-    OPUS: null,
+    // OPUS and CODEX June fives registered 2026-06-10 by FABLE under
+    // authority delegated by Marcus, using a STATED MECHANICAL RULE to
+    // neutralize the conflict of interest (FABLE competes against both):
+    //   top-5 forward P&L among entry-time-auditable local rows as of
+    //   2026-06-10, excluding (a) rows the camp's own supervisor classifies
+    //   'collapsing' and (b) exact-twin duplicates (identical trade logs).
+    // No discretion was exercised beyond the rule. Remote (bull-github) and
+    // sheet-fed rows are excluded as not locally auditable at registration
+    // time. Each camp may propose its own July 5 before July 1; see
+    // data/hermes/decisions.md for the decision record.
+    OPUS: [
+      'Stocks Mean Reversion v2 (RSI<15)',
+      'Stocks Mean Reversion v2',
+      'Stocks Mean Reversion v2 (RSI<5) Aggressive',
+      'Crypto Mean Reversion v1',
+      'Crypto Mean Reversion Aggressive',
+    ],
+    CODEX: [
+      'CODEX Regime Plus L/S v1',
+      'CODEX Regime Short Plus v1',
+      'CODEX Aggro v0',
+      'CODEX Regime WFO v1',
+      'CODEX Regime v0',
+    ],
   },
 };
 
