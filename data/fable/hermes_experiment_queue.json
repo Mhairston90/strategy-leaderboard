@@ -1,6 +1,6 @@
 {
   "owner": "fable",
-  "generated_at": "2026-06-13T15:47:44.000Z",
+  "generated_at": "2026-06-14T17:15:34.000Z",
   "guardrails": [
     "Review-only: no live routing, position-sizing, or spec files were modified.",
     "Queue items are research and operational recommendations only.",
@@ -95,7 +95,7 @@
       "type": "sample_collection",
       "title": "Keep collecting forward sample for FABLE Meta-Allocator v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "3/10 forward closes since live_start 2026-06-10. No classification until the sample gate is met; no promotion/repair decisions on backfill numbers."
+      "requested_action": "4/10 forward closes since live_start 2026-06-10. No classification until the sample gate is met; no promotion/repair decisions on backfill numbers."
     }
   ]
 }
