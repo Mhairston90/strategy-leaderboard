@@ -12,6 +12,7 @@ All signals are computed on cached OHLC shared with the rest of the repo
 shifted one completed bar — no look-ahead.
 """
 from __future__ import annotations
+import time
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -56,13 +57,36 @@ class FableConfig:
 
 # ---------------------------------------------------------------- loaders
 
+def _read_csv_retry(path, tries: int = 4, wait_s: float = 5.0) -> pd.DataFrame:
+    """Resilient read of the shared OHLC caches (added 2026-06-12, user-approved).
+
+    The Stock Nightly fetcher rewrites these CSVs; when the machine wakes and
+    Task Scheduler fires the missed jobs simultaneously, a read can catch a
+    file mid-rewrite (EmptyDataError killed FABLE Crypto Drift v1 on 06-11 and
+    06-12). The fetcher now writes atomically, but retry here as defense in
+    depth — a few seconds' wait outlasts any single-file rewrite.
+    """
+    last_err: Exception | None = None
+    for attempt in range(tries):
+        try:
+            df = pd.read_csv(path)
+            if len(df):
+                return df
+            last_err = ValueError(f"empty dataframe from {path}")
+        except (pd.errors.EmptyDataError, FileNotFoundError, OSError) as e:
+            last_err = e
+        if attempt < tries - 1:
+            time.sleep(wait_s)
+    raise RuntimeError(f"cache unreadable after {tries} tries: {path}: {last_err}")
+
+
 def _load(sym: str, cfg: FableConfig) -> tuple[pd.DataFrame, pd.DataFrame]:
     base = STOCKS_DATA if cfg.asset_class == "stocks" else CRYPTO_DATA
-    intraday = pd.read_csv(base / f"{sym}{cfg.bar_suffix}.csv")
+    intraday = _read_csv_retry(base / f"{sym}{cfg.bar_suffix}.csv")
     if cfg.asset_class == "stocks":
-        higher = pd.read_csv(base / f"{sym}_1d.csv")
+        higher = _read_csv_retry(base / f"{sym}_1d.csv")
     else:
-        higher = pd.read_csv(base / f"{sym}_4h.csv")
+        higher = _read_csv_retry(base / f"{sym}_4h.csv")
     return intraday, higher
 
 

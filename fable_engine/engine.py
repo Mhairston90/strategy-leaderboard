@@ -116,9 +116,21 @@ def simulate(signals: dict[str, pd.DataFrame], cfg, starting_equity: float) -> S
         })
 
     last_close: dict[str, float] = {}
+    live_start = getattr(cfg, "live_start_unix", None)
+
     for unix, sym, row in timeline:
         last_close[sym] = float(row.close)
         pos = open_pos.get(sym)
+
+        # ---- live-boundary flatten: backtest inventory never crosses into
+        # the forward period. A competitor going live starts FLAT; pre-live
+        # positions are closed at the first live bar's open (their entries
+        # are pre-live, so these closes are excluded from contest equity).
+        if (pos is not None and live_start is not None
+                and pos["entry_unix"] < live_start and unix >= live_start):
+            book_close(pos, unix, float(row.open), "exit-live-boundary-flatten")
+            del open_pos[sym]
+            pos = None
 
         # ---- manage open position on this symbol's new bar ----
         if pos is not None and unix > pos["entry_unix"]:

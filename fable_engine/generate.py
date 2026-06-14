@@ -135,10 +135,17 @@ def render_portfolio(cfg: FableConfig, sim: SimulationResult, generated_at: str)
         f"## Open positions ({len(sim.open_at_end)})\n\n"
     )
     if sim.open_at_end:
-        body += "| Symbol | Side | Entry | Last | Stop | Size | Unrealized | Entry time | Bars held |\n"
-        body += "|--------|------|-------|------|------|------|------------|------------|-----------|\n"
+        # First 9 columns conform to the dashboard's shared open-positions
+        # schema (lib/command_center.js parsePortfolioOpenPositions):
+        # Pair|Sleeve|Side|Size|Entry|Stop|Mark|PnL|Exposure. Extra columns
+        # beyond the 9th are ignored by the parser.
+        body += "| Pair | Sleeve | Side | Size | Entry | Stop | Mark | PnL | Exposure | Entry time | Bars held |\n"
+        body += "|------|--------|------|------|-------|------|------|-----|----------|------------|-----------|\n"
         body += "\n".join(
-            f"| {p['symbol']} | {p['side']} | {p['entry']:.4f} | {p['last_close']:.4f} | {p['stop']:.4f} | {p['size']:.4f} | {_fmt_signed(p['unrealized'])} | {p['entry_time']} | {p['bars_held']} |"
+            f"| {p['symbol']} | {cfg.asset_class} | {p['side']} | {p['size']:.4f} "
+            f"| {p['entry']:.4f} | {p['stop']:.4f} | {p['last_close']:.4f} "
+            f"| {_fmt_signed(p['unrealized'])} | {abs(p['size'] * p['last_close']):.2f} "
+            f"| {p['entry_time']} | {p['bars_held']} |"
             for p in sim.open_at_end
         )
     else:
@@ -175,17 +182,37 @@ def main() -> int:
     generated_at = _utc_now_iso()
     OUT_DIR.mkdir(parents=True, exist_ok=True)
 
+    live_start_unix = _to_unix(LIVE_START_ISO)
+    # Per-strategy isolation (added 2026-06-12, user-approved): an unhandled
+    # exception in one strategy used to kill the whole run mid-loop — on
+    # 06-11/06-12 a cache race crashed Crypto Drift (last in this dict), which
+    # also skipped git_commit and stranded the other six strategies'
+    # regenerated files uncommitted. One bad strategy must not take down the
+    # rest, and the run must exit non-zero so the BAT can log it.
+    failed: list[str] = []
     for key in keys:
         cfg = CONFIGS[key]
+        cfg.live_start_unix = live_start_unix
         print(f"[fable] {cfg.display_name}", flush=True)
-        signals = build_signals(cfg, start_unix)
-        sim = simulate(signals, cfg, args.starting_equity)
+        try:
+            signals = build_signals(cfg, start_unix)
+            sim = simulate(signals, cfg, args.starting_equity)
+        except Exception as e:  # noqa: BLE001 — isolate, report, continue
+            import traceback
+            print(f"  ERROR — {key} skipped this run: {e}", flush=True)
+            traceback.print_exc()
+            failed.append(key)
+            continue
         print(f"  events: {len(sim.events)}  closed: {len(sim.closed_pnls)}  realized: {sim.realized_pnl_total:+.2f}", flush=True)
         (OUT_DIR / f"{key}_trade_log.md").write_text(render_trade_log(cfg, sim, generated_at), encoding="utf-8")
         (OUT_DIR / f"{key}_portfolio.md").write_text(render_portfolio(cfg, sim, generated_at), encoding="utf-8")
 
-    if args.git_commit:
-        git_commit(keys, generated_at)
+    ok_keys = [k for k in keys if k not in failed]
+    if args.git_commit and ok_keys:
+        git_commit(ok_keys, generated_at)
+    if failed:
+        print(f"[fable] {len(failed)} strategy(ies) FAILED: {', '.join(failed)}", flush=True)
+        return 1
     return 0
 
 
