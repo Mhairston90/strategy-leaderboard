@@ -1,37 +1,44 @@
 /**
- * Pre-registered scoring — adopted 2026-06-10.
+ * Contest scoring eligibility.
  *
- * THE RULE: each owner pre-registers exactly 5 strategies per calendar month.
- * The owner's contest score for that month = the summed forward P&L of those
- * 5 rows and ONLY those 5 — picked before the month's results are known.
- * Everything else an owner runs is research-only (still on the board, still
- * auditable, contributes nothing to the score).
+ * RULE (set by Marcus 2026-06-16, superseding the 2026-06-10 pre-registration
+ * experiment): a camp's contest score = the summed FORWARD P&L of its top 5
+ * strategies by forward P&L. "Forward" = trades entered on/after each
+ * strategy's live-start (live_start_iso, else the contest start). The ONLY
+ * thing excluded is backtested / pre-live-start trades. NOTHING ELSE is
+ * excluded — every forward-trading strategy is eligible regardless of source
+ * (local, bull-github/remote, or sheet) or how it was created.
  *
- * WHY: the old "best top-5 of unlimited entries" scoring rewarded spawning
- * variant lottery tickets — with 79 rows, several will look great by chance
- * and losers cost nothing. Pre-registration makes the score measure
- * selection skill, not breadth.
+ * This is symmetric across all camps (OPUS, CODEX, FABLE) — the same rule
+ * scores everyone. The scoreboard (lib/contest.js) ranks each camp's eligible
+ * rows by forward P&L and takes the top 5; exact-twin rows (byte-identical
+ * trade logs) are still de-duplicated, because counting the same trades twice
+ * would be double-counting, not an exclusion.
  *
- * MECHANICS:
- *  - Registrations are per UTC calendar month, keyed 'YYYY-MM'.
- *  - A month's registration must be committed BEFORE that month begins
- *    (exception: 2026-06 — the rule was adopted mid-month, so June
- *    registrations were taken at adoption on 2026-06-10).
- *  - An owner with no registration for the month falls back to legacy
- *    top-5-by-forward-P&L, clearly flagged "unregistered" on the scoreboard.
- *  - Registered names that error or go missing score 0 — picking a row that
- *    dies is part of the skill being measured.
- *  - Changing a registration mid-month is forbidden (same spirit as the
- *    mid-window parameter-change ban in COMPETITION.md).
+ * --- REPEALED 2026-06-16: pre-registration model -----------------------------
+ * From 2026-06-10 to 2026-06-16 the score used a pre-registered set of exactly
+ * 5 strategies per camp per month, with remote (bull-github) and sheet sources
+ * excluded at registration time. Marcus repealed it: it was hiding genuine
+ * forward performers (BULL v0, Basket Breakout Aggressive v1) behind a stale
+ * 06-10 snapshot and source-type filter. The historical June registrations are
+ * preserved below for audit but are no longer active. Tradeoff acknowledged:
+ * ranking the top-5 of all forward rows rewards breadth (more variants = more
+ * top-5 lottery tickets); revisit if a camp games it by spawning variants.
  */
 
 export const REGISTRATION_RULE_ADOPTED_ISO = '2026-06-10T00:00:00Z';
+export const REGISTRATION_RULE_REPEALED_ISO = '2026-06-16T00:00:00Z';
 
-export const SCORING_REGISTRATIONS = {
+// Active registrations: NONE. registrationFor() returns null for every owner,
+// so lib/contest.js scores all camps by the universal "top-5 forward P&L,
+// backtest-only exclusion" fallback.
+export const SCORING_REGISTRATIONS = {};
+
+// Historical record of the repealed 2026-06 pre-registration (audit only — NOT
+// used for scoring). Kept so the decision trail in data/hermes/decisions.md
+// remains verifiable.
+export const HISTORICAL_REGISTRATIONS_REPEALED = {
   '2026-06': {
-    // FABLE registered at rule adoption 2026-06-10. The Fader (regime
-    // insurance), Gap Snap, both BULL LAB variants, and any later additions
-    // are research-only for June.
     FABLE: [
       'FABLE Equities Snapback L/S v1',
       'FABLE Equities Snapback Turbo',
@@ -39,16 +46,6 @@ export const SCORING_REGISTRATIONS = {
       'FABLE Crypto Pulse L/S v1',
       'FABLE Crypto Drift v1',
     ],
-    // OPUS and CODEX June fives registered 2026-06-10 by FABLE under
-    // authority delegated by Marcus, using a STATED MECHANICAL RULE to
-    // neutralize the conflict of interest (FABLE competes against both):
-    //   top-5 forward P&L among entry-time-auditable local rows as of
-    //   2026-06-10, excluding (a) rows the camp's own supervisor classifies
-    //   'collapsing' and (b) exact-twin duplicates (identical trade logs).
-    // No discretion was exercised beyond the rule. Remote (bull-github) and
-    // sheet-fed rows are excluded as not locally auditable at registration
-    // time. Each camp may propose its own July 5 before July 1; see
-    // data/hermes/decisions.md for the decision record.
     OPUS: [
       'Stocks Mean Reversion v2 (RSI<15)',
       'Stocks Mean Reversion v2',
@@ -72,7 +69,11 @@ export function monthKey(nowMs) {
   return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`;
 }
 
-/** Returns the registered 5-name array for owner in the month of `nowMs`, or null. */
+/**
+ * Returns the registered 5-name array for owner in the month of `nowMs`, or
+ * null. Post-repeal (2026-06-16) this is always null → lib/contest.js uses the
+ * universal top-5-forward-P&L scoring for every camp.
+ */
 export function registrationFor(owner, nowMs) {
   const month = SCORING_REGISTRATIONS[monthKey(nowMs)];
   if (!month) return null;
