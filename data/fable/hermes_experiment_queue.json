@@ -1,6 +1,6 @@
 {
   "owner": "fable",
-  "generated_at": "2026-06-18T14:06:00.000Z",
+  "generated_at": "2026-06-19T15:37:40.000Z",
   "guardrails": [
     "Review-only: no live routing, position-sizing, or spec files were modified.",
     "Queue items are research and operational recommendations only.",
@@ -13,8 +13,8 @@
     "fading_winner": 0,
     "recovering": 0,
     "stable_profitable": 1,
-    "stable_losing": 0,
-    "insufficient_data": 6
+    "stable_losing": 1,
+    "insufficient_data": 5
   },
   "items": [
     {
@@ -26,6 +26,16 @@
       "title": "Address collapse in FABLE Equities Gap Snap v1",
       "source": "data/fable/hermes_experiment_queue.json",
       "requested_action": "Trailing-14d PF 0.17, PnL -604. Decide: halve risk on new entries, pause pending diagnosis, or archive."
+    },
+    {
+      "owner": "fable",
+      "strategy": "FABLE Equities Snapback L/S v1",
+      "strategy_id": "fable-snapback-ls",
+      "priority": 2,
+      "type": "experiment",
+      "title": "Repair weak edge in FABLE Equities Snapback L/S v1",
+      "source": "data/fable/hermes_experiment_queue.json",
+      "requested_action": "Forward PF 1.00, trailing 1.00. Design ONE one-variable repair experiment; no promotion evidence until PF > 1.2."
     },
     {
       "owner": "fable",
@@ -45,7 +55,7 @@
       "type": "sample_collection",
       "title": "Keep collecting forward sample for FABLE Crypto Pulse L/S v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "5/10 forward closes since live_start 2026-06-10. No classification until the sample gate is met; no promotion/repair decisions on backfill numbers."
+      "requested_action": "6/10 forward closes since live_start 2026-06-10. No classification until the sample gate is met; no promotion/repair decisions on backfill numbers."
     },
     {
       "owner": "fable",
@@ -55,7 +65,7 @@
       "type": "sample_collection",
       "title": "Keep collecting forward sample for FABLE Equities Afterburner v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "1/10 forward closes since live_start 2026-06-10. No classification until the sample gate is met; no promotion/repair decisions on backfill numbers."
+      "requested_action": "2/10 forward closes since live_start 2026-06-10. No classification until the sample gate is met; no promotion/repair decisions on backfill numbers."
     },
     {
       "owner": "fable",
@@ -65,17 +75,7 @@
       "type": "sample_collection",
       "title": "Keep collecting sample for FABLE Equities Fader v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Stable: forward PF 1.42, trailing 1.42. Stay the course; review at month boundary for registration."
-    },
-    {
-      "owner": "fable",
-      "strategy": "FABLE Equities Snapback L/S v1",
-      "strategy_id": "fable-snapback-ls",
-      "priority": 3,
-      "type": "sample_collection",
-      "title": "Keep collecting forward sample for FABLE Equities Snapback L/S v1",
-      "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "8/10 forward closes since live_start 2026-06-10. No classification until the sample gate is met; no promotion/repair decisions on backfill numbers."
+      "requested_action": "Stable: forward PF 1.92, trailing 1.92. Stay the course; review at month boundary for registration."
     },
     {
       "owner": "fable",
@@ -85,7 +85,7 @@
       "type": "sample_collection",
       "title": "Keep collecting forward sample for FABLE Equities Snapback Turbo",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "6/10 forward closes since live_start 2026-06-10. No classification until the sample gate is met; no promotion/repair decisions on backfill numbers."
+      "requested_action": "9/10 forward closes since live_start 2026-06-10. No classification until the sample gate is met; no promotion/repair decisions on backfill numbers."
     },
     {
       "owner": "fable",
