@@ -2,7 +2,7 @@
   "items": {
     "||experiment|refine codex aggro foundry": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -12,7 +12,7 @@
     },
     "||experiment|refine codex apex wfo foundry": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -33,7 +33,7 @@
     "||experiment|refine codex donchian iqr foundry": {
       "first_seen": "2026-06-10T22:58:06Z",
       "last_seen": "2026-06-26T15:53:58Z",
-      "resolved_at": null,
+      "resolved_at": "2026-06-27T16:45:47Z",
       "owner": "",
       "strategy": "",
       "priority": 2,
@@ -42,7 +42,7 @@
     },
     "||experiment|refine codex equities breakout foundry": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -52,7 +52,7 @@
     },
     "||experiment|refine codex equities mean reversion foundry": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -62,7 +62,7 @@
     },
     "||experiment|refine codex pulse foundry": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -72,7 +72,7 @@
     },
     "||experiment|refine codex pulse session foundry": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -82,7 +82,7 @@
     },
     "||experiment|refine codex regime wfo foundry": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -92,7 +92,7 @@
     },
     "||experiment|repair weak edge for codex aggro plus l/s v1": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -112,7 +112,7 @@
     },
     "||sample_collection|keep collecting sample for codex aggro plus l/s quality v2": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -122,7 +122,7 @@
     },
     "||sample_collection|keep collecting sample for codex aggro plus v1": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -132,7 +132,7 @@
     },
     "||sample_collection|keep collecting sample for codex aggro quality v3": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -142,7 +142,7 @@
     },
     "||sample_collection|keep collecting sample for codex aggro short plus quality v2": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -172,7 +172,7 @@
     },
     "||sample_collection|keep collecting sample for codex apex v0": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -182,7 +182,7 @@
     },
     "||sample_collection|keep collecting sample for codex apex wfo v1": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -192,7 +192,7 @@
     },
     "||sample_collection|keep collecting sample for codex convex crypto scout v1": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -202,7 +202,7 @@
     },
     "||sample_collection|keep collecting sample for codex equities breakout runner v1": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -222,7 +222,7 @@
     },
     "||sample_collection|keep collecting sample for codex equities gap fade v0": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -232,7 +232,7 @@
     },
     "||sample_collection|keep collecting sample for codex equities mean reversion v1": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -242,7 +242,7 @@
     },
     "||sample_collection|keep collecting sample for codex equities mr quality v2": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -252,7 +252,7 @@
     },
     "||sample_collection|keep collecting sample for codex equities near-breakout pullback v1": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -262,7 +262,7 @@
     },
     "||sample_collection|keep collecting sample for codex equities opening range v1": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -272,7 +272,7 @@
     },
     "||sample_collection|keep collecting sample for codex equities regime hedge v1": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -282,7 +282,7 @@
     },
     "||sample_collection|keep collecting sample for codex equities rs pullback v1": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -292,7 +292,7 @@
     },
     "||sample_collection|keep collecting sample for codex equities vwap reversal v1": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -302,7 +302,7 @@
     },
     "||sample_collection|keep collecting sample for codex markov directional v1": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -312,7 +312,7 @@
     },
     "||sample_collection|keep collecting sample for codex markov gate v1": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -322,7 +322,7 @@
     },
     "||sample_collection|keep collecting sample for codex regime plus l/s v1": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -332,7 +332,7 @@
     },
     "||sample_collection|keep collecting sample for codex regime plus v1": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -342,7 +342,7 @@
     },
     "||sample_collection|keep collecting sample for codex regime short plus v1": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -352,7 +352,7 @@
     },
     "||sample_collection|keep collecting sample for codex regime v0": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -362,7 +362,7 @@
     },
     "||sample_collection|keep collecting sample for codex regime wfo v1": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -372,8 +372,8 @@
     },
     "||sample_collection|keep collecting sample for codex v0": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-24T16:36:28Z",
-      "resolved_at": "2026-06-25T16:17:20Z",
+      "last_seen": "2026-06-27T16:45:47Z",
+      "resolved_at": null,
       "owner": "",
       "strategy": "",
       "priority": 3,
@@ -382,7 +382,7 @@
     },
     "claude|stocks basket breakout v1|experiment|address regime collapse in stocks basket breakout v1": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "claude",
       "strategy": "Stocks Basket Breakout v1",
@@ -392,7 +392,7 @@
     },
     "claude|stocks mean reversion v1|experiment|defend stocks mean reversion v1 \u2014 leader but oos bleeding": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "claude",
       "strategy": "Stocks Mean Reversion v1",
@@ -402,7 +402,7 @@
     },
     "claude|stocks mean reversion v2|experiment|defend stocks mean reversion v2 \u2014 leader but oos bleeding": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "claude",
       "strategy": "Stocks Mean Reversion v2",
@@ -412,7 +412,7 @@
     },
     "claude|basket breakout aggressive v1 (crypto)|sample_collection|confirm basket breakout aggressive v1 (crypto) recovery": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "claude",
       "strategy": "Basket Breakout Aggressive v1 (crypto)",
@@ -422,7 +422,7 @@
     },
     "claude|basket breakout aggressive v2 (crypto)|experiment|diagnose persistent loss in basket breakout aggressive v2 (crypto)": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "claude",
       "strategy": "Basket Breakout Aggressive v2 (crypto)",
@@ -432,7 +432,7 @@
     },
     "claude|basket breakout leveraged v1 (crypto)|experiment|diagnose persistent loss in basket breakout leveraged v1 (crypto)": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "claude",
       "strategy": "Basket Breakout Leveraged v1 (crypto)",
@@ -442,7 +442,7 @@
     },
     "claude|stocks basket breakout aggressive v1|experiment|diagnose persistent loss in stocks basket breakout aggressive v1": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "claude",
       "strategy": "Stocks Basket Breakout Aggressive v1",
@@ -452,8 +452,8 @@
     },
     "claude|stocks basket breakout diversified v1|experiment|diagnose persistent loss in stocks basket breakout diversified v1": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-18T14:06:00Z",
-      "resolved_at": "2026-06-19T15:37:40Z",
+      "last_seen": "2026-06-27T16:45:47Z",
+      "resolved_at": null,
       "owner": "claude",
       "strategy": "Stocks Basket Breakout Diversified v1",
       "priority": 2,
@@ -462,7 +462,7 @@
     },
     "fable|fable crypto drift v1|sample_collection|keep collecting forward sample for fable crypto drift v1": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "fable",
       "strategy": "FABLE Crypto Drift v1",
@@ -472,7 +472,7 @@
     },
     "fable|fable crypto pulse l/s v1|sample_collection|keep collecting forward sample for fable crypto pulse l/s v1": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "fable",
       "strategy": "FABLE Crypto Pulse L/S v1",
@@ -482,7 +482,7 @@
     },
     "fable|fable equities afterburner v1|sample_collection|keep collecting forward sample for fable equities afterburner v1": {
       "first_seen": "2026-06-10T22:58:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "fable",
       "strategy": "FABLE Equities Afterburner v1",
@@ -562,7 +562,7 @@
     },
     "fable|fable equities gap snap v1|experiment|address collapse in fable equities gap snap v1": {
       "first_seen": "2026-06-18T14:06:00Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "fable",
       "strategy": "FABLE Equities Gap Snap v1",
@@ -572,7 +572,7 @@
     },
     "fable|fable equities fader v1|sample_collection|keep collecting sample for fable equities fader v1": {
       "first_seen": "2026-06-18T14:06:00Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "fable",
       "strategy": "FABLE Equities Fader v1",
@@ -583,7 +583,7 @@
     "claude|stocks basket breakout diversified v1|sample_collection|confirm stocks basket breakout diversified v1 recovery": {
       "first_seen": "2026-06-19T15:37:40Z",
       "last_seen": "2026-06-26T15:53:58Z",
-      "resolved_at": null,
+      "resolved_at": "2026-06-27T16:45:47Z",
       "owner": "claude",
       "strategy": "Stocks Basket Breakout Diversified v1",
       "priority": 2,
@@ -592,7 +592,7 @@
     },
     "fable|fable equities snapback l/s v1|experiment|repair weak edge in fable equities snapback l/s v1": {
       "first_seen": "2026-06-19T15:37:40Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "fable",
       "strategy": "FABLE Equities Snapback L/S v1",
@@ -632,7 +632,7 @@
     },
     "fable|fable meta-allocator v1|sample_collection|keep collecting sample for fable meta-allocator v1": {
       "first_seen": "2026-06-23T16:06:06Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "fable",
       "strategy": "FABLE Meta-Allocator v1",
@@ -642,7 +642,7 @@
     },
     "||experiment|repair weak edge for codex equities connors mr v1": {
       "first_seen": "2026-06-24T16:36:28Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -652,7 +652,7 @@
     },
     "||experiment|repair weak edge for codex aggro short plus v1": {
       "first_seen": "2026-06-25T16:17:20Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "",
       "strategy": "",
@@ -662,7 +662,7 @@
     },
     "fable|fable equities snapback turbo|experiment|repair weak edge in fable equities snapback turbo": {
       "first_seen": "2026-06-26T15:53:58Z",
-      "last_seen": "2026-06-26T15:53:58Z",
+      "last_seen": "2026-06-27T16:45:47Z",
       "resolved_at": null,
       "owner": "fable",
       "strategy": "FABLE Equities Snapback Turbo",
@@ -671,5 +671,5 @@
       "title": "Repair weak edge in FABLE Equities Snapback Turbo"
     }
   },
-  "generated_at": "2026-06-26T15:53:58Z"
+  "generated_at": "2026-06-27T16:45:47Z"
 }
