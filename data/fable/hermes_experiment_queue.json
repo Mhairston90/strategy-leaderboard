@@ -1,6 +1,6 @@
 {
   "owner": "fable",
-  "generated_at": "2026-06-27T16:45:46.000Z",
+  "generated_at": "2026-06-28T16:18:40.000Z",
   "guardrails": [
     "Review-only: no live routing, position-sizing, or spec files were modified.",
     "Queue items are research and operational recommendations only.",
@@ -9,11 +9,11 @@
   ],
   "summary": {
     "queue_items": 8,
-    "collapsing": 1,
+    "collapsing": 2,
     "fading_winner": 0,
     "recovering": 0,
     "stable_profitable": 2,
-    "stable_losing": 2,
+    "stable_losing": 1,
     "insufficient_data": 3
   },
   "items": [
@@ -25,7 +25,17 @@
       "type": "experiment",
       "title": "Address collapse in FABLE Equities Gap Snap v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Trailing-14d PF 0.30, PnL -332. Decide: halve risk on new entries, pause pending diagnosis, or archive."
+      "requested_action": "Trailing-14d PF 0.19, PnL -631. Decide: halve risk on new entries, pause pending diagnosis, or archive."
+    },
+    {
+      "owner": "fable",
+      "strategy": "FABLE Equities Snapback Turbo",
+      "strategy_id": "fable-snapback-turbo",
+      "priority": 1,
+      "type": "experiment",
+      "title": "Address collapse in FABLE Equities Snapback Turbo",
+      "source": "data/fable/hermes_experiment_queue.json",
+      "requested_action": "Trailing-14d PF 0.58, PnL -886. Decide: halve risk on new entries, pause pending diagnosis, or archive."
     },
     {
       "owner": "fable",
@@ -35,17 +45,7 @@
       "type": "experiment",
       "title": "Repair weak edge in FABLE Equities Snapback L/S v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Forward PF 0.79, trailing 0.71. Design ONE one-variable repair experiment; no promotion evidence until PF > 1.2."
-    },
-    {
-      "owner": "fable",
-      "strategy": "FABLE Equities Snapback Turbo",
-      "strategy_id": "fable-snapback-turbo",
-      "priority": 2,
-      "type": "experiment",
-      "title": "Repair weak edge in FABLE Equities Snapback Turbo",
-      "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Forward PF 0.76, trailing 0.66. Design ONE one-variable repair experiment; no promotion evidence until PF > 1.2."
+      "requested_action": "Forward PF 0.71, trailing 0.64. Design ONE one-variable repair experiment; no promotion evidence until PF > 1.2."
     },
     {
       "owner": "fable",
