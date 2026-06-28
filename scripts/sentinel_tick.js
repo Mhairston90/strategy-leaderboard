@@ -1,0 +1,295 @@
+import { readFile, writeFile } from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { createAlpacaPaperClient } from '../lib/sentinel/alpaca_paper.js';
+import { loadSentinelConfigFromText } from '../lib/sentinel/config.js';
+import { appendJsonl, readJsonlFile } from '../lib/sentinel/jsonl.js';
+import { buildReconciliationUpdate } from '../lib/sentinel/reconcile.js';
+import { evaluateTicketRisk } from '../lib/sentinel/risk_governor.js';
+import { normalizeSymbolForAlpaca, validateTicket } from '../lib/sentinel/ticket_schema.js';
+
+const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const SENTINEL_DIR = path.join(REPO_ROOT, 'data', 'sentinel');
+const SUPPORTED_SYMBOLS = new Set(['AAPL', 'MSFT', 'SPY', 'QQQ', 'BTC/USD', 'ETH/USD']);
+const ENV_SECRET_NAMES = ['APCA_API_KEY_ID', 'APCA_API_SECRET_KEY', 'ALPACA_API_KEY_ID', 'ALPACA_API_SECRET_KEY'];
+
+function asArray(value) {
+  return Array.isArray(value) ? value : [];
+}
+
+function numeric(value, fallback = 0) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+}
+
+function redactKnownSecrets(text) {
+  let safeText = String(text ?? '');
+  for (const name of ENV_SECRET_NAMES) {
+    const secret = process.env[name];
+    if (typeof secret === 'string' && secret !== '') {
+      safeText = safeText.split(secret).join('***');
+    }
+  }
+
+  return safeText.replace(
+    /(APCA-API-(?:KEY-ID|SECRET-KEY)|authorization|secret|token|password)\s*[:=]\s*[^,\s}]+/gi,
+    '$1: ***',
+  );
+}
+
+function brokerFailureReason(result) {
+  const error = result?.error;
+  if (typeof error === 'string' && error.trim() !== '') {
+    return redactKnownSecrets(error);
+  }
+  if (typeof error?.message === 'string' && error.message.trim() !== '') {
+    return redactKnownSecrets(error.message);
+  }
+  if (typeof error?.error === 'string' && error.error.trim() !== '') {
+    return redactKnownSecrets(error.error);
+  }
+  if (result?.status) {
+    return `broker rejected order with status ${result.status}`;
+  }
+  return 'broker rejected order';
+}
+
+function brokerOrderId(order) {
+  const id = order?.id ?? order?.client_order_id ?? order?.order_id;
+  return id === undefined || id === null ? '' : String(id);
+}
+
+function decisionFor(ticket, now, decision, reasons = [], extra = {}) {
+  return {
+    ticket_id: ticket?.ticket_id ?? null,
+    processed_at: now,
+    decision,
+    risk_status:
+      decision === 'submitted' ? 'approved' : decision === 'broker_rejected' ? 'rejected' : 'blocked',
+    strategy: ticket?.strategy ?? null,
+    symbol: ticket?.symbol ? normalizeSymbolForAlpaca(ticket.symbol) : null,
+    asset_class: ticket?.asset_class ?? null,
+    side: ticket?.side ?? null,
+    intent: ticket?.intent ?? null,
+    notional_usd: ticket?.notional_usd ?? null,
+    quantity: Object.hasOwn(ticket ?? {}, 'quantity') ? ticket.quantity : null,
+    order_type: ticket?.order_type ?? null,
+    time_in_force: ticket?.time_in_force ?? null,
+    reason: ticket?.reason ?? null,
+    source_signal_id: ticket?.source_signal_id ?? null,
+    broker: ticket?.broker ?? null,
+    reasons,
+    ...extra,
+  };
+}
+
+function orderSubmittedEvent(ticket, now, orderId) {
+  return {
+    type: 'order_submitted',
+    at: now,
+    ticket_id: ticket.ticket_id,
+    broker_order_id: orderId,
+    symbol: normalizeSymbolForAlpaca(ticket.symbol),
+    side: ticket.side,
+    notional_usd: ticket.notional_usd,
+    strategy: ticket.strategy,
+  };
+}
+
+function orderRejectedEvent(ticket, now, reason) {
+  return {
+    type: 'order_rejected',
+    at: now,
+    ticket_id: ticket.ticket_id,
+    symbol: ticket?.symbol ? normalizeSymbolForAlpaca(ticket.symbol) : null,
+    side: ticket?.side ?? null,
+    notional_usd: ticket?.notional_usd ?? null,
+    strategy: ticket?.strategy ?? null,
+    reason,
+  };
+}
+
+export async function processTickets({
+  tickets,
+  broker,
+  config,
+  riskState,
+  account,
+  positions,
+  recentTickets,
+  supportedSymbols,
+  now = new Date().toISOString(),
+} = {}) {
+  const decisions = [];
+  const ledgerEvents = [];
+  const riskContext = {
+    config,
+    riskState,
+    account,
+    positions,
+    recentTickets,
+    supportedSymbols,
+  };
+
+  for (const ticket of asArray(tickets)) {
+    const schema = validateTicket(ticket);
+    if (!schema.ok) {
+      decisions.push(decisionFor(ticket, now, 'blocked', schema.errors));
+      continue;
+    }
+
+    const risk = evaluateTicketRisk(ticket, riskContext);
+    if (!risk.ok) {
+      decisions.push(decisionFor(ticket, now, 'blocked', risk.reasons));
+      continue;
+    }
+
+    const submitted = await broker.submitOrder(ticket);
+    if (!submitted?.ok) {
+      const reason = brokerFailureReason(submitted);
+      decisions.push(decisionFor(ticket, now, 'broker_rejected', [reason]));
+      ledgerEvents.push(orderRejectedEvent(ticket, now, reason));
+      continue;
+    }
+
+    const orderId = brokerOrderId(submitted.order);
+    decisions.push(decisionFor(ticket, now, 'submitted', [], { broker_order_id: orderId }));
+    ledgerEvents.push(orderSubmittedEvent(ticket, now, orderId));
+  }
+
+  return { decisions, ledgerEvents };
+}
+
+export function buildSentinelStatusMarkdown({ generatedAt, decisions = [], riskState = {} } = {}) {
+  const submitted = decisions.filter((decision) => decision.decision === 'submitted').length;
+  const blocked = decisions.filter((decision) => decision.decision === 'blocked').length;
+  const brokerRejected = decisions.filter((decision) => decision.decision === 'broker_rejected').length;
+
+  return [
+    '# Trade Sentinel Status',
+    '',
+    `- generated_at: ${generatedAt ?? ''}`,
+    `- processed_tickets: ${decisions.length}`,
+    `- submitted: ${submitted}`,
+    `- blocked: ${blocked}`,
+    `- broker_rejected: ${brokerRejected}`,
+    `- frozen: ${riskState.frozen === true}`,
+    '',
+  ].join('\n');
+}
+
+async function readJson(relativePath, fallback) {
+  try {
+    return JSON.parse(await readFile(path.join(REPO_ROOT, relativePath), 'utf8'));
+  } catch (error) {
+    if (error?.code === 'ENOENT') {
+      return fallback;
+    }
+    throw error;
+  }
+}
+
+async function writeJson(relativePath, value) {
+  await writeFile(path.join(REPO_ROOT, relativePath), `${JSON.stringify(value, null, 2)}\n`, 'utf8');
+}
+
+async function appendAllJsonl(relativePath, values) {
+  for (const value of values) {
+    await appendJsonl(path.join(REPO_ROOT, relativePath), value);
+  }
+}
+
+function brokerFetchError(label, result) {
+  return new Error(`${label} fetch failed: ${brokerFailureReason(result)}`);
+}
+
+async function main() {
+  const generatedAt = new Date().toISOString();
+  const config = loadSentinelConfigFromText(
+    await readFile(path.join(SENTINEL_DIR, 'config.json'), 'utf8'),
+  );
+  const storedRiskState = await readJson('data/sentinel/risk_state.json', { frozen: false });
+  const tickets = await readJsonlFile(path.join(SENTINEL_DIR, 'ticket_inbox.jsonl'));
+  const recentTickets = await readJsonlFile(path.join(SENTINEL_DIR, 'trade_tickets.jsonl'));
+  const existingLedgerEvents = await readJsonlFile(path.join(SENTINEL_DIR, 'execution_ledger.jsonl'));
+
+  const broker = createAlpacaPaperClient();
+  const accountResult = await broker.getAccount();
+  if (!accountResult.ok) {
+    throw brokerFetchError('Alpaca account', accountResult);
+  }
+
+  const positionsResult = await broker.getPositions();
+  if (!positionsResult.ok) {
+    throw brokerFetchError('Alpaca positions', positionsResult);
+  }
+
+  const ordersResult = await broker.getOrders();
+  if (!ordersResult.ok) {
+    throw brokerFetchError('Alpaca orders', ordersResult);
+  }
+
+  const brokerPositions = asArray(positionsResult.positions);
+  const openOrders = asArray(ordersResult.orders);
+  const account = {
+    equity: numeric(accountResult.account?.equity),
+    daily_realized_pnl: numeric(accountResult.account?.daily_realized_pnl),
+    open_orders: openOrders,
+  };
+  const preProcessReconciliation = buildReconciliationUpdate({
+    ledgerEvents: existingLedgerEvents,
+    brokerPositions,
+    riskState: storedRiskState,
+    config,
+    generatedAt,
+  });
+
+  const processed = await processTickets({
+    tickets,
+    broker,
+    config,
+    riskState: preProcessReconciliation.riskState,
+    account,
+    positions: brokerPositions,
+    recentTickets,
+    supportedSymbols: SUPPORTED_SYMBOLS,
+    now: generatedAt,
+  });
+
+  await appendAllJsonl('data/sentinel/trade_tickets.jsonl', processed.decisions);
+  await appendAllJsonl('data/sentinel/execution_ledger.jsonl', processed.ledgerEvents);
+
+  const postProcessReconciliation = buildReconciliationUpdate({
+    ledgerEvents: [...existingLedgerEvents, ...processed.ledgerEvents],
+    brokerPositions,
+    riskState: preProcessReconciliation.riskState,
+    config,
+    generatedAt,
+  });
+  const nextRiskState = {
+    ...postProcessReconciliation.riskState,
+    generated_at: generatedAt,
+    paper_auto_submit_enabled: config.paper_auto_submit_enabled,
+    live_trading_enabled: config.live_trading_enabled,
+  };
+
+  await writeJson('data/sentinel/reconciliation_report.json', postProcessReconciliation.report);
+  await writeJson('data/sentinel/risk_state.json', nextRiskState);
+  await writeFile(
+    path.join(SENTINEL_DIR, 'sentinel_status.md'),
+    buildSentinelStatusMarkdown({
+      generatedAt,
+      decisions: processed.decisions,
+      riskState: nextRiskState,
+    }),
+    'utf8',
+  );
+}
+
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  main().catch((error) => {
+    console.error(redactKnownSecrets(error instanceof Error ? error.message : String(error)));
+    process.exitCode = 1;
+  });
+}
