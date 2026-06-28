@@ -289,6 +289,40 @@ test('processTickets reduces projected exposure for same-run close tickets', asy
   assert.equal(result.decisions.map((decision) => decision.decision).join(','), 'submitted,submitted');
 });
 
+test('processTickets submits partial close that remains over cap then blocks new exposure', async () => {
+  const { broker, submittedTickets } = submittingBroker();
+  const closeTicket = ticketWith({
+    ticket_id: 'sentinel-test-partial-close',
+    side: 'sell',
+    intent: 'close',
+    notional_usd: 25,
+    source_signal_id: 'paper-smoke-partial-close',
+  });
+  const reopenTicket = ticketWith({
+    ticket_id: 'sentinel-test-reopen-over-cap',
+    notional_usd: 25,
+    source_signal_id: 'paper-smoke-reopen-over-cap',
+  });
+
+  const result = await processTickets({
+    tickets: [closeTicket, reopenTicket],
+    broker,
+    ...context({
+      config: {
+        max_symbol_exposure_pct: 5,
+        max_gross_exposure_pct: 5,
+        max_strategy_weight_pct: 5,
+      },
+      account: { equity: 1000 },
+      positions: [{ symbol: 'AAPL', strategy: ticket.strategy, market_value: 200 }],
+    }),
+  });
+
+  assert.deepEqual(submittedTickets, [closeTicket]);
+  assert.equal(result.decisions.map((decision) => decision.decision).join(','), 'submitted,blocked');
+  assert.match(result.decisions[1].reasons.join(' | '), /symbol exposure 200 exceeds cap 50/);
+});
+
 test('processTickets blocks resubmission from existing ledger source_signal_id when recentTickets is empty', async () => {
   const { broker, submittedTickets } = submittingBroker();
 
