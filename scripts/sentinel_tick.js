@@ -60,6 +60,17 @@ function brokerOrderId(order) {
   return id === undefined || id === null ? '' : String(id);
 }
 
+function ledgerRecentTickets(ledgerEvents) {
+  return asArray(ledgerEvents)
+    .filter((event) => event?.source_signal_id && event?.symbol && event?.strategy)
+    .map((event) => ({
+      ticket_id: event.ticket_id ?? null,
+      source_signal_id: event.source_signal_id,
+      symbol: event.symbol,
+      strategy: event.strategy,
+    }));
+}
+
 function decisionFor(ticket, now, decision, reasons = [], extra = {}) {
   return {
     ticket_id: ticket?.ticket_id ?? null,
@@ -94,6 +105,7 @@ function orderSubmittedEvent(ticket, now, orderId) {
     side: ticket.side,
     notional_usd: ticket.notional_usd,
     strategy: ticket.strategy,
+    source_signal_id: ticket.source_signal_id,
   };
 }
 
@@ -106,7 +118,34 @@ function orderRejectedEvent(ticket, now, reason) {
     side: ticket?.side ?? null,
     notional_usd: ticket?.notional_usd ?? null,
     strategy: ticket?.strategy ?? null,
+    source_signal_id: ticket?.source_signal_id ?? null,
     reason,
+  };
+}
+
+function projectedAccount(account, openOrders) {
+  return {
+    ...(account ?? {}),
+    open_orders: openOrders,
+  };
+}
+
+function projectedOpenOrder(ticket, orderId) {
+  return {
+    id: orderId,
+    ticket_id: ticket.ticket_id,
+    symbol: normalizeSymbolForAlpaca(ticket.symbol),
+    side: ticket.side,
+    notional_usd: ticket.notional_usd,
+    strategy: ticket.strategy,
+    source_signal_id: ticket.source_signal_id,
+  };
+}
+
+function projectedExposurePosition(ticket) {
+  return {
+    symbol: normalizeSymbolForAlpaca(ticket.symbol),
+    market_value: ticket.notional_usd,
   };
 }
 
@@ -118,43 +157,57 @@ export async function processTickets({
   account,
   positions,
   recentTickets,
+  ledgerEvents: existingLedgerEvents,
   supportedSymbols,
   now = new Date().toISOString(),
 } = {}) {
   const decisions = [];
   const ledgerEvents = [];
-  const riskContext = {
-    config,
-    riskState,
-    account,
-    positions,
-    recentTickets,
-    supportedSymbols,
-  };
+  const projectedRecentTickets = [...asArray(recentTickets), ...ledgerRecentTickets(existingLedgerEvents)];
+  const projectedOpenOrders = [...asArray(account?.open_orders)];
+  const projectedPositions = Array.isArray(positions) ? [...positions] : [...asArray(account?.positions)];
 
   for (const ticket of asArray(tickets)) {
     const schema = validateTicket(ticket);
     if (!schema.ok) {
-      decisions.push(decisionFor(ticket, now, 'blocked', schema.errors));
+      const decision = decisionFor(ticket, now, 'blocked', schema.errors);
+      decisions.push(decision);
+      projectedRecentTickets.push(decision);
       continue;
     }
 
+    const riskContext = {
+      config,
+      riskState,
+      account: projectedAccount(account, projectedOpenOrders),
+      positions: projectedPositions,
+      recentTickets: projectedRecentTickets,
+      supportedSymbols,
+    };
     const risk = evaluateTicketRisk(ticket, riskContext);
     if (!risk.ok) {
-      decisions.push(decisionFor(ticket, now, 'blocked', risk.reasons));
+      const decision = decisionFor(ticket, now, 'blocked', risk.reasons);
+      decisions.push(decision);
+      projectedRecentTickets.push(decision);
       continue;
     }
 
     const submitted = await broker.submitOrder(ticket);
     if (!submitted?.ok) {
       const reason = brokerFailureReason(submitted);
-      decisions.push(decisionFor(ticket, now, 'broker_rejected', [reason]));
+      const decision = decisionFor(ticket, now, 'broker_rejected', [reason]);
+      decisions.push(decision);
+      projectedRecentTickets.push(decision);
       ledgerEvents.push(orderRejectedEvent(ticket, now, reason));
       continue;
     }
 
     const orderId = brokerOrderId(submitted.order);
-    decisions.push(decisionFor(ticket, now, 'submitted', [], { broker_order_id: orderId }));
+    const decision = decisionFor(ticket, now, 'submitted', [], { broker_order_id: orderId });
+    decisions.push(decision);
+    projectedRecentTickets.push(decision);
+    projectedOpenOrders.push(projectedOpenOrder(ticket, orderId));
+    projectedPositions.push(projectedExposurePosition(ticket));
     ledgerEvents.push(orderSubmittedEvent(ticket, now, orderId));
   }
 
@@ -253,6 +306,7 @@ async function main() {
     account,
     positions: brokerPositions,
     recentTickets,
+    ledgerEvents: existingLedgerEvents,
     supportedSymbols: SUPPORTED_SYMBOLS,
     now: generatedAt,
   });

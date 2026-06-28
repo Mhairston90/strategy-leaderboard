@@ -48,6 +48,24 @@ function context(overrides = {}) {
   };
 }
 
+function ticketWith(overrides = {}) {
+  return { ...ticket, ...overrides };
+}
+
+function submittingBroker() {
+  const submittedTickets = [];
+
+  return {
+    submittedTickets,
+    broker: {
+      async submitOrder(submittedTicket) {
+        submittedTickets.push(submittedTicket);
+        return { ok: true, order: { id: `paper-order-${submittedTickets.length}` } };
+      },
+    },
+  };
+}
+
 test('processTickets auto-submits approved paper tickets and records an order_submitted ledger event', async () => {
   const submittedTickets = [];
   const broker = {
@@ -75,6 +93,7 @@ test('processTickets auto-submits approved paper tickets and records an order_su
       side: ticket.side,
       notional_usd: ticket.notional_usd,
       strategy: ticket.strategy,
+      source_signal_id: ticket.source_signal_id,
     },
   ]);
 });
@@ -123,6 +142,7 @@ test('processTickets records broker rejected decisions and order_rejected ledger
       side: ticket.side,
       notional_usd: ticket.notional_usd,
       strategy: ticket.strategy,
+      source_signal_id: ticket.source_signal_id,
       reason: 'paper broker rejected order',
     },
   ]);
@@ -145,5 +165,95 @@ test('processTickets records schema-invalid tickets as blocked decisions and doe
   assert.equal(result.decisions.length, 1);
   assert.equal(result.decisions[0].decision, 'blocked');
   assert.match(result.decisions[0].reasons.join(' | '), /quantity is required/);
+  assert.deepEqual(result.ledgerEvents, []);
+});
+
+test('processTickets blocks same-run duplicate source_signal_id after the first submission', async () => {
+  const { broker, submittedTickets } = submittingBroker();
+  const duplicate = ticketWith({ ticket_id: 'sentinel-test-2' });
+
+  const result = await processTickets({ tickets: [ticket, duplicate], broker, ...context() });
+
+  assert.deepEqual(submittedTickets, [ticket]);
+  assert.equal(result.decisions.length, 2);
+  assert.equal(result.decisions[0].decision, 'submitted');
+  assert.equal(result.decisions[1].decision, 'blocked');
+  assert.match(result.decisions[1].reasons.join(' | '), /duplicate source signal: paper-smoke-1/);
+  assert.equal(result.ledgerEvents.length, 1);
+  assert.equal(result.ledgerEvents[0].source_signal_id, ticket.source_signal_id);
+});
+
+test('processTickets applies same-run max_open_orders projection', async () => {
+  const { broker, submittedTickets } = submittingBroker();
+  const secondTicket = ticketWith({
+    ticket_id: 'sentinel-test-2',
+    source_signal_id: 'paper-smoke-2',
+  });
+
+  const result = await processTickets({
+    tickets: [ticket, secondTicket],
+    broker,
+    ...context({ config: { max_open_orders: 1 } }),
+  });
+
+  assert.deepEqual(submittedTickets, [ticket]);
+  assert.equal(result.decisions.map((decision) => decision.decision).join(','), 'submitted,blocked');
+  assert.match(result.decisions[1].reasons.join(' | '), /open orders 1 at or above cap 1/);
+  assert.equal(result.ledgerEvents.length, 1);
+});
+
+test('processTickets applies same-run symbol exposure projection', async () => {
+  const { broker, submittedTickets } = submittingBroker();
+  const firstTicket = ticketWith({
+    ticket_id: 'sentinel-test-1',
+    notional_usd: 1200,
+    source_signal_id: 'paper-smoke-1',
+  });
+  const secondTicket = ticketWith({
+    ticket_id: 'sentinel-test-2',
+    notional_usd: 1200,
+    source_signal_id: 'paper-smoke-2',
+  });
+
+  const result = await processTickets({
+    tickets: [firstTicket, secondTicket],
+    broker,
+    ...context(),
+  });
+
+  assert.deepEqual(submittedTickets, [firstTicket]);
+  assert.equal(result.decisions.map((decision) => decision.decision).join(','), 'submitted,blocked');
+  assert.match(result.decisions[1].reasons.join(' | '), /symbol exposure 2400 exceeds cap 2000/);
+  assert.equal(result.ledgerEvents.length, 1);
+});
+
+test('processTickets blocks resubmission from existing ledger source_signal_id when recentTickets is empty', async () => {
+  const { broker, submittedTickets } = submittingBroker();
+
+  const result = await processTickets({
+    tickets: [ticket],
+    broker,
+    ...context({
+      recentTickets: [],
+      ledgerEvents: [
+        {
+          type: 'order_submitted',
+          at: '2026-06-28T18:00:30Z',
+          ticket_id: 'sentinel-earlier',
+          broker_order_id: 'paper-order-earlier',
+          symbol: ticket.symbol,
+          side: ticket.side,
+          notional_usd: ticket.notional_usd,
+          strategy: ticket.strategy,
+          source_signal_id: ticket.source_signal_id,
+        },
+      ],
+    }),
+  });
+
+  assert.deepEqual(submittedTickets, []);
+  assert.equal(result.decisions.length, 1);
+  assert.equal(result.decisions[0].decision, 'blocked');
+  assert.match(result.decisions[0].reasons.join(' | '), /duplicate source signal: paper-smoke-1/);
   assert.deepEqual(result.ledgerEvents, []);
 });
