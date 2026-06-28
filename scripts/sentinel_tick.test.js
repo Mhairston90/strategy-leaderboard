@@ -511,6 +511,36 @@ test('processTickets blocks oversized close before projection can flip exposure'
   assert.deepEqual(result.ledgerEvents, []);
 });
 
+test('processTickets blocks non-reducing close tickets before broker submission', async () => {
+  const { broker, submittedTickets } = submittingBroker();
+  const closeTicket = ticketWith({
+    ticket_id: 'sentinel-test-non-reducing-close',
+    side: 'sell',
+    intent: 'close',
+    notional_usd: 100,
+    source_signal_id: 'paper-smoke-non-reducing-close',
+  });
+
+  const result = await processTickets({
+    tickets: [closeTicket],
+    broker,
+    ...context({
+      config: {
+        max_symbol_exposure_pct: 100,
+        max_gross_exposure_pct: 100,
+        max_strategy_weight_pct: 100,
+      },
+      positions: [],
+    }),
+  });
+
+  assert.deepEqual(submittedTickets, []);
+  assert.equal(result.decisions.length, 1);
+  assert.equal(result.decisions[0].decision, 'blocked');
+  assert.match(result.decisions[0].reasons.join(' | '), /close ticket does not reduce existing exposure/);
+  assert.deepEqual(result.ledgerEvents, []);
+});
+
 test('processTickets blocks resubmission from existing ledger source_signal_id when recentTickets is empty', async () => {
   const { broker, submittedTickets } = submittingBroker();
 
