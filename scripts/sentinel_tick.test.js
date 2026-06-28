@@ -481,6 +481,36 @@ test('processTickets submits partial close that remains over cap then blocks new
   assert.match(result.decisions[1].reasons.join(' | '), /symbol exposure 200 exceeds cap 50/);
 });
 
+test('processTickets blocks oversized close before projection can flip exposure', async () => {
+  const { broker, submittedTickets } = submittingBroker();
+  const closeTicket = ticketWith({
+    ticket_id: 'sentinel-test-over-close',
+    side: 'sell',
+    intent: 'close',
+    notional_usd: 1000,
+    source_signal_id: 'paper-smoke-over-close',
+  });
+
+  const result = await processTickets({
+    tickets: [closeTicket],
+    broker,
+    ...context({
+      config: {
+        max_symbol_exposure_pct: 100,
+        max_gross_exposure_pct: 100,
+        max_strategy_weight_pct: 100,
+      },
+      positions: [{ symbol: 'AAPL', strategy: ticket.strategy, market_value: 100 }],
+    }),
+  });
+
+  assert.deepEqual(submittedTickets, []);
+  assert.equal(result.decisions.length, 1);
+  assert.equal(result.decisions[0].decision, 'blocked');
+  assert.match(result.decisions[0].reasons.join(' | '), /close notional 1000 exceeds existing exposure 100/);
+  assert.deepEqual(result.ledgerEvents, []);
+});
+
 test('processTickets blocks resubmission from existing ledger source_signal_id when recentTickets is empty', async () => {
   const { broker, submittedTickets } = submittingBroker();
 

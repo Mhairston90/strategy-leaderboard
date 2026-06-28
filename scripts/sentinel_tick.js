@@ -24,6 +24,12 @@ function numeric(value, fallback = 0) {
   return Number.isFinite(parsed) ? parsed : fallback;
 }
 
+function copyAccountTelemetry(target, source, field) {
+  if (Object.hasOwn(source ?? {}, field)) {
+    target[field] = source[field];
+  }
+}
+
 function redactKnownSecrets(text) {
   let safeText = String(text ?? '');
   for (const name of ENV_SECRET_NAMES) {
@@ -384,7 +390,9 @@ async function main() {
   const storedRiskState = await readJson('data/sentinel/risk_state.json', { frozen: false });
   const tickets = await readJsonlFile(path.join(SENTINEL_DIR, 'ticket_inbox.jsonl'));
   const recentTickets = await readJsonlFile(path.join(SENTINEL_DIR, 'trade_tickets.jsonl'));
-  const existingLedgerEvents = await readJsonlFile(path.join(SENTINEL_DIR, 'execution_ledger.jsonl'));
+  const existingLedgerEvents = await readJsonlFile(path.join(SENTINEL_DIR, 'execution_ledger.jsonl'), {
+    tolerateMalformed: true,
+  });
 
   const broker = createAlpacaPaperClient();
   const accountResult = await broker.getAccount();
@@ -405,10 +413,12 @@ async function main() {
   const brokerPositions = asArray(positionsResult.positions);
   const openOrders = asArray(ordersResult.orders);
   const account = {
-    equity: numeric(accountResult.account?.equity),
-    daily_realized_pnl: numeric(accountResult.account?.daily_realized_pnl),
+    equity: accountResult.account?.equity,
     open_orders: openOrders,
   };
+  for (const field of ['daily_realized_loss', 'daily_realized_loss_usd', 'daily_realized_pnl', 'last_equity']) {
+    copyAccountTelemetry(account, accountResult.account, field);
+  }
   const preProcessReconciliation = buildReconciliationUpdate({
     ledgerEvents: existingLedgerEvents,
     brokerPositions,
