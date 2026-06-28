@@ -1,0 +1,13 @@
+{
+  "generated_at": "",
+  "mode": "paper",
+  "total_weight": 1,
+  "strategies": [
+    { "name": "CODEX Regime Plus L/S v1", "target_weight": 0.22, "role": "core_return_engine" },
+    { "name": "Basket Breakout Aggressive v1", "target_weight": 0.20, "role": "independent_breakout" },
+    { "name": "CODEX Aggro v0", "target_weight": 0.18, "role": "proven_crypto_momentum" },
+    { "name": "CODEX Aggro Short Plus Quality v2", "target_weight": 0.15, "role": "quality_short_momentum" },
+    { "name": "Stocks Mean Reversion v2 (RSI<15)", "target_weight": 0.15, "role": "equity_mean_reversion_stabilizer" },
+    { "name": "FABLE Equities Fader v1", "target_weight": 0.10, "role": "diversifier" }
+  ]
+}
