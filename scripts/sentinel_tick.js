@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { createAlpacaPaperClient } from '../lib/sentinel/alpaca_paper.js';
 import { loadSentinelConfigFromText } from '../lib/sentinel/config.js';
 import { appendJsonl, readJsonlFile } from '../lib/sentinel/jsonl.js';
+import { replayLedgerEvents } from '../lib/sentinel/ledger.js';
 import { buildReconciliationUpdate } from '../lib/sentinel/reconcile.js';
 import { evaluateTicketRisk } from '../lib/sentinel/risk_governor.js';
 import { normalizeSymbolForAlpaca, validateTicket } from '../lib/sentinel/ticket_schema.js';
@@ -62,10 +63,17 @@ function brokerOrderId(order) {
 
 function ledgerRecentTickets(ledgerEvents) {
   return asArray(ledgerEvents)
-    .filter((event) => event?.source_signal_id && event?.symbol && event?.strategy)
+    .filter(
+      (event) =>
+        (event?.type === 'order_submitted' || event?.type === 'order_rejected') &&
+        event?.source_signal_id &&
+        event?.symbol &&
+        event?.strategy,
+    )
     .map((event) => ({
       ticket_id: event.ticket_id ?? null,
       at: event.at ?? null,
+      type: event.type,
       source_signal_id: event.source_signal_id,
       symbol: event.symbol,
       strategy: event.strategy,
@@ -175,6 +183,79 @@ function applyProjectedExposure(positions, ticket) {
   };
 }
 
+function signsCompatible(left, right) {
+  const leftNumber = Number(left);
+  const rightNumber = Number(right);
+  if (!Number.isFinite(leftNumber) || !Number.isFinite(rightNumber)) {
+    return false;
+  }
+  if (Math.abs(leftNumber) <= 0.000001 || Math.abs(rightNumber) <= 0.000001) {
+    return false;
+  }
+
+  return Math.sign(leftNumber) === Math.sign(rightNumber);
+}
+
+function quantitiesMatch(left, right) {
+  const leftNumber = Number(left);
+  const rightNumber = Number(right);
+  return (
+    Number.isFinite(leftNumber) &&
+    Number.isFinite(rightNumber) &&
+    Math.abs(leftNumber - rightNumber) <= 0.000001
+  );
+}
+
+function canAttributeBrokerPosition(brokerPosition, ledgerPosition) {
+  if (!ledgerPosition?.strategy) {
+    return false;
+  }
+
+  if (quantitiesMatch(brokerPosition?.qty, ledgerPosition.qty)) {
+    return true;
+  }
+
+  return signsCompatible(brokerPosition?.market_value, ledgerPosition.market_value);
+}
+
+function strategyAttributedPositions(positions, ledgerEvents) {
+  const brokerPositions = asArray(positions);
+  const replay = replayLedgerEvents(ledgerEvents);
+  const ledgerPositions = new Map(
+    [...replay.positions.entries()].map(([symbol, position]) => [
+      normalizeSymbolForAlpaca(symbol),
+      { ...position, symbol: normalizeSymbolForAlpaca(position.symbol ?? symbol) },
+    ]),
+  );
+
+  if (brokerPositions.length === 0) {
+    return [...ledgerPositions.values()];
+  }
+
+  const attributed = brokerPositions.map((position) => {
+    const symbol = normalizeSymbolForAlpaca(position?.symbol);
+    const ledgerPosition = ledgerPositions.get(symbol);
+    const strategy = String(position?.strategy ?? '').trim();
+    if (strategy || !canAttributeBrokerPosition(position, ledgerPosition)) {
+      return { ...position, symbol };
+    }
+
+    return {
+      ...position,
+      symbol,
+      strategy: ledgerPosition.strategy,
+    };
+  });
+
+  for (const [symbol, ledgerPosition] of ledgerPositions.entries()) {
+    if (!attributed.some((position) => normalizeSymbolForAlpaca(position?.symbol) === symbol)) {
+      attributed.push(ledgerPosition);
+    }
+  }
+
+  return attributed;
+}
+
 async function recordLedgerEvent(ledgerEvents, onLedgerEvent, event) {
   ledgerEvents.push(event);
   if (typeof onLedgerEvent === 'function') {
@@ -199,7 +280,10 @@ export async function processTickets({
   const ledgerEvents = [];
   const projectedRecentTickets = [...asArray(recentTickets), ...ledgerRecentTickets(existingLedgerEvents)];
   const projectedOpenOrders = [...asArray(account?.open_orders)];
-  const projectedPositions = Array.isArray(positions) ? [...positions] : [...asArray(account?.positions)];
+  const projectedPositions = strategyAttributedPositions(
+    Array.isArray(positions) ? positions : account?.positions,
+    existingLedgerEvents,
+  );
 
   for (const ticket of asArray(tickets)) {
     const schema = validateTicket(ticket);

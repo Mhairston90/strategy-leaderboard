@@ -295,6 +295,106 @@ test('processTickets counts recent ledger-only submissions toward symbol order c
   assert.deepEqual(result.ledgerEvents, []);
 });
 
+test('processTickets ignores blocked recent decisions for same-run orders-per-symbol projection', async () => {
+  const { broker, submittedTickets } = submittingBroker();
+  const newTicket = ticketWith({ source_signal_id: 'paper-smoke-new' });
+
+  const result = await processTickets({
+    tickets: [newTicket],
+    broker,
+    ...context({
+      config: { max_orders_per_symbol_per_hour: 1 },
+      recentTickets: [
+        {
+          ...ticket,
+          ticket_id: 'blocked-earlier',
+          source_signal_id: 'blocked-earlier',
+          decision: 'blocked',
+          processed_at: '2026-06-28T18:00:30Z',
+        },
+      ],
+    }),
+  });
+
+  assert.deepEqual(submittedTickets, [newTicket]);
+  assert.equal(result.decisions.length, 1);
+  assert.equal(result.decisions[0].decision, 'submitted');
+  assert.equal(result.ledgerEvents.length, 1);
+});
+
+test('processTickets ignores filled ledger events for orders-per-symbol cap', async () => {
+  const { broker, submittedTickets } = submittingBroker();
+  const newTicket = ticketWith({ source_signal_id: 'paper-smoke-new' });
+
+  const result = await processTickets({
+    tickets: [newTicket],
+    broker,
+    ...context({
+      config: { max_orders_per_symbol_per_hour: 1 },
+      ledgerEvents: [
+        {
+          type: 'order_filled',
+          at: '2026-06-28T18:00:30Z',
+          ticket_id: 'sentinel-filled',
+          broker_order_id: 'paper-order-filled',
+          symbol: ticket.symbol,
+          side: ticket.side,
+          filled_qty: 1,
+          filled_avg_price: 25,
+          strategy: ticket.strategy,
+          source_signal_id: 'paper-smoke-filled',
+        },
+      ],
+    }),
+  });
+
+  assert.deepEqual(submittedTickets, [newTicket]);
+  assert.equal(result.decisions[0].decision, 'submitted');
+});
+
+test('processTickets enforces strategy cap from ledger-attributed broker positions', async () => {
+  const { broker, submittedTickets } = submittingBroker();
+
+  const result = await processTickets({
+    tickets: [ticketWith({ symbol: 'AAPL', source_signal_id: 'paper-smoke-new' })],
+    broker,
+    ...context({
+      config: { max_strategy_weight_pct: 2 },
+      account: { equity: 10000 },
+      positions: [{ symbol: 'MSFT', qty: '2', market_value: '200' }],
+      supportedSymbols: new Set(['AAPL', 'MSFT']),
+      ledgerEvents: [
+        {
+          type: 'order_submitted',
+          at: '2026-06-28T17:00:00Z',
+          ticket_id: 'sentinel-msft',
+          broker_order_id: 'paper-order-msft',
+          symbol: 'MSFT',
+          side: 'buy',
+          notional_usd: 200,
+          strategy: ticket.strategy,
+          source_signal_id: 'paper-smoke-msft',
+        },
+        {
+          type: 'order_filled',
+          at: '2026-06-28T17:01:00Z',
+          ticket_id: 'sentinel-msft',
+          broker_order_id: 'paper-order-msft',
+          symbol: 'MSFT',
+          side: 'buy',
+          filled_qty: 2,
+          filled_avg_price: 100,
+        },
+      ],
+    }),
+  });
+
+  assert.deepEqual(submittedTickets, []);
+  assert.equal(result.decisions.length, 1);
+  assert.equal(result.decisions[0].decision, 'blocked');
+  assert.match(result.decisions[0].reasons.join(' | '), /strategy weight 225 exceeds cap 200/);
+});
+
 test('processTickets applies same-run symbol exposure projection', async () => {
   const { broker, submittedTickets } = submittingBroker();
   const firstTicket = ticketWith({
