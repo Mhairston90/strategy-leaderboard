@@ -65,6 +65,7 @@ function ledgerRecentTickets(ledgerEvents) {
     .filter((event) => event?.source_signal_id && event?.symbol && event?.strategy)
     .map((event) => ({
       ticket_id: event.ticket_id ?? null,
+      at: event.at ?? null,
       source_signal_id: event.source_signal_id,
       symbol: event.symbol,
       strategy: event.strategy,

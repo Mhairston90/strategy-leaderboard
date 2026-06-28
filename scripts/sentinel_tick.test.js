@@ -259,6 +259,42 @@ test('processTickets applies same-run orders-per-symbol-per-hour projection', as
   assert.equal(result.ledgerEvents.length, 1);
 });
 
+test('processTickets counts recent ledger-only submissions toward symbol order cap', async () => {
+  const { broker, submittedTickets } = submittingBroker();
+
+  const result = await processTickets({
+    tickets: [ticketWith({ source_signal_id: 'paper-smoke-new' })],
+    broker,
+    ...context({
+      config: { max_orders_per_symbol_per_hour: 1 },
+      recentTickets: [],
+      ledgerEvents: [
+        {
+          type: 'order_submitted',
+          at: '2026-06-28T18:00:30Z',
+          ticket_id: 'sentinel-ledger-only',
+          broker_order_id: 'paper-order-ledger-only',
+          symbol: ticket.symbol,
+          side: ticket.side,
+          notional_usd: ticket.notional_usd,
+          strategy: ticket.strategy,
+          source_signal_id: 'paper-smoke-ledger-only',
+        },
+      ],
+      now: '2026-06-28T18:01:00Z',
+    }),
+  });
+
+  assert.deepEqual(submittedTickets, []);
+  assert.equal(result.decisions.length, 1);
+  assert.equal(result.decisions[0].decision, 'blocked');
+  assert.match(
+    result.decisions[0].reasons.join(' | '),
+    /orders for AAPL in the past hour 1 at or above cap 1/,
+  );
+  assert.deepEqual(result.ledgerEvents, []);
+});
+
 test('processTickets applies same-run symbol exposure projection', async () => {
   const { broker, submittedTickets } = submittingBroker();
   const firstTicket = ticketWith({
