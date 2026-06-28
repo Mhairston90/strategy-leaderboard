@@ -145,8 +145,40 @@ function projectedOpenOrder(ticket, orderId) {
 function projectedExposurePosition(ticket) {
   return {
     symbol: normalizeSymbolForAlpaca(ticket.symbol),
-    market_value: ticket.notional_usd,
+    strategy: ticket.strategy,
+    market_value: ticket.side === 'sell' ? -ticket.notional_usd : ticket.notional_usd,
   };
+}
+
+function sameProjectedPosition(position, ticket) {
+  return (
+    normalizeSymbolForAlpaca(position?.symbol) === normalizeSymbolForAlpaca(ticket.symbol) &&
+    (position?.strategy === ticket.strategy || position?.strategy === undefined)
+  );
+}
+
+function applyProjectedExposure(positions, ticket) {
+  const projected = projectedExposurePosition(ticket);
+  const existingIndex = positions.findIndex((position) => sameProjectedPosition(position, ticket));
+  if (existingIndex === -1) {
+    positions.push(projected);
+    return;
+  }
+
+  const existing = positions[existingIndex];
+  positions[existingIndex] = {
+    ...existing,
+    symbol: normalizeSymbolForAlpaca(existing.symbol),
+    strategy: existing.strategy ?? ticket.strategy,
+    market_value: numeric(existing.market_value) + projected.market_value,
+  };
+}
+
+async function recordLedgerEvent(ledgerEvents, onLedgerEvent, event) {
+  ledgerEvents.push(event);
+  if (typeof onLedgerEvent === 'function') {
+    await onLedgerEvent(event);
+  }
 }
 
 export async function processTickets({
@@ -159,6 +191,7 @@ export async function processTickets({
   recentTickets,
   ledgerEvents: existingLedgerEvents,
   supportedSymbols,
+  onLedgerEvent,
   now = new Date().toISOString(),
 } = {}) {
   const decisions = [];
@@ -198,7 +231,7 @@ export async function processTickets({
       const decision = decisionFor(ticket, now, 'broker_rejected', [reason]);
       decisions.push(decision);
       projectedRecentTickets.push(decision);
-      ledgerEvents.push(orderRejectedEvent(ticket, now, reason));
+      await recordLedgerEvent(ledgerEvents, onLedgerEvent, orderRejectedEvent(ticket, now, reason));
       continue;
     }
 
@@ -206,9 +239,9 @@ export async function processTickets({
     const decision = decisionFor(ticket, now, 'submitted', [], { broker_order_id: orderId });
     decisions.push(decision);
     projectedRecentTickets.push(decision);
+    await recordLedgerEvent(ledgerEvents, onLedgerEvent, orderSubmittedEvent(ticket, now, orderId));
     projectedOpenOrders.push(projectedOpenOrder(ticket, orderId));
-    projectedPositions.push(projectedExposurePosition(ticket));
-    ledgerEvents.push(orderSubmittedEvent(ticket, now, orderId));
+    applyProjectedExposure(projectedPositions, ticket);
   }
 
   return { decisions, ledgerEvents };
@@ -308,11 +341,11 @@ async function main() {
     recentTickets,
     ledgerEvents: existingLedgerEvents,
     supportedSymbols: SUPPORTED_SYMBOLS,
+    onLedgerEvent: (event) => appendJsonl(path.join(SENTINEL_DIR, 'execution_ledger.jsonl'), event),
     now: generatedAt,
   });
 
   await appendAllJsonl('data/sentinel/trade_tickets.jsonl', processed.decisions);
-  await appendAllJsonl('data/sentinel/execution_ledger.jsonl', processed.ledgerEvents);
 
   const postProcessReconciliation = buildReconciliationUpdate({
     ledgerEvents: [...existingLedgerEvents, ...processed.ledgerEvents],

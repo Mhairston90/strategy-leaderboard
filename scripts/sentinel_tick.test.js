@@ -26,9 +26,12 @@ const baseContext = {
     mode: 'paper',
     paper_auto_submit_enabled: true,
     live_trading_enabled: false,
+    max_gross_exposure_pct: 100,
+    max_strategy_weight_pct: 25,
     max_symbol_exposure_pct: 20,
     max_daily_loss_pct: 2,
     max_open_orders: 10,
+    max_orders_per_symbol_per_hour: 2,
   },
   riskState: { frozen: false },
   account: { equity: 10000, daily_realized_pnl: 0, open_orders: [] },
@@ -148,6 +151,38 @@ test('processTickets records broker rejected decisions and order_rejected ledger
   ]);
 });
 
+test('processTickets records submitted and rejected ledger events immediately after each broker response', async () => {
+  const callbackEvents = [];
+  const firstTicket = ticketWith({ ticket_id: 'sentinel-test-1', source_signal_id: 'paper-smoke-1' });
+  const secondTicket = ticketWith({ ticket_id: 'sentinel-test-2', source_signal_id: 'paper-smoke-2' });
+  const broker = {
+    async submitOrder(submittedTicket) {
+      assert.equal(
+        callbackEvents.length,
+        submittedTicket.ticket_id === firstTicket.ticket_id ? 0 : 1,
+        'previous broker response should be recorded before next submit',
+      );
+      if (submittedTicket.ticket_id === secondTicket.ticket_id) {
+        return { ok: false, status: 422, error: { message: 'paper broker rejected order' } };
+      }
+
+      return { ok: true, order: { id: 'paper-order-1' } };
+    },
+  };
+
+  const result = await processTickets({
+    tickets: [firstTicket, secondTicket],
+    broker,
+    ...context(),
+    onLedgerEvent: async (event) => {
+      callbackEvents.push(event);
+    },
+  });
+
+  assert.deepEqual(callbackEvents, result.ledgerEvents);
+  assert.deepEqual(callbackEvents.map((event) => event.type), ['order_submitted', 'order_rejected']);
+});
+
 test('processTickets records schema-invalid tickets as blocked decisions and does not submit', async () => {
   let submitCount = 0;
   const broker = {
@@ -225,6 +260,33 @@ test('processTickets applies same-run symbol exposure projection', async () => {
   assert.equal(result.decisions.map((decision) => decision.decision).join(','), 'submitted,blocked');
   assert.match(result.decisions[1].reasons.join(' | '), /symbol exposure 2400 exceeds cap 2000/);
   assert.equal(result.ledgerEvents.length, 1);
+});
+
+test('processTickets reduces projected exposure for same-run close tickets', async () => {
+  const { broker, submittedTickets } = submittingBroker();
+  const closeTicket = ticketWith({
+    ticket_id: 'sentinel-test-close',
+    side: 'sell',
+    intent: 'close',
+    notional_usd: 1900,
+    source_signal_id: 'paper-smoke-close',
+  });
+  const reopenTicket = ticketWith({
+    ticket_id: 'sentinel-test-reopen',
+    notional_usd: 1200,
+    source_signal_id: 'paper-smoke-reopen',
+  });
+
+  const result = await processTickets({
+    tickets: [closeTicket, reopenTicket],
+    broker,
+    ...context({
+      positions: [{ symbol: 'AAPL', strategy: ticket.strategy, market_value: 2000 }],
+    }),
+  });
+
+  assert.deepEqual(submittedTickets, [closeTicket, reopenTicket]);
+  assert.equal(result.decisions.map((decision) => decision.decision).join(','), 'submitted,submitted');
 });
 
 test('processTickets blocks resubmission from existing ledger source_signal_id when recentTickets is empty', async () => {
