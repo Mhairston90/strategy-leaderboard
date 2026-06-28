@@ -1,7 +1,7 @@
 # Trade Sentinel Design
 
 Date: 2026-06-28
-Status: proposed for user review
+Status: approved for planning
 
 ## Goal
 
@@ -14,7 +14,7 @@ The sentinel will:
 - Track promotion, demotion, cooldown, and retirement candidates.
 - Generate trade tickets from approved strategies.
 - Run every proposed trade through safety checks.
-- Execute only through Alpaca paper trading in the first version.
+- Auto-submit approved tickets through Alpaca paper trading in the first version.
 - Reconcile paper fills back into an auditable execution ledger.
 
 The first implementation is paper-only. Live-money execution, account funding, margin, options, perps, and unattended live trading are out of scope.
@@ -29,7 +29,7 @@ The user-facing experience should feel like an execution desk:
 
 - Clear account state at the top.
 - Current strategy allocation visible at all times.
-- Proposed trades queued before execution.
+- Proposed trades queued briefly for audit, then auto-submitted when every risk check passes.
 - Risk gate state shown in plain language.
 - Promotion and demotion decisions explained with evidence.
 - Every order and fill reconstructable from logs.
@@ -113,9 +113,9 @@ Shows proposed orders before they are sent:
 - Stop or exit rule, when available.
 - Reason tag from the source strategy.
 - Risk checks passed and failed.
-- Final action: `approve paper order`, `block`, or `manual review`.
+- Final action: `auto-submit paper order` or `block`.
 
-V1 starts in manual-approval mode. The UI can submit to Alpaca paper only after the user approves the ticket. Paper auto-submit can be enabled later with an explicit local config flag after reconciliation has proven clean.
+V1 starts in Alpaca paper auto-submit mode. The UI records each ticket before submission, but there is no manual approval step in the first implementation. Risk checks, broker-health checks, duplicate-order checks, and reconciliation checks are the controls that decide whether a ticket is submitted or blocked.
 
 ### Risk Governor
 
@@ -196,7 +196,7 @@ If replay and broker state disagree beyond tolerance, the sentinel freezes new o
 5. Read strategy signals or trade-intent files.
 6. Convert strategy intent into normalized trade tickets.
 7. Apply account, strategy, symbol, and broker risk checks.
-8. Submit allowed orders to Alpaca paper trading.
+8. Auto-submit allowed orders to Alpaca paper trading.
 9. Poll order status and fills.
 10. Append execution ledger events.
 11. Rebuild sentinel account state from the ledger.
@@ -212,6 +212,7 @@ Alpaca is the first adapter because it provides a clean broker API, a paper-trad
 The sentinel will use:
 
 - Paper endpoint only.
+- Auto-submit paper orders after all required checks pass.
 - Local environment variables for keys.
 - No keys committed to Git.
 - No keys pasted into chat.
@@ -265,6 +266,7 @@ Live execution requires a separate design, explicit user approval, and an additi
 Initial defaults:
 
 - Paper-only mode.
+- Paper auto-submit enabled.
 - Max gross exposure: 100% of paper equity.
 - Max single strategy target weight: 25%.
 - Max single symbol exposure: 20%.
@@ -375,7 +377,7 @@ Manual verification:
 - Confirm paper mode is visible.
 - Confirm no live mode can submit orders.
 - Confirm Alpaca paper connection works using local keys.
-- Confirm a dry-run trade ticket can be blocked and approved in paper mode.
+- Confirm a dry-run trade ticket is either blocked with a visible reason or auto-submitted to Alpaca paper.
 - Confirm execution ledger records every step.
 
 ## Acceptance Criteria
@@ -389,7 +391,7 @@ The first version is ready when:
 - Risk Governor blocks invalid or unsafe tickets.
 - Alpaca paper credentials are read only from local ignored environment files.
 - Alpaca paper account state can be fetched.
-- Paper orders can be submitted only when explicitly enabled.
+- Paper orders auto-submit after every risk check passes.
 - Execution Ledger records order lifecycle events.
 - Replay/Audit can rebuild account state.
 - Reconciliation can freeze trading on mismatch.
@@ -400,8 +402,8 @@ The first version is ready when:
 
 The first implementation uses these defaults:
 
-- Paper orders start as manual-approval-only.
-- A local `paper_auto_submit_enabled` flag can be added, but it defaults to `false`.
+- Paper orders auto-submit after all risk checks pass.
+- A local `paper_auto_submit_enabled` flag exists and defaults to `true` for paper mode.
 - Sentinel UI starts inside this repo as a sibling page to the leaderboard.
 - Alpaca paper is the first broker adapter.
 - Symbols unsupported by Alpaca paper are blocked with a visible reason instead of simulated as if they were routed.
