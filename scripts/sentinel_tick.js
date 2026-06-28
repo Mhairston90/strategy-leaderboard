@@ -216,6 +216,7 @@ export async function processTickets({
       positions: projectedPositions,
       recentTickets: projectedRecentTickets,
       supportedSymbols,
+      now,
     };
     const risk = evaluateTicketRisk(ticket, riskContext);
     if (!risk.ok) {

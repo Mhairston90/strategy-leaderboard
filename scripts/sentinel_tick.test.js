@@ -237,6 +237,28 @@ test('processTickets applies same-run max_open_orders projection', async () => {
   assert.equal(result.ledgerEvents.length, 1);
 });
 
+test('processTickets applies same-run orders-per-symbol-per-hour projection', async () => {
+  const { broker, submittedTickets } = submittingBroker();
+  const secondTicket = ticketWith({
+    ticket_id: 'sentinel-test-2',
+    source_signal_id: 'paper-smoke-2',
+  });
+
+  const result = await processTickets({
+    tickets: [ticket, secondTicket],
+    broker,
+    ...context({ config: { max_orders_per_symbol_per_hour: 1 } }),
+  });
+
+  assert.deepEqual(submittedTickets, [ticket]);
+  assert.equal(result.decisions.map((decision) => decision.decision).join(','), 'submitted,blocked');
+  assert.match(
+    result.decisions[1].reasons.join(' | '),
+    /orders for AAPL in the past hour 1 at or above cap 1/,
+  );
+  assert.equal(result.ledgerEvents.length, 1);
+});
+
 test('processTickets applies same-run symbol exposure projection', async () => {
   const { broker, submittedTickets } = submittingBroker();
   const firstTicket = ticketWith({
