@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trade Sentinel</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="dash">
+    <header class="dash-header">
+      <div class="title">Trade Sentinel</div>
+      <div class="meta">
+        <a class="refresh-btn" href="./">Leaderboard</a>
+        <span id="updated" class="dim">loading...</span>
+        <button id="refresh-btn" class="refresh-btn" type="button">Refresh</button>
+      </div>
+    </header>
+
+    <main id="sentinel-root" class="sentinel-main" aria-label="Trade Sentinel">
+      <div class="loading">Loading Trade Sentinel...</div>
+    </main>
+
+    <footer class="dash-footer">
+      <span>data: local Sentinel artifacts</span>
+      <span style="margin-left:auto;">paper-only - read-only dashboard</span>
+    </footer>
+  </div>
+
+  <script type="module">
+    const assetVersion = new URLSearchParams(location.search).get('v') || Date.now().toString();
+    import(`./sentinel_app.js?v=${encodeURIComponent(assetVersion)}`);
+  </script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "mode": "paper",
+  "broker": "alpaca-paper",
+  "paper_auto_submit_enabled": true,
+  "live_trading_enabled": false,
+  "max_gross_exposure_pct": 100,
+  "max_strategy_weight_pct": 25,
+  "max_symbol_exposure_pct": 20,
+  "max_daily_loss_pct": 2,
+  "max_open_orders": 10,
+  "max_orders_per_symbol_per_hour": 2,
+  "stale_leaderboard_minutes": 15,
+  "reconciliation_freeze_enabled": true
+}

@@ -5,7 +5,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "test": "node --test lib/*.test.js adapters/*.test.js scripts/*.test.js",
-    "smoke": "node scripts/smoke.js"
+    "test": "node --test lib/*.test.js lib/**/*.test.js adapters/*.test.js scripts/*.test.js",
+    "smoke": "node scripts/smoke.js",
+    "sentinel:smoke": "node scripts/sentinel_smoke.js"
   }
 }
