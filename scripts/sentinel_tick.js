@@ -3,7 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { createAlpacaPaperClient } from '../lib/sentinel/alpaca_paper.js';
-import { loadSentinelConfigFromText } from '../lib/sentinel/config.js';
+import { applyEnvText, loadSentinelConfigFromText } from '../lib/sentinel/config.js';
 import { appendJsonl, readJsonlFile } from '../lib/sentinel/jsonl.js';
 import { replayLedgerEvents } from '../lib/sentinel/ledger.js';
 import { buildReconciliationUpdate } from '../lib/sentinel/reconcile.js';
@@ -368,6 +368,18 @@ async function readJson(relativePath, fallback) {
   }
 }
 
+async function loadLocalEnvFiles(env = process.env) {
+  for (const filename of ['.env.local', '.env']) {
+    try {
+      applyEnvText(env, await readFile(path.join(REPO_ROOT, filename), 'utf8'));
+    } catch (error) {
+      if (error?.code !== 'ENOENT') {
+        throw error;
+      }
+    }
+  }
+}
+
 async function writeJson(relativePath, value) {
   await writeFile(path.join(REPO_ROOT, relativePath), `${JSON.stringify(value, null, 2)}\n`, 'utf8');
 }
@@ -384,6 +396,7 @@ function brokerFetchError(label, result) {
 
 async function main() {
   const generatedAt = new Date().toISOString();
+  await loadLocalEnvFiles();
   const config = loadSentinelConfigFromText(
     await readFile(path.join(SENTINEL_DIR, 'config.json'), 'utf8'),
   );
