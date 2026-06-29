@@ -40,7 +40,9 @@ test('launcher reuses only a server serving this directory', async () => {
   assert.match(bat, /Get-NetTCPConnection -LocalPort %PORT%/);
   assert.match(bat, /Get-CimInstance Win32_Process/);
   assert.match(bat, /CommandLine/);
-  assert.match(bat, /Contains\(\$d\.ToLower\(\)\)/);
+  assert.match(bat, /\$needle=\('--directory '\+\$q\+\$d\+\$q\)\.ToLower\(\)/);
+  assert.match(bat, /Contains\(\$needle\)/);
+  assert.doesNotMatch(bat, /Contains\(\$d\.ToLower\(\)\)/);
   assert.match(bat, /Stop-Process -Id \$c\.OwningProcess -Force/);
   assert.match(bat, /if !START_SERVER! EQU 1/);
 });

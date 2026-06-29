@@ -13,12 +13,11 @@ set URL=http://127.0.0.1:%PORT%/?v=!CACHE_BUSTER!
 set SERVER_SCRIPT=%SERVER_DIR%\scripts\serve_leaderboard.py
 
 REM Decide whether to (re)start the server. A server is REUSED only if it is
-REM already serving THIS directory. A server on :8123 that serves a DIFFERENT
-REM directory (e.g. a stale pre-migration copy) is killed and replaced — this
-REM prevents the dashboard from silently showing data from the wrong repo.
+REM already serving THIS exact directory. A server on :8123 that serves a
+REM DIFFERENT directory (including a nested worktree) is killed and replaced.
 set "EXPECTED_DIR=%SERVER_DIR%"
 set "DECISION=START"
-for /f "usebackq delims=" %%S in (`powershell -NoProfile -ExecutionPolicy Bypass -Command "$d=$env:EXPECTED_DIR; $c=@(Get-NetTCPConnection -LocalPort %PORT% -State Listen -ErrorAction SilentlyContinue)[0]; if(-not $c){'START';exit}; $cl=(Get-CimInstance Win32_Process -Filter ('ProcessId='+$c.OwningProcess) -ErrorAction SilentlyContinue).CommandLine; if($cl -and $cl.ToLower().Contains($d.ToLower())){'REUSE'}else{try{Stop-Process -Id $c.OwningProcess -Force -ErrorAction Stop}catch{}; 'START'}"`) do set "DECISION=%%S"
+for /f "usebackq delims=" %%S in (`powershell -NoProfile -ExecutionPolicy Bypass -Command "$d=($env:EXPECTED_DIR).TrimEnd('\'); $c=@(Get-NetTCPConnection -LocalPort %PORT% -State Listen -ErrorAction SilentlyContinue)[0]; if(-not $c){'START';exit}; $cl=(Get-CimInstance Win32_Process -Filter ('ProcessId='+$c.OwningProcess) -ErrorAction SilentlyContinue).CommandLine; $q=[char]34; $needle=('--directory '+$q+$d+$q).ToLower(); if($cl -and $cl.ToLower().Contains($needle)){'REUSE'}else{try{Stop-Process -Id $c.OwningProcess -Force -ErrorAction Stop}catch{}; 'START'}"`) do set "DECISION=%%S"
 set START_SERVER=1
 if /I "!DECISION!"=="REUSE" set START_SERVER=0
 
