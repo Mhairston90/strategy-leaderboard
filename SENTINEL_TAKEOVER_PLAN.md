@@ -57,6 +57,17 @@ The existing Trade Sentinel (`lib/sentinel/*`, `scripts/sentinel_tick*.{js,ps1}`
 2. **Fees + funding-cost mechanics** for shorts on the US perps product (research only verified Hyperliquid's funding, which is NOT US-legal — do NOT extrapolate).
 3. Exact **contract symbols** for each alt on the US perps product / demo-futures (e.g., naming like `PF_XXXUSD` vs the US-regulated contract tickers). Needed for order routing.
 
+### 3b. ⚠️ Kraken demo-futures is currently unreliable — build broker-agnostic
+As of 2026-06-30, `demo-futures.kraken.com/derivatives/api/v3/instruments` returns **HTTP 503** (sandbox down), while production `futures.kraken.com` returns 200. **Do NOT block the build on Kraken's testnet.**
+
+**Mandatory approach: a broker-abstraction interface + a mock adapter.** All broker adapters (`alpaca_paper`, `kraken_perps`, and a new `mock_broker`) implement the SAME interface: `getAccount()`, `getPositions()`, `submitOrder()`, `cancelOrder()`. The entire position-sync system is built and validated against `mock_broker.js` (simulates fills at live mark prices, tracks positions, **supports shorts**). The real Kraken/Coinbase adapter is a drop-in swap behind that interface — **zero logic changes**. This makes the flaky demo a non-issue and gives a fully working paper system immediately.
+
+**Real crypto-short venue options (for the eventual live/real-testnet integration; verify when reached, not a blocker):**
+- **Kraken demo-futures** — retry (503 likely transient); or Kraken production API micro-size for a gated final check.
+- **Coinbase US perps** — the other US-legal venue (Coinbase launched US perps); verify alt coverage + sandbox availability.
+- **Kalshi** — US-regulated perps but BTC/ETH/SOL/XRP only; **misses the target alts** — likely not viable.
+- All non-US venues (Hyperliquid/dYdX/GMX/Bybit/OKX/Binance/Deribit) remain ruled out for US persons.
+
 ---
 
 ## 4. Target architecture
@@ -129,8 +140,10 @@ Schemas differ by family — parse both:
   "skip_symbols": ["DOT"],             // NEW: no US-legal perp venue for DOT
   "venues": {                          // NEW
     "us_equity": { "adapter": "alpaca_paper", "env": "paper" },
-    "crypto":    { "adapter": "kraken_perps", "env": "testnet",
+    "crypto":    { "adapter": "mock_broker", "env": "testnet",
                    "base_url": "https://demo-futures.kraken.com" }
+    // crypto.adapter starts as "mock_broker" (Kraken demo is 503); swap to
+    // "kraken_perps" once Phase 1b's integration smoke passes. Same interface.
   },
   "max_gross_exposure_pct": 100,       // existing risk caps — keep
   "max_strategy_weight_pct": 25,
@@ -152,14 +165,19 @@ Keep the existing schema; add a `divergence` event type for skipped symbols: `{ 
 
 Each phase is independently testable and gets its own commit series. **Do not start Phase 2 until Phase 1's testnet integration is proven.**
 
-### Phase 1 — Kraken perps testnet adapter (de-risk the unknown)
-**Goal:** prove we can auth, read positions, and place/cancel **long AND short** orders on `demo-futures.kraken.com`.
-- [ ] **1.1** Confirm the MUST-VERIFY items in §3 (eligibility, fees/funding, contract symbols). Document findings in `docs/kraken-perps-notes.md`.
-- [ ] **1.2** Create a Kraken **demo-futures** account; store API key/secret in env vars (`KRAKEN_FUTURES_KEY`, `KRAKEN_FUTURES_SECRET`); never commit secrets. Add `assertTestnetEnv()` guard like `alpaca_paper.assertPaperEnv`.
-- [ ] **1.3** `lib/sentinel/kraken_perps.js`: implement auth signing (Kraken Futures uses a specific `Authent` HMAC scheme — see `docs.kraken.com/api/docs/guides/futures-introduction`), `getAccount()`, `getPositions()`, `submitOrder({symbol, side, size|notional, type})`, `cancelOrder(id)`. Symbol map for SOL/XRP/ADA/LINK/DOGE/LTC/AVAX (+BTC/ETH).
-- [ ] **1.4** Unit tests (`kraken_perps.test.js`) with mocked HTTP: signing correctness, request shaping, response parsing, error/redaction (mirror `alpaca_paper.test.js`).
-- [ ] **1.5** Live-testnet smoke script (`scripts/kraken_perps_smoke.js`): open a tiny SHORT on a testnet alt, read it back in `getPositions()`, then close it. Verify shorts actually work. **Acceptance: a short opens and closes on demo-futures.**
-- [ ] **1.6** Commit. Do not proceed until 1.5 passes.
+### Phase 1 — Broker abstraction + mock adapter (unblocks everything; NO venue testnet needed)
+**Goal:** a common broker interface with a working mock adapter, so the whole system builds and runs in paper with zero dependency on any venue's (currently flaky) testnet. This replaces the old "prove Kraken first" plan because `demo-futures` is 503 (see §3b).
+- [ ] **1.1** Define the broker interface contract (`lib/sentinel/broker.js` or JSDoc): `getAccount()`, `getPositions()`, `submitOrder({symbol, side, size|notional, type})`, `cancelOrder(id)`. Align existing `alpaca_paper.js` to it.
+- [ ] **1.2** `lib/sentinel/mock_broker.js` + tests: in-memory positions, fills at a supplied live **mark price**, supports **LONG and SHORT**, tracks realized/unrealized PnL, persists to `data/sentinel/mock_broker_state.json`. This is the permanent test harness.
+- [ ] **1.3** `assertTestnetEnv()` guard: `environment==="testnet"` refuses any live/production base URL.
+- [ ] **1.4** **Acceptance:** mock broker opens+closes a SHORT and a LONG; positions read back correctly. Commit. **No external venue needed to pass this phase.**
+
+### Phase 1b — Real Kraken (or Coinbase) perps adapter (parallel / deferred; NOT on the critical path)
+**Goal:** the real crypto-short adapter, a drop-in swap behind the Phase-1 interface. Do this when a working sandbox exists (retry Kraken `demo-futures` once the 503 clears, or Coinbase sandbox, or a gated production micro-size check).
+- [ ] **1b.1** Confirm §3 MUST-VERIFY items (eligibility, fees/funding, contract symbols); document in `docs/kraken-perps-notes.md`. If Kraken demo stays down, evaluate Coinbase US perps as the real venue.
+- [ ] **1b.2** `lib/sentinel/kraken_perps.js` implementing the interface: `Authent` HMAC signing (see `docs.kraken.com/api/docs/guides/futures-introduction`), `getAccount/getPositions/submitOrder/cancelOrder`, symbol map for SOL/XRP/ADA/LINK/DOGE/LTC/AVAX (+BTC/ETH). Env creds; redaction (mirror `alpaca_paper.js`).
+- [ ] **1b.3** Unit tests (`kraken_perps.test.js`, mocked HTTP): signing, request shaping, parsing, redaction.
+- [ ] **1b.4** Integration smoke (`scripts/kraken_perps_smoke.js`) against whichever sandbox is live: open a tiny SHORT, read back, close. **Acceptance: a real short opens and closes.** Until this passes, the system runs on `mock_broker` for crypto.
 
 ### Phase 2 — Position-sync engine (the brain)
 **Goal:** compute the target portfolio and drift-band-rebalance both venues in the tick.
@@ -169,7 +187,7 @@ Each phase is independently testable and gets its own commit series. **Do not st
 - [ ] **2.4** Neutralize `risk_governor` staleness; keep exposure caps; run rebalance orders through it before submit.
 - [ ] **2.5** Rewrite `scripts/sentinel_tick.js` to the new flow: read target → read both venues' positions → rebalance → risk-gate → route/submit → ledger → reconcile → write `sentinel_status.md` + `heartbeat.json`. Keep `tick_lock`.
 - [ ] **2.6** End-to-end dry-run mode (`--dry-run`): compute and log intended orders without submitting. Verify against a hand-computed target for one tick.
-- [ ] **2.7** Live-testnet integration run: one real tick against Alpaca paper + Kraken demo. **Acceptance: the paper accounts move toward the target portfolio; blocked-rate is ~0; shorts execute on Kraken.**
+- [ ] **2.7** Integration run: one real tick against Alpaca paper + `mock_broker` (crypto). **Acceptance: the accounts move toward the target portfolio; blocked-rate is ~0; crypto shorts fill in the mock at live marks.** (Re-run against `kraken_perps` once Phase 1b lands — no logic changes, just the config adapter swap.)
 - [ ] **2.8** Commit.
 
 ### Phase 3 — Hardening, reconciliation, dashboard, digest
