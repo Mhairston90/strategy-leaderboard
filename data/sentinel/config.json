@@ -16,7 +16,7 @@
     "crypto_spot": { "adapter": "alpaca_paper", "env": "paper" }
   },
   "ninjatrader": {
-    "account": "DEMO8256098",
+    "account": "Sim101",
     "documents_root": "C:\\Users\\Mhair\\OneDrive\\Documents\\NinjaTrader 8",
     "connection_name": "Simulation",
     "wait_for_feedback": false,
