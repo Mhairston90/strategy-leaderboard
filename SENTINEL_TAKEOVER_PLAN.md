@@ -40,6 +40,8 @@ The existing Trade Sentinel (`lib/sentinel/*`, `scripts/sentinel_tick*.{js,ps1}`
 
 ## 3. Venue research (verified 2026-06-30; US-based retail algo trader)
 
+> **⚠️ SUPERSEDED IN PART — read the Addendum (§11, dated 2026-07-01) before acting on this section.** Follow-up verification found the Kraken Derivatives US product has **no retail API** and does not run on the `futures.kraken.com` platform that `demo-futures` mirrors. The crypto venue decision changed to **CME micro futures via NinjaTrader sim**. §3's facts are kept for history only.
+
 **Winner: Kraken Derivatives US (CFTC-regulated perpetual futures).** Launched ~2026-06-15 via NinjaTrader Clearing LLC (d/b/a Kraken Derivatives US, a CFTC-registered FCM, NFA ID 0309379), contracts on the Bitnomial DCM. Legally accessible to ordinary US retail on the **regulated perps product**.
 - **Covers 7 of 8 target alts:** SOL, XRP, ADA, LINK, DOGE, LTC, AVAX (+ BTC, ETH). **DOT NOT covered.**
 - **Real testnet:** `https://demo-futures.kraken.com/` — Kraken states the WebSocket/REST endpoints, feeds, and response structures are **identical to production; only the base URL differs.** No KYC to sign up for the demo.
@@ -229,4 +231,62 @@ Each phase is independently testable and gets its own commit series. **Do not st
 - Retire after cutover: `lib/sentinel/ticket_generator.js`.
 
 ---
-*This plan supersedes the current event-replay sentinel. Build phases in order; keep everything testnet/paper; do not enable any live-money path without explicit human sign-off.*
+
+## 11. ADDENDUM — 2026-07-01: corrected venue facts + crypto-venue decision (supersedes parts of §3, §5c, §6 Phase 1b)
+
+> **Author:** Claude (paired with Mhair), 2026-07-01. Everything below was verified against primary sources today (Kraken support docs, Bitnomial API docs, CME product pages, live API probes, and Mhair's actual Alpaca paper account).
+
+### 11a. Corrections to §3 (why Kraken perps is OFF the table)
+1. **`demo-futures.kraken.com` mirrors the WRONG platform for a US trader.** It is the testnet of Kraken's *global* futures exchange (`futures.kraken.com`, `PF_*` contracts) — which US residents are not eligible to trade live, ever. Passing tests there validates an API we can never use with real money. (The demo is also still 503 as of today, second day.)
+2. **Kraken Derivatives US is a different stack with NO retail API.** It is Bitnomial Exchange contracts (tickers like `PBTCUC`, `PDOTUH`, `PADAUK`) cleared by NinjaTrader Clearing, surfaced ONLY in the Kraken Pro UI. Verified zero of these symbols exist on the `futures.kraken.com` API (probed all 327 tickers). No Kraken support doc offers API trading for it.
+3. **Bitnomial direct is not retail-reachable.** Its REST API order entry requires a connection provisioned via Bitnomial's clearing customer portal (we are a NinjaTrader Clearing retail customer, not a Bitnomial member); indirect access is via CQG (paid ISV). **Bitnomial has NO sandbox** — Production + DR only.
+4. **Coinbase is a dead end for paper.** The Advanced Trade sandbox returns mocked stateless responses (orders don't create positions); the real perps API (`*-PERP-INTX`) is non-US only.
+5. **Good news:** Kraken Derivatives US perps list 16 contracts **including DOT, ADA, LINK, DOGE, LTC, AVAX** — so §3's "DOT has no US venue" is wrong *long-term*. When Kraken exposes an API for this product, nearly the whole book becomes executable. Watch for that announcement.
+6. **Alpaca ETF-short fallback (verified on Mhair's paper account, kept for reference):** IBIT (BTC), ETHA (ETH), BSOL (SOL) are `shortable + easy_to_borrow`; **no XRP instrument on Alpaca is shortable** (checked XRP, GXRP, XRPC, XRPZ, XXRP, UXRP, XRPI; inverse BITI/SETH also not shortable but those are long-inverse anyway). This path was offered and NOT chosen (market-hours-only execution; no XRP), but it remains the cheapest live-money-continuous fallback.
+
+### 11b. DECISION (Mhair, 2026-07-01)
+**Majors-and-covered-alts via CME micro futures, executed in NinjaTrader's free simulator.** Adjust later when a US-legal retail API venue for alt perps opens (most likely: Kraken Derivatives US adding API access).
+
+**CME micro crypto coverage is broader than assumed — 7 of the 10 book symbols** (verified on CME product pages today):
+| Symbol | CME Micro contract | Ticker |
+|---|---|---|
+| BTC | Micro Bitcoin | MBT (0.1 BTC) |
+| ETH | Micro Ether | MET (0.1 ETH) |
+| SOL | Micro SOL | MSL (25 SOL) |
+| XRP | Micro XRP | MXP (2,500 XRP) |
+| ADA | Micro ADA | MCA (size: verify) |
+| LINK | Micro LINK | MLN (size: verify) |
+| AVAX | Micro AVAX | MAV (size: verify) |
+
+**Not on CME: DOGE, LTC, DOT** → longs route to Alpaca crypto spot (all three are listed there); **shorts in DOGE/LTC/DOT are skipped** with a `divergence` ledger entry (extend §5d's DOT mechanism).
+
+### 11c. Revised venue routing (replaces §5c `venues` sketch)
+```jsonc
+"venues": {
+  "us_equity":   { "adapter": "alpaca_paper",   "env": "paper" },
+  "crypto_cme":  { "adapter": "ninjatrader_sim", "env": "sim" },   // BTC/ETH/SOL/XRP/ADA/LINK/AVAX, long+short
+  "crypto_spot": { "adapter": "alpaca_paper",    "env": "paper" }  // DOGE/LTC/DOT LONGS only (Alpaca crypto spot)
+},
+"skip_symbols": []  // replaced by rule: crypto short with no CME micro → skip + divergence
+```
+Routing rule in `venue_router.js`: `us_equity → alpaca_paper`; `crypto` with a CME micro → `ninjatrader_sim` (either sign); `crypto` without one → long → `alpaca_paper` spot, short → skip + divergence.
+
+**Phase 1 (mock_broker) is UNCHANGED and still the critical path.** `ninjatrader_sim` replaces `kraken_perps` as the Phase-1b real venue. `kraken_perps.js` + its smoke script are parked, not deleted — the interface work is reusable if/when Kraken US gets an API.
+
+### 11d. NinjaTrader integration design (Phase 1b, revised)
+- **Order entry — NO C# strategy rewrite needed:** NinjaTrader 8's **ATI File Interface (OIF)** accepts plain-text Order Instruction Files dropped into `Documents\NinjaTrader 8\incoming`; processed the instant they're written. The Node adapter (`ninjatrader_sim.js`) writes OIF lines (`PLACE;;Sim101;<instrument>;<BUY|SELL>;<qty>;MARKET;;;GTC;...`) — docs: ninjatrader.com/support/helpguides/nt8/order_instruction_files_oif.htm.
+- **Position/fill feedback:** OIF is one-way. Two options, pick during build: (a) NT's DLL interface (`NtDirect.dll` — `MarketPosition()`, `AvgEntryPrice()`), or (b) a ~100-line NinjaScript AddOn that dumps Sim101 positions/fills to a JSON file on a timer, which Node polls. (b) is likely simpler and more debuggable.
+- **Contract months + rollover:** unlike perps, CME futures expire (monthly). The adapter needs a front-month resolver (e.g. `MBT 08-26`) and a roll rule (roll N days before expiry, close old + open new, ledger both legs).
+- **Market data / sim account:** free 14-day live-data sim trial at signup; after that verify the cheapest ongoing option (Market Replay is free; live sim data may need a funded NT brokerage account or data sub). **Verify during 1b.1.**
+- **Trading hours:** CME crypto trades Sun 5pm–Fri 4pm CT (closed weekends + a daily ~60-min maintenance break). Crypto signals landing in the gap execute at next open — the rebalancer's position-sync model handles this naturally (it syncs *state*, staleness is irrelevant), but the ledger should tag delayed syncs.
+- **Sizing granularity warning:** 1 MBT ≈ 0.1 BTC ≈ **$6,000 notional** at current prices. With the default `total_capital_usd: 10000`, one MBT contract is 60% gross — the drift-band math can't work. **Raise `total_capital_usd` to ≥ 100000 for the sim** (confirm with Mhair; it's paper, realism of *proportions* matters more than the absolute number).
+
+### 11e. Revised open-questions list (replaces §9)
+- MCA / MLN / MAV contract sizes + tick sizes (CME contract-spec pages).
+- NinjaTrader ongoing sim data cost after the 14-day trial; whether new NT accounts are still opened normally post-Kraken-acquisition.
+- Position-feedback mechanism choice: NtDirect.dll vs NinjaScript JSON exporter.
+- `total_capital_usd` — propose 100000 given contract granularity (was 10000).
+- **Standing watch:** Kraken Derivatives US API availability (would unlock DOGE/LTC/DOT + true perps; check blog/changelog) and `demo-futures.kraken.com` recovery (minor — wrong platform for US live, still useful for exercising the parked `kraken_perps.js`).
+
+---
+*This plan supersedes the current event-replay sentinel. Build phases in order; keep everything testnet/paper/sim; do not enable any live-money path without explicit human sign-off.*

@@ -1,11 +1,38 @@
 {
   "mode": "paper",
   "broker": "alpaca-paper",
+  "execution_model": "position-sync",
+  "environment": "testnet",
   "paper_auto_submit_enabled": true,
+  "position_sync_auto_submit_enabled": true,
   "live_trading_enabled": false,
+  "scale_targets_to_gross_cap": true,
+  "total_capital_usd": 100000,
+  "drift_band_pct": 0.2,
+  "min_order_usd": 25,
+  "venues": {
+    "us_equity": { "adapter": "alpaca_paper", "env": "paper" },
+    "crypto_cme": { "adapter": "ninjatrader_sim", "env": "sim" },
+    "crypto_spot": { "adapter": "alpaca_paper", "env": "paper" }
+  },
+  "ninjatrader": {
+    "account": "DEMO8256098",
+    "documents_root": "C:\\Users\\Mhair\\OneDrive\\Documents\\NinjaTrader 8",
+    "connection_name": "Simulation",
+    "wait_for_feedback": false,
+    "pending_order_ttl_minutes": 15,
+    "roll_warning_days": 5,
+    "contracts": {
+      "BTC/USD": { "instrument": "MBT 07-26", "point_value": 0.1, "roll_at": "2026-07-24T00:00:00Z", "next_instrument": "MBT 08-26" },
+      "ETH/USD": { "instrument": "MET 07-26", "point_value": 0.1, "roll_at": "2026-07-24T00:00:00Z", "next_instrument": "MET 08-26" },
+      "SOL/USD": { "instrument": "MSL 07-26", "point_value": 25, "roll_at": "2026-07-24T00:00:00Z", "next_instrument": "MSL 08-26" },
+      "XRP/USD": { "instrument": "MXP 07-26", "point_value": 2500, "roll_at": "2026-07-24T00:00:00Z", "next_instrument": "MXP 08-26" }
+    }
+  },
+  "position_sync_reject_cooldown_minutes": 10,
   "max_gross_exposure_pct": 100,
   "max_strategy_weight_pct": 25,
-  "max_symbol_exposure_pct": 20,
+  "max_symbol_exposure_pct": 30,
   "max_daily_loss_pct": 2,
   "max_open_orders": 10,
   "max_orders_per_symbol_per_hour": 2,

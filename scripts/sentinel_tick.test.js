@@ -1,7 +1,15 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { processTickets } from './sentinel_tick.js';
+import {
+  SENTINEL_SUPPORTED_SYMBOLS,
+  buildLeaderboardGenerationWindow,
+  buildNinjaFeedbackLedgerEvents,
+  buildTickTickets,
+  applyPositionSyncHealthRiskState,
+  processPositionSyncOrders,
+  processTickets,
+} from './sentinel_tick.js';
 
 const ticket = {
   ticket_id: 'sentinel-test-1',
@@ -68,6 +76,40 @@ function submittingBroker() {
     },
   };
 }
+
+test('buildLeaderboardGenerationWindow defaults to a one-day leaderboard lookback ending at tick time', () => {
+  const window = buildLeaderboardGenerationWindow({
+    generatedAt: '2026-06-29T17:00:00Z',
+    config: {},
+  });
+
+  assert.deepEqual(window, {
+    since: '2026-06-28T17:00:00Z',
+    until: '2026-06-29T17:00:00Z',
+  });
+});
+
+test('buildTickTickets processes manual inbox tickets before generated leaderboard tickets', () => {
+  const manual = ticketWith({ ticket_id: 'manual-ticket' });
+  const generated = ticketWith({ ticket_id: 'generated-ticket' });
+
+  assert.deepEqual(
+    buildTickTickets({ inboxTickets: [manual], leaderboardTickets: [generated] }),
+    [manual, generated],
+  );
+});
+
+test('SENTINEL_SUPPORTED_SYMBOLS includes Alpaca crypto USD pairs used by allocated leaderboard strategies', () => {
+  for (const symbol of ['ADA/USD', 'AVAX/USD', 'DOGE/USD', 'DOT/USD', 'ETH/USD', 'LTC/USD', 'SOL/USD', 'XRP/USD']) {
+    assert.equal(SENTINEL_SUPPORTED_SYMBOLS.has(symbol), true, `${symbol} should be supported`);
+  }
+});
+
+test('SENTINEL_SUPPORTED_SYMBOLS includes equity symbols used by allocated Sentinel strategies', () => {
+  for (const symbol of ['AMD', 'AVGO', 'CAT', 'DIS', 'FCX', 'JPM', 'LLY', 'META', 'NFLX', 'NKE', 'NVDA', 'OXY', 'PLTR', 'TSLA']) {
+    assert.equal(SENTINEL_SUPPORTED_SYMBOLS.has(symbol), true, `${symbol} should be supported`);
+  }
+});
 
 test('processTickets auto-submits approved paper tickets and records an order_submitted ledger event', async () => {
   const submittedTickets = [];
@@ -570,4 +612,420 @@ test('processTickets blocks resubmission from existing ledger source_signal_id w
   assert.equal(result.decisions[0].decision, 'blocked');
   assert.match(result.decisions[0].reasons.join(' | '), /duplicate source signal: paper-smoke-1/);
   assert.deepEqual(result.ledgerEvents, []);
+});
+
+test('processPositionSyncOrders submits orders to their venue brokers and records ledger events', async () => {
+  const submitted = [];
+  const brokers = {
+    'alpaca-paper': {
+      async submitOrder(order) {
+        submitted.push({ venue: 'alpaca-paper', order });
+        return { ok: true, order: { id: 'alpaca-order-1' } };
+      },
+    },
+    'ninjatrader-sim': {
+      async submitOrder(order) {
+        submitted.push({ venue: 'ninjatrader-sim', order });
+        return { ok: true, order: { id: 'ninja-order-1' } };
+      },
+    },
+  };
+  const orders = [
+    ticketWith({
+      ticket_id: 'sync-amd',
+      source_signal_id: 'position-sync:alpaca-paper:AMD:-900',
+      broker: 'alpaca-paper',
+      venue: 'alpaca-paper',
+      intent: 'rebalance',
+      side: 'sell',
+      notional_usd: 900,
+    }),
+    ticketWith({
+      ticket_id: 'sync-sol',
+      source_signal_id: 'position-sync:ninjatrader-sim:MSL-07-26:2',
+      broker: 'ninjatrader-sim',
+      venue: 'ninjatrader-sim',
+      symbol: 'SOL/USD',
+      asset_class: 'crypto',
+      intent: 'rebalance',
+      side: 'buy',
+      notional_usd: 3900,
+      quantity: 2,
+      instrument: 'MSL 07-26',
+    }),
+  ];
+
+  const result = await processPositionSyncOrders({
+    orders,
+    brokers,
+    config: {
+      mode: 'paper',
+      paper_auto_submit_enabled: true,
+      position_sync_auto_submit_enabled: true,
+      live_trading_enabled: false,
+      total_capital_usd: 100000,
+      max_gross_exposure_pct: 100,
+      max_symbol_exposure_pct: 20,
+      max_daily_loss_pct: 2,
+    },
+    riskState: { frozen: false },
+    account: { equity: 100000, daily_realized_pnl: 0 },
+    targetGrossExposureUsd: 10000,
+    now: '2026-07-01T20:00:00Z',
+  });
+
+  assert.equal(submitted.length, 2);
+  assert.deepEqual(result.decisions.map((decision) => decision.decision), ['submitted', 'submitted']);
+  assert.deepEqual(result.ledgerEvents.map((event) => ({
+    type: event.type,
+    broker_order_id: event.broker_order_id,
+    broker: event.broker,
+    venue: event.venue,
+    symbol: event.symbol,
+    side: event.side,
+  })), [
+    {
+      type: 'order_submitted',
+      broker_order_id: 'alpaca-order-1',
+      broker: 'alpaca-paper',
+      venue: 'alpaca-paper',
+      symbol: 'AAPL',
+      side: 'sell',
+    },
+    {
+      type: 'order_submitted',
+      broker_order_id: 'ninja-order-1',
+      broker: 'ninjatrader-sim',
+      venue: 'ninjatrader-sim',
+      symbol: 'SOL/USD',
+      side: 'buy',
+    },
+  ]);
+});
+
+test('processPositionSyncOrders blocks sync orders when position sync auto-submit is disabled', async () => {
+  let submitCount = 0;
+  const result = await processPositionSyncOrders({
+    orders: [
+      ticketWith({
+        ticket_id: 'sync-amd',
+        source_signal_id: 'position-sync:alpaca-paper:AMD:-900',
+        broker: 'alpaca-paper',
+        venue: 'alpaca-paper',
+        intent: 'rebalance',
+        side: 'sell',
+        notional_usd: 900,
+      }),
+    ],
+    brokers: {
+      'alpaca-paper': {
+        async submitOrder() {
+          submitCount += 1;
+          return { ok: true, order: { id: 'alpaca-order-1' } };
+        },
+      },
+    },
+    config: {
+      mode: 'paper',
+      paper_auto_submit_enabled: true,
+      position_sync_auto_submit_enabled: false,
+      live_trading_enabled: false,
+      total_capital_usd: 100000,
+      max_gross_exposure_pct: 100,
+      max_symbol_exposure_pct: 20,
+      max_daily_loss_pct: 2,
+    },
+    riskState: { frozen: false },
+    account: { equity: 100000, daily_realized_pnl: 0 },
+    targetGrossExposureUsd: 10000,
+    now: '2026-07-01T20:00:00Z',
+  });
+
+  assert.equal(submitCount, 0);
+  assert.equal(result.decisions[0].decision, 'blocked');
+  assert.match(result.decisions[0].reasons.join(' | '), /position-sync auto-submit must be enabled/);
+  assert.deepEqual(result.ledgerEvents, []);
+});
+
+function syncOrder(overrides = {}) {
+  return ticketWith({
+    ticket_id: 'sync-btc',
+    source_signal_id: 'position-sync:ninjatrader-sim:MBT 07-26:1',
+    broker: 'ninjatrader-sim',
+    venue: 'ninjatrader-sim',
+    symbol: 'BTC/USD',
+    asset_class: 'crypto',
+    intent: 'rebalance',
+    side: 'buy',
+    notional_usd: 6000,
+    quantity: 1,
+    instrument: 'MBT 07-26',
+    ...overrides,
+  });
+}
+
+const syncConfig = {
+  mode: 'paper',
+  paper_auto_submit_enabled: true,
+  position_sync_auto_submit_enabled: true,
+  live_trading_enabled: false,
+  total_capital_usd: 100000,
+  max_gross_exposure_pct: 100,
+  max_symbol_exposure_pct: 20,
+  max_daily_loss_pct: 2,
+};
+
+function countingNinjaBroker() {
+  let submitCount = 0;
+  return {
+    get submitCount() {
+      return submitCount;
+    },
+    brokers: {
+      'ninjatrader-sim': {
+        async submitOrder() {
+          submitCount += 1;
+          return { ok: true, order: { id: `ninja-order-${submitCount}` } };
+        },
+      },
+    },
+  };
+}
+
+test('processPositionSyncOrders blocks NinjaTrader orders when the data connection is not connected', async () => {
+  const counting = countingNinjaBroker();
+
+  const result = await processPositionSyncOrders({
+    orders: [syncOrder()],
+    brokers: counting.brokers,
+    config: syncConfig,
+    riskState: { frozen: false },
+    account: {
+      equity: 100000,
+      daily_realized_pnl: 0,
+      venues: { ninjatrader_sim: { connection: 'disconnected' } },
+    },
+    targetGrossExposureUsd: 10000,
+    now: '2026-07-02T10:06:00Z',
+  });
+
+  assert.equal(counting.submitCount, 0);
+  assert.equal(result.decisions[0].decision, 'blocked');
+  assert.match(result.decisions[0].reasons.join(' | '), /NinjaTrader connection is not connected/);
+  assert.deepEqual(result.ledgerEvents, []);
+});
+
+test('processPositionSyncOrders blocks NinjaTrader orders when the connection status is unknown', async () => {
+  const counting = countingNinjaBroker();
+
+  const result = await processPositionSyncOrders({
+    orders: [syncOrder()],
+    brokers: counting.brokers,
+    config: syncConfig,
+    riskState: { frozen: false },
+    account: {
+      equity: 100000,
+      daily_realized_pnl: 0,
+      venues: { ninjatrader_sim: { connection: 'unknown' } },
+    },
+    targetGrossExposureUsd: 10000,
+    now: '2026-07-02T10:06:00Z',
+  });
+
+  assert.equal(counting.submitCount, 0);
+  assert.equal(result.decisions[0].decision, 'blocked');
+  assert.match(result.decisions[0].reasons.join(' | '), /NinjaTrader connection is not connected/);
+});
+
+test('processPositionSyncOrders enforces a cooldown after a recent broker rejection for the same symbol and venue', async () => {
+  const counting = countingNinjaBroker();
+
+  const result = await processPositionSyncOrders({
+    orders: [syncOrder()],
+    brokers: counting.brokers,
+    config: { ...syncConfig, position_sync_reject_cooldown_minutes: 10 },
+    riskState: { frozen: false },
+    account: {
+      equity: 100000,
+      daily_realized_pnl: 0,
+      venues: { ninjatrader_sim: { connection: 'connected' } },
+    },
+    targetGrossExposureUsd: 10000,
+    ledgerEvents: [
+      {
+        type: 'order_rejected',
+        at: '2026-07-02T10:04:00Z',
+        broker_order_id: 'NT-rejected',
+        venue: 'ninjatrader-sim',
+        symbol: 'BTC/USD',
+        side: 'buy',
+        reason: 'ninjatrader feedback: rejected',
+      },
+    ],
+    now: '2026-07-02T10:06:00Z',
+  });
+
+  assert.equal(counting.submitCount, 0);
+  assert.equal(result.decisions[0].decision, 'blocked');
+  assert.match(result.decisions[0].reasons.join(' | '), /cooling down/);
+});
+
+test('processPositionSyncOrders allows submission after the rejection cooldown has elapsed', async () => {
+  const counting = countingNinjaBroker();
+
+  const result = await processPositionSyncOrders({
+    orders: [syncOrder()],
+    brokers: counting.brokers,
+    config: { ...syncConfig, position_sync_reject_cooldown_minutes: 10 },
+    riskState: { frozen: false },
+    account: {
+      equity: 100000,
+      daily_realized_pnl: 0,
+      venues: { ninjatrader_sim: { connection: 'connected' } },
+    },
+    targetGrossExposureUsd: 10000,
+    ledgerEvents: [
+      {
+        type: 'order_rejected',
+        at: '2026-07-02T09:50:00Z',
+        broker_order_id: 'NT-rejected',
+        venue: 'ninjatrader-sim',
+        symbol: 'BTC/USD',
+        side: 'buy',
+        reason: 'ninjatrader feedback: rejected',
+      },
+    ],
+    now: '2026-07-02T10:06:00Z',
+  });
+
+  assert.equal(counting.submitCount, 1);
+  assert.equal(result.decisions[0].decision, 'submitted');
+});
+
+test('processPositionSyncOrders enforces the per-symbol hourly order cap from ledger history', async () => {
+  const counting = countingNinjaBroker();
+  const submittedEvent = (id, at) => ({
+    type: 'order_submitted',
+    at,
+    broker_order_id: id,
+    venue: 'ninjatrader-sim',
+    symbol: 'BTC/USD',
+    side: 'buy',
+    quantity: 1,
+    source_signal_id: 'position-sync:ninjatrader-sim:MBT 07-26:1',
+  });
+
+  const result = await processPositionSyncOrders({
+    orders: [syncOrder()],
+    brokers: counting.brokers,
+    config: { ...syncConfig, max_orders_per_symbol_per_hour: 2 },
+    riskState: { frozen: false },
+    account: {
+      equity: 100000,
+      daily_realized_pnl: 0,
+      venues: { ninjatrader_sim: { connection: 'connected' } },
+    },
+    targetGrossExposureUsd: 10000,
+    ledgerEvents: [
+      submittedEvent('NT-a', '2026-07-02T09:30:00Z'),
+      submittedEvent('NT-b', '2026-07-02T09:45:00Z'),
+    ],
+    now: '2026-07-02T10:06:00Z',
+  });
+
+  assert.equal(counting.submitCount, 0);
+  assert.equal(result.decisions[0].decision, 'blocked');
+  assert.match(result.decisions[0].reasons.join(' | '), /past hour 2 at or above cap 2/);
+});
+
+test('buildNinjaFeedbackLedgerEvents converts terminal feedback into fill and rejection ledger events once', () => {
+  const ledgerEvents = [
+    {
+      type: 'order_submitted',
+      at: '2026-07-02T10:00:00Z',
+      ticket_id: 'sync-btc',
+      broker_order_id: 'NT-fill',
+      broker: 'ninjatrader-sim',
+      venue: 'ninjatrader-sim',
+      symbol: 'BTC/USD',
+      instrument: 'MBT 07-26',
+      side: 'buy',
+      quantity: 1,
+      strategy: 'Sentinel Position Sync',
+      source_signal_id: 'position-sync:ninjatrader-sim:MBT 07-26:1',
+    },
+    {
+      type: 'order_submitted',
+      at: '2026-07-02T10:00:00Z',
+      ticket_id: 'sync-sol',
+      broker_order_id: 'NT-reject',
+      broker: 'ninjatrader-sim',
+      venue: 'ninjatrader-sim',
+      symbol: 'SOL/USD',
+      instrument: 'MSL 07-26',
+      side: 'sell',
+      quantity: 4,
+      strategy: 'Sentinel Position Sync',
+      source_signal_id: 'position-sync:ninjatrader-sim:MSL 07-26:8',
+    },
+  ];
+  const ninjaOrders = [
+    { id: 'NT-fill', status: 'filled', filled_qty: 1, fill_price: 60050 },
+    { id: 'NT-reject', status: 'rejected', filled_qty: 0, fill_price: 0 },
+    { id: 'NT-unrelated', status: 'filled', filled_qty: 2, fill_price: 100 },
+  ];
+
+  const events = buildNinjaFeedbackLedgerEvents({
+    ledgerEvents,
+    ninjaOrders,
+    now: '2026-07-02T10:07:00Z',
+  });
+
+  assert.deepEqual(events.map((event) => ({ type: event.type, broker_order_id: event.broker_order_id })), [
+    { type: 'order_filled', broker_order_id: 'NT-fill' },
+    { type: 'order_rejected', broker_order_id: 'NT-reject' },
+  ]);
+  assert.equal(events[0].symbol, 'BTC/USD');
+  assert.equal(events[0].filled_qty, 1);
+  assert.equal(events[0].fill_price, 60050);
+  assert.equal(events[1].symbol, 'SOL/USD');
+  assert.match(events[1].reason, /rejected/);
+
+  const secondPass = buildNinjaFeedbackLedgerEvents({
+    ledgerEvents: [...ledgerEvents, ...events],
+    ninjaOrders,
+    now: '2026-07-02T10:08:00Z',
+  });
+  assert.deepEqual(secondPass, [], 'feedback already ledgered should not emit duplicates');
+});
+
+test('applyPositionSyncHealthRiskState freezes on stale Ninja feedback and clears on clean reports', () => {
+  const frozen = applyPositionSyncHealthRiskState({
+    riskState: { frozen: false },
+    report: {
+      divergences: [
+        {
+          symbol: 'ETH/USD',
+          instrument: 'MET 07-26',
+          reason: 'stale_ninjatrader_feedback',
+          broker_order_id: 'NT-stale-eth',
+        },
+      ],
+    },
+    generatedAt: '2026-07-01T20:30:00Z',
+  });
+
+  assert.equal(frozen.frozen, true);
+  assert.equal(frozen.freeze_source, 'ninjatrader_feedback');
+  assert.match(frozen.freeze_reason, /ETH\/USD/);
+
+  const cleared = applyPositionSyncHealthRiskState({
+    riskState: frozen,
+    report: { divergences: [] },
+    generatedAt: '2026-07-01T20:31:00Z',
+  });
+
+  assert.equal(cleared.frozen, false);
+  assert.equal(cleared.freeze_source, '');
+  assert.equal(cleared.freeze_reason, '');
 });
