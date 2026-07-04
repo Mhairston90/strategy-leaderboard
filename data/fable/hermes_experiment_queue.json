@@ -1,6 +1,6 @@
 {
   "owner": "fable",
-  "generated_at": "2026-07-03T23:07:29.000Z",
+  "generated_at": "2026-07-04T17:00:04.000Z",
   "guardrails": [
     "Review-only: no live routing, position-sizing, or spec files were modified.",
     "Queue items are research and operational recommendations only.",
@@ -25,7 +25,7 @@
       "type": "experiment",
       "title": "Address collapse in FABLE Crypto Pulse L/S v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Trailing-14d PF 0.28, PnL -513. Decide: halve risk on new entries, pause pending diagnosis, or archive."
+      "requested_action": "Trailing-14d PF 0.15, PnL -1168. Decide: halve risk on new entries, pause pending diagnosis, or archive."
     },
     {
       "owner": "fable",
