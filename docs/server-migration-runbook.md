@@ -46,7 +46,10 @@ git clone https://github.com/Mhairston90/strategy-leaderboard.git C:\trading\str
    "Connect on startup" → select the data connection (currently named **Simulation** — the sentinel
    reads `outgoing\<connection name>.txt`; if the connection has a different name on the server,
    update `ninjatrader.connection_name` in `data/sentinel/config.json`).
-4. Add NT8 to Windows Startup (shell:startup shortcut).
+4. Add NT8 to Windows Startup (shell:startup shortcut) — belt-and-suspenders with the watchdog task.
+5. **Check "Remember credentials" (or equivalent) on the NT login screen** — the watchdog can
+   restart NT, but it cannot type a password. Unattended recovery requires saved credentials +
+   "connect on startup".
 
 ### 4. Sentinel config diffs (`data/sentinel/config.json`)
 - `ninjatrader.documents_root` → the server's real NT folder, e.g.
@@ -54,7 +57,10 @@ git clone https://github.com/Mhairston90/strategy-leaderboard.git C:\trading\str
 - Everything else carries over unchanged.
 
 ### 5. Scheduled tasks
-XML exports of all six laptop tasks live in `docs/migration/tasks/`. On the server:
+XML exports of all seven laptop tasks live in `docs/migration/tasks/`. **"NinjaTrader Watchdog"
+is essential** — it restarts NT when the data connection drops (NT does not reliably auto-reconnect),
+corrects the connection status file when NT is killed (otherwise it lies `CONNECTED` to the
+sentinel's gate), and clears stale order files before restarts. On the server:
 ```powershell
 schtasks /create /tn "Trade Sentinel Paper Tick Loop" /xml "C:\trading\strategy-leaderboard\docs\migration\tasks\Trade-Sentinel-Paper-Tick-Loop.xml"
 # ...repeat for the other five XMLs
