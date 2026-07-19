@@ -1,6 +1,6 @@
 {
   "owner": "fable",
-  "generated_at": "2026-07-18T14:00:11.000Z",
+  "generated_at": "2026-07-19T14:00:11.000Z",
   "guardrails": [
     "Review-only: no live routing, position-sizing, or spec files were modified.",
     "Queue items are research and operational recommendations only.",
@@ -45,7 +45,7 @@
       "type": "sample_collection",
       "title": "Confirm recovery in FABLE Crypto Pulse L/S v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Trailing-14d PF 3.53 vs full 0.79. Collect sample; no sizing changes until recovery is confirmed."
+      "requested_action": "Trailing-14d PF 42.16 vs full 0.79. Collect sample; no sizing changes until recovery is confirmed."
     },
     {
       "owner": "fable",
