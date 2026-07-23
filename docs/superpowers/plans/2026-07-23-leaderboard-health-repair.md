@@ -31,7 +31,7 @@
 - Modify `lib/sentinel/allocator.js`: block stale rows from allocation.
 - Modify `lib/sentinel/promotion_engine.test.js`: stale promotion rows are blocked.
 - Modify `lib/sentinel/promotion_engine.js`: block stale rows from promotion.
-- Create `scripts/leaderboard_integrity.test.js`: protect registry size and named CODEX histories.
+- Modify `scripts/codex_snapshot_integrity.test.js`: protect registry size and named CODEX histories.
 - Modify `docs/superpowers/specs/2026-07-23-leaderboard-health-repair-design.md`: record cache-family message isolation discovered during planning.
 
 ### FABLE (`C:\trading\Fable`)
@@ -739,33 +739,14 @@ Expected: four tests pass without sleeping because tests inject a fake sleeper.
 
 **Files:**
 
-- Create: `C:\trading\strategy-leaderboard\scripts\leaderboard_integrity.test.js`
+- Modify: `C:\trading\strategy-leaderboard\scripts\codex_snapshot_integrity.test.js`
 
 - [ ] **Step 1: Add the registry and protected-history contract**
 
-Create:
+Add this test beside the existing protected-CODEX history test:
 
 ```js
-import { readFile } from 'node:fs/promises';
-import { test } from 'node:test';
-import assert from 'node:assert/strict';
-
-import { STRATEGIES, effectiveCutoff, sourceSnapshotMaxAgeHours } from '../registry.js';
-
 const MIN_STRATEGY_COUNT = 80;
-const PROTECTED_CODEX_NAMES = [
-  'CODEX v0',
-  'CODEX Aggro v0',
-  'CODEX Pulse v0',
-  'CODEX Regime v0',
-  'CODEX Apex v0',
-  'CODEX Regime WFO v1',
-  'CODEX Apex WFO v1',
-];
-
-async function localText(path) {
-  return readFile(new URL(`../${path}`, import.meta.url), 'utf8');
-}
 
 test('leaderboard registry never shrinks below the captured 80-row baseline', () => {
   assert.ok(
@@ -775,41 +756,17 @@ test('leaderboard registry never shrinks below the captured 80-row baseline', ()
   const names = STRATEGIES.map(strategy => strategy.name);
   assert.equal(new Set(names).size, names.length, 'strategy names must remain unique');
 });
-
-test('protected CODEX rows retain non-empty forward trade histories', async () => {
-  for (const name of PROTECTED_CODEX_NAMES) {
-    const strategy = STRATEGIES.find(candidate => candidate.name === name);
-    assert.ok(strategy, `${name} missing from registry`);
-    const [portfolioText, tradeLogText] = await Promise.all([
-      localText(strategy.source.portfolio_path),
-      localText(strategy.source.trade_log_path),
-    ]);
-    const row = strategy.adapter(
-      {
-        portfolio: { ok: true, text: portfolioText },
-        tradeLog: { ok: true, text: tradeLogText },
-        status: { ok: true, text: '' },
-      },
-      {
-        startingCapital: strategy.starting_capital,
-        name: strategy.name,
-        liveStartIso: effectiveCutoff(strategy.live_start_iso),
-        maxSnapshotAgeHours: sourceSnapshotMaxAgeHours(strategy.source),
-      },
-    );
-
-    assert.notEqual(row.status, 'error', `${name} returned fatal status`);
-    assert.ok(row.trades_n > 0, `${name} forward history is empty`);
-  }
-});
 ```
 
-- [ ] **Step 2: Run the integrity test**
+Keep the existing `active CODEX snapshots keep their non-empty forward trade
+history` test unchanged.
+
+- [ ] **Step 2: Run the integrity tests**
 
 Run:
 
 ```powershell
-node --test scripts/leaderboard_integrity.test.js
+node --test scripts/codex_snapshot_integrity.test.js
 ```
 
 Expected: two tests pass, proving the current baseline is intact before any data
@@ -832,7 +789,7 @@ refresh.
 Run:
 
 ```powershell
-node --test scripts/leaderboard_integrity.test.js
+node --test scripts/codex_snapshot_integrity.test.js
 npm run smoke
 ```
 
@@ -899,7 +856,7 @@ Expected: all commands exit zero; FABLE portfolio timestamps become current.
 Run:
 
 ```powershell
-node --test scripts/leaderboard_integrity.test.js
+node --test scripts/codex_snapshot_integrity.test.js
 npm run smoke
 ```
 
@@ -1006,8 +963,8 @@ Expected: `strategyCount` is at least 80 and every protected row has
 Run:
 
 ```powershell
-git diff --check -- adapters/adapter_bull.js adapters/adapter_codex.js adapters/adapters.test.js lib/strategy_row.js lib/source_health.js lib/source_health.test.js lib/render.js lib/render.test.js css/style.css lib/contest.js lib/contest.test.js lib/command_center.js lib/command_center.test.js lib/sentinel/allocator.js lib/sentinel/allocator.test.js lib/sentinel/promotion_engine.js lib/sentinel/promotion_engine.test.js scripts/leaderboard_integrity.test.js docs/superpowers/specs/2026-07-23-leaderboard-health-repair-design.md
-git diff --stat -- adapters/adapter_bull.js adapters/adapter_codex.js adapters/adapters.test.js lib/strategy_row.js lib/source_health.js lib/source_health.test.js lib/render.js lib/render.test.js css/style.css lib/contest.js lib/contest.test.js lib/command_center.js lib/command_center.test.js lib/sentinel/allocator.js lib/sentinel/allocator.test.js lib/sentinel/promotion_engine.js lib/sentinel/promotion_engine.test.js scripts/leaderboard_integrity.test.js docs/superpowers/specs/2026-07-23-leaderboard-health-repair-design.md
+git diff --check -- adapters/adapter_bull.js adapters/adapter_codex.js adapters/adapters.test.js lib/strategy_row.js lib/source_health.js lib/source_health.test.js lib/render.js lib/render.test.js css/style.css lib/contest.js lib/contest.test.js lib/command_center.js lib/command_center.test.js lib/sentinel/allocator.js lib/sentinel/allocator.test.js lib/sentinel/promotion_engine.js lib/sentinel/promotion_engine.test.js scripts/codex_snapshot_integrity.test.js docs/superpowers/specs/2026-07-23-leaderboard-health-repair-design.md
+git diff --stat -- adapters/adapter_bull.js adapters/adapter_codex.js adapters/adapters.test.js lib/strategy_row.js lib/source_health.js lib/source_health.test.js lib/render.js lib/render.test.js css/style.css lib/contest.js lib/contest.test.js lib/command_center.js lib/command_center.test.js lib/sentinel/allocator.js lib/sentinel/allocator.test.js lib/sentinel/promotion_engine.js lib/sentinel/promotion_engine.test.js scripts/codex_snapshot_integrity.test.js docs/superpowers/specs/2026-07-23-leaderboard-health-repair-design.md
 ```
 
 Expected: no whitespace errors and no files outside the repair scope included.
