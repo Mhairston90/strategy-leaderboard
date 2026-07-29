@@ -112,8 +112,31 @@ FABLE_DEPS = {
 }
 
 
-def main() -> int:
-    now = dt.datetime.now(dt.timezone.utc)
+def cache_family(filename: str) -> str | None:
+    symbol = filename.split("_", 1)[0]
+    if symbol in WIDE15:
+        return "equities"
+    if symbol in CRYPTO8:
+        return "crypto"
+    return None
+
+
+def cache_message(which: str, cache_severity: dict[str, str], findings) -> str:
+    problems = [finding for finding in findings if finding[1] != "ok"]
+    if cache_severity[which] == "ok":
+        return "all files fresh"
+    if which != "both":
+        problems = [
+            finding
+            for finding in problems
+            if cache_family(finding[0]) == which
+        ]
+    rendered = [f"{name} ({message})" for name, _severity, message in problems]
+    return f"{len(rendered)} issue(s): " + "; ".join(rendered[:3])
+
+
+def main(*, require_ok: bool = False, now: dt.datetime | None = None) -> int:
+    now = now or dt.datetime.now(dt.timezone.utc)
     state = json.loads(STATE.read_text()) if STATE.exists() else {}
     new_state, findings = {}, []
 
@@ -137,16 +160,6 @@ def main() -> int:
     ts = now.strftime("%Y-%m-%dT%H:%M:%SZ")
     problems = [f for f in findings if f[1] != "ok"]
 
-    def cache_msg(which):
-        rel = [f"{n}: {m}" for n, sv, m in problems
-               if (which in ("equities", "both")) == (not n[:3].isupper() or n.split("_")[0] in WIDE15)] \
-              if False else [f"{n}: {m}" for n, sv, m in problems]
-        # keep messages short: count + first issue
-        if cache_sev[which] == "ok":
-            return "all files fresh"
-        mine = [f"{n} ({m})" for n, sv, m in problems]
-        return f"{len(mine)} issue(s): " + "; ".join(mine[:3])
-
     lines = [
         "# Cache Health \u2014 shared OHLC data-integrity sentinel",
         "",
@@ -155,12 +168,16 @@ def main() -> int:
         "",
         "| Routine | Strategy | Timestamp UTC | Status | Data source | Message |",
         "|---------|----------|---------------|--------|-------------|---------|",
-        f"| cache-health | EQUITIES CACHE (wide-15 1h/1d) | {ts} | {eq_sev} | local | {cache_msg('equities')} |",
-        f"| cache-health | CRYPTO CACHE (Kraken-8 1h/4h) | {ts} | {cr_sev} | local | {cache_msg('crypto')} |",
+        f"| cache-health | EQUITIES CACHE (wide-15 1h/1d) | {ts} | {eq_sev} | local | {cache_message('equities', cache_sev, findings)} |",
+        f"| cache-health | CRYPTO CACHE (Kraken-8 1h/4h) | {ts} | {cr_sev} | local | {cache_message('crypto', cache_sev, findings)} |",
     ]
     for name, dep in FABLE_DEPS.items():
         sev = cache_sev[dep]
-        msg = "all data dependencies fresh" if sev == "ok" else f"{dep} cache: {cache_msg(dep)}"
+        msg = (
+            "all data dependencies fresh"
+            if sev == "ok"
+            else f"{dep} cache: {cache_message(dep, cache_sev, findings)}"
+        )
         lines.append(f"| cache-health | {name} | {ts} | {sev} | local | {msg} |")
 
     lines += ["", "## Detail", ""]
@@ -172,9 +189,15 @@ def main() -> int:
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text("\n".join(lines) + "\n", encoding="utf-8")
-    STATE.write_text(json.dumps(new_state, indent=0), encoding="utf-8")
     worst = worse(eq_sev, cr_sev)
+    # Shrinkage compares against the last fully healthy cache set. Persisting
+    # counts from a failed/warning run would let a retry normalize truncated
+    # or stale inputs into a new baseline and incorrectly pass.
+    if worst == "ok":
+        STATE.write_text(json.dumps(new_state, indent=0), encoding="utf-8")
     print(f"[cache-health] equities={eq_sev} crypto={cr_sev} files={len(findings)} problems={len(problems)}", flush=True)
+    if require_ok:
+        return 0 if worst == "ok" else 1
     return 1 if worst == "error" else 0
 
 
