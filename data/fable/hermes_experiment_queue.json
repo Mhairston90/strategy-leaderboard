@@ -1,6 +1,6 @@
 {
   "owner": "fable",
-  "generated_at": "2026-07-29T17:14:05.000Z",
+  "generated_at": "2026-08-04T17:42:44.000Z",
   "guardrails": [
     "Review-only: no live routing, position-sizing, or spec files were modified.",
     "Queue items are research and operational recommendations only.",
@@ -9,11 +9,11 @@
   ],
   "summary": {
     "queue_items": 8,
-    "collapsing": 4,
+    "collapsing": 2,
     "fading_winner": 0,
-    "recovering": 1,
-    "stable_profitable": 0,
-    "stable_losing": 3,
+    "recovering": 0,
+    "stable_profitable": 1,
+    "stable_losing": 5,
     "insufficient_data": 0
   },
   "items": [
@@ -25,7 +25,7 @@
       "type": "experiment",
       "title": "Address collapse in FABLE Crypto Drift v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Trailing-14d PF 0.00, PnL -1150. Decide: halve risk on new entries, pause pending diagnosis, or archive."
+      "requested_action": "Trailing-14d PF 0.07, PnL -883. Decide: halve risk on new entries, pause pending diagnosis, or archive."
     },
     {
       "owner": "fable",
@@ -39,43 +39,23 @@
     },
     {
       "owner": "fable",
-      "strategy": "FABLE Equities Snapback Turbo",
-      "strategy_id": "fable-snapback-turbo",
-      "priority": 1,
-      "type": "experiment",
-      "title": "Address collapse in FABLE Equities Snapback Turbo",
-      "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Trailing-14d PF 0.42, PnL -2585. Decide: halve risk on new entries, pause pending diagnosis, or archive."
-    },
-    {
-      "owner": "fable",
-      "strategy": "FABLE Meta-Allocator v1",
-      "strategy_id": "fable-meta-allocator",
-      "priority": 1,
-      "type": "experiment",
-      "title": "Address collapse in FABLE Meta-Allocator v1",
-      "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Trailing-14d PF 0.07, PnL -797. Decide: halve risk on new entries, pause pending diagnosis, or archive."
-    },
-    {
-      "owner": "fable",
       "strategy": "FABLE Crypto Pulse L/S v1",
       "strategy_id": "fable-crypto-pulse",
       "priority": 2,
       "type": "experiment",
       "title": "Repair weak edge in FABLE Crypto Pulse L/S v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Forward PF 0.88, trailing 1.18. Design ONE one-variable repair experiment; no promotion evidence until PF > 1.2."
+      "requested_action": "Forward PF 0.76, trailing 0.86. Design ONE one-variable repair experiment; no promotion evidence until PF > 1.2."
     },
     {
       "owner": "fable",
       "strategy": "FABLE Equities Afterburner v1",
       "strategy_id": "fable-afterburner",
       "priority": 2,
-      "type": "sample_collection",
-      "title": "Confirm recovery in FABLE Equities Afterburner v1",
+      "type": "experiment",
+      "title": "Repair weak edge in FABLE Equities Afterburner v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Trailing-14d PF 1.46 vs full 0.59. Collect sample; no sizing changes until recovery is confirmed."
+      "requested_action": "Forward PF 0.52, trailing 0.87. Design ONE one-variable repair experiment; no promotion evidence until PF > 1.2."
     },
     {
       "owner": "fable",
@@ -85,17 +65,37 @@
       "type": "experiment",
       "title": "Repair weak edge in FABLE Equities Fader v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Forward PF 0.91, trailing 0.95. Design ONE one-variable repair experiment; no promotion evidence until PF > 1.2."
+      "requested_action": "Forward PF 0.91, trailing 1.20. Design ONE one-variable repair experiment; no promotion evidence until PF > 1.2."
+    },
+    {
+      "owner": "fable",
+      "strategy": "FABLE Equities Snapback Turbo",
+      "strategy_id": "fable-snapback-turbo",
+      "priority": 2,
+      "type": "experiment",
+      "title": "Repair weak edge in FABLE Equities Snapback Turbo",
+      "source": "data/fable/hermes_experiment_queue.json",
+      "requested_action": "Forward PF 0.88, trailing 0.74. Design ONE one-variable repair experiment; no promotion evidence until PF > 1.2."
+    },
+    {
+      "owner": "fable",
+      "strategy": "FABLE Meta-Allocator v1",
+      "strategy_id": "fable-meta-allocator",
+      "priority": 2,
+      "type": "experiment",
+      "title": "Repair weak edge in FABLE Meta-Allocator v1",
+      "source": "data/fable/hermes_experiment_queue.json",
+      "requested_action": "Forward PF 0.56, trailing 0.92. Design ONE one-variable repair experiment; no promotion evidence until PF > 1.2."
     },
     {
       "owner": "fable",
       "strategy": "FABLE Equities Snapback L/S v1",
       "strategy_id": "fable-snapback-ls",
-      "priority": 2,
-      "type": "experiment",
-      "title": "Repair weak edge in FABLE Equities Snapback L/S v1",
+      "priority": 3,
+      "type": "sample_collection",
+      "title": "Keep collecting sample for FABLE Equities Snapback L/S v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Forward PF 0.98, trailing 0.64. Design ONE one-variable repair experiment; no promotion evidence until PF > 1.2."
+      "requested_action": "Stable: forward PF 1.05, trailing 1.16. Stay the course; review at month boundary for registration."
     }
   ]
 }
