@@ -1,6 +1,6 @@
 {
   "owner": "fable",
-  "generated_at": "2026-08-31T16:17:17.000Z",
+  "generated_at": "2026-09-01T17:42:44.000Z",
   "guardrails": [
     "Review-only: no live routing, position-sizing, or spec files were modified.",
     "Queue items are research and operational recommendations only.",
@@ -55,7 +55,7 @@
       "type": "sample_collection",
       "title": "Confirm recovery in FABLE Meta-Allocator v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Trailing-14d PF 4.46 vs full 0.69. Collect sample; no sizing changes until recovery is confirmed."
+      "requested_action": "Trailing-14d PF 3.52 vs full 0.69. Collect sample; no sizing changes until recovery is confirmed."
     },
     {
       "owner": "fable",
@@ -75,7 +75,7 @@
       "type": "sample_collection",
       "title": "Keep collecting sample for FABLE Equities Fader v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Stable: forward PF 1.15, trailing 2.07. Stay the course; review at month boundary for registration."
+      "requested_action": "Stable: forward PF 1.15, trailing 1.57. Stay the course; review at month boundary for registration."
     },
     {
       "owner": "fable",
@@ -85,7 +85,7 @@
       "type": "sample_collection",
       "title": "Keep collecting sample for FABLE Equities Snapback L/S v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Stable: forward PF 1.11, trailing 1.43. Stay the course; review at month boundary for registration."
+      "requested_action": "Stable: forward PF 1.11, trailing 1.41. Stay the course; review at month boundary for registration."
     },
     {
       "owner": "fable",
@@ -95,7 +95,7 @@
       "type": "sample_collection",
       "title": "Keep collecting sample for FABLE Equities Snapback Turbo",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Stable: forward PF 1.09, trailing 1.96. Stay the course; review at month boundary for registration."
+      "requested_action": "Stable: forward PF 1.09, trailing 1.76. Stay the course; review at month boundary for registration."
     }
   ]
 }
