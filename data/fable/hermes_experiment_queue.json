@@ -1,6 +1,6 @@
 {
   "owner": "fable",
-  "generated_at": "2026-09-20T16:33:00.000Z",
+  "generated_at": "2026-09-21T14:00:14.000Z",
   "guardrails": [
     "Review-only: no live routing, position-sizing, or spec files were modified.",
     "Queue items are research and operational recommendations only.",
