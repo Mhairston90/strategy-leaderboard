@@ -1,6 +1,6 @@
 {
   "owner": "fable",
-  "generated_at": "2026-09-28T14:00:25.000Z",
+  "generated_at": "2026-09-29T14:00:21.000Z",
   "guardrails": [
     "Review-only: no live routing, position-sizing, or spec files were modified.",
     "Queue items are research and operational recommendations only.",
@@ -35,7 +35,7 @@
       "type": "repair",
       "title": "Killswitch proximity: FABLE Equities Afterburner v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Forward realized DD 24.2% vs killswitch 25%. PAUSE/CONTINUE/KILL decision required per spec recovery rules."
+      "requested_action": "Forward realized DD 25.7% vs killswitch 25%. PAUSE/CONTINUE/KILL decision required per spec recovery rules."
     },
     {
       "owner": "fable",
@@ -55,7 +55,7 @@
       "type": "experiment",
       "title": "Repair weak edge in FABLE Equities Fader v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Forward PF 0.98, trailing 0.79. Design ONE one-variable repair experiment; no promotion evidence until PF > 1.2."
+      "requested_action": "Forward PF 1.00, trailing 0.89. Design ONE one-variable repair experiment; no promotion evidence until PF > 1.2."
     },
     {
       "owner": "fable",
@@ -65,7 +65,7 @@
       "type": "sample_collection",
       "title": "Confirm recovery in FABLE Meta-Allocator v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Trailing-14d PF 3.13 vs full 0.92. Collect sample; no sizing changes until recovery is confirmed."
+      "requested_action": "Trailing-14d PF 6.02 vs full 0.96. Collect sample; no sizing changes until recovery is confirmed."
     },
     {
       "owner": "fable",
@@ -75,7 +75,7 @@
       "type": "sample_collection",
       "title": "Keep collecting sample for FABLE Crypto Drift v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Stable: forward PF 2.11, trailing 2.12. Stay the course; review at month boundary for registration."
+      "requested_action": "Stable: forward PF 2.11, trailing inf. Stay the course; review at month boundary for registration."
     },
     {
       "owner": "fable",
@@ -85,7 +85,7 @@
       "type": "sample_collection",
       "title": "Keep collecting sample for FABLE Equities Snapback L/S v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Stable: forward PF 1.28, trailing 2.71. Stay the course; review at month boundary for registration."
+      "requested_action": "Stable: forward PF 1.27, trailing 1.70. Stay the course; review at month boundary for registration."
     },
     {
       "owner": "fable",
@@ -95,7 +95,7 @@
       "type": "sample_collection",
       "title": "Keep collecting sample for FABLE Equities Snapback Turbo",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Stable: forward PF 1.17, trailing 2.10. Stay the course; review at month boundary for registration."
+      "requested_action": "Stable: forward PF 1.17, trailing 2.40. Stay the course; review at month boundary for registration."
     }
   ]
 }
