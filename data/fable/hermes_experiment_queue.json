@@ -1,6 +1,6 @@
 {
   "owner": "fable",
-  "generated_at": "2026-10-04T14:00:14.000Z",
+  "generated_at": "2026-10-05T14:00:15.000Z",
   "guardrails": [
     "Review-only: no live routing, position-sizing, or spec files were modified.",
     "Queue items are research and operational recommendations only.",
@@ -65,7 +65,7 @@
       "type": "sample_collection",
       "title": "Keep collecting sample for FABLE Equities Fader v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Stable: forward PF 1.05, trailing 1.22. Stay the course; review at month boundary for registration."
+      "requested_action": "Stable: forward PF 1.05, trailing 2.16. Stay the course; review at month boundary for registration."
     },
     {
       "owner": "fable",
@@ -85,7 +85,7 @@
       "type": "sample_collection",
       "title": "Keep collecting sample for FABLE Equities Snapback Turbo",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Stable: forward PF 1.29, trailing 2.62. Stay the course; review at month boundary for registration."
+      "requested_action": "Stable: forward PF 1.29, trailing 3.31. Stay the course; review at month boundary for registration."
     },
     {
       "owner": "fable",
@@ -95,7 +95,7 @@
       "type": "sample_collection",
       "title": "Keep collecting sample for FABLE Meta-Allocator v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Stable: forward PF 1.10, trailing 6.44. Stay the course; review at month boundary for registration."
+      "requested_action": "Stable: forward PF 1.12, trailing 6.94. Stay the course; review at month boundary for registration."
     }
   ]
 }
