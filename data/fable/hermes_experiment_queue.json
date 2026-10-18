@@ -1,6 +1,6 @@
 {
   "owner": "fable",
-  "generated_at": "2026-10-16T14:00:19.000Z",
+  "generated_at": "2026-10-18T18:35:26.000Z",
   "guardrails": [
     "Review-only: no live routing, position-sizing, or spec files were modified.",
     "Queue items are research and operational recommendations only.",
@@ -9,8 +9,8 @@
   ],
   "summary": {
     "queue_items": 8,
-    "collapsing": 6,
-    "fading_winner": 1,
+    "collapsing": 7,
+    "fading_winner": 0,
     "recovering": 0,
     "stable_profitable": 0,
     "stable_losing": 1,
@@ -65,7 +65,7 @@
       "type": "experiment",
       "title": "Address collapse in FABLE Equities Snapback L/S v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Trailing-14d PF 0.29, PnL -1238. Decide: halve risk on new entries, pause pending diagnosis, or archive."
+      "requested_action": "Trailing-14d PF 0.39, PnL -1121. Decide: halve risk on new entries, pause pending diagnosis, or archive."
     },
     {
       "owner": "fable",
@@ -73,9 +73,9 @@
       "strategy_id": "fable-snapback-turbo",
       "priority": 1,
       "type": "experiment",
-      "title": "Defend FABLE Equities Snapback Turbo \u2014 winner fading in current window",
+      "title": "Address collapse in FABLE Equities Snapback Turbo",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Full forward PF 1.24 but trailing-14d PF 0.64. Diagnose regime fit before the edge decays further."
+      "requested_action": "Trailing-14d PF 0.51, PnL -1721. Decide: halve risk on new entries, pause pending diagnosis, or archive."
     },
     {
       "owner": "fable",
@@ -85,7 +85,7 @@
       "type": "experiment",
       "title": "Address collapse in FABLE Meta-Allocator v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Trailing-14d PF 0.32, PnL -684. Decide: halve risk on new entries, pause pending diagnosis, or archive."
+      "requested_action": "Trailing-14d PF 0.13, PnL -916. Decide: halve risk on new entries, pause pending diagnosis, or archive."
     },
     {
       "owner": "fable",
@@ -95,7 +95,7 @@
       "type": "experiment",
       "title": "Repair weak edge in FABLE Equities Fader v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Forward PF 1.00, trailing 0.74. Design ONE one-variable repair experiment; no promotion evidence until PF > 1.2."
+      "requested_action": "Forward PF 1.04, trailing 0.91. Design ONE one-variable repair experiment; no promotion evidence until PF > 1.2."
     }
   ]
 }
