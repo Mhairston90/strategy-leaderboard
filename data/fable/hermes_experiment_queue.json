@@ -1,6 +1,6 @@
 {
   "owner": "fable",
-  "generated_at": "2026-10-21T16:31:54.000Z",
+  "generated_at": "2026-10-23T14:00:14.000Z",
   "guardrails": [
     "Review-only: no live routing, position-sizing, or spec files were modified.",
     "Queue items are research and operational recommendations only.",
@@ -25,7 +25,7 @@
       "type": "experiment",
       "title": "Address collapse in FABLE Crypto Drift v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Trailing-14d PF 0.44, PnL -123. Decide: halve risk on new entries, pause pending diagnosis, or archive."
+      "requested_action": "Trailing-14d PF 0.21, PnL -374. Decide: halve risk on new entries, pause pending diagnosis, or archive."
     },
     {
       "owner": "fable",
@@ -65,7 +65,7 @@
       "type": "experiment",
       "title": "Address collapse in FABLE Equities Snapback L/S v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Trailing-14d PF 0.46, PnL -995. Decide: halve risk on new entries, pause pending diagnosis, or archive."
+      "requested_action": "Trailing-14d PF 0.51, PnL -864. Decide: halve risk on new entries, pause pending diagnosis, or archive."
     },
     {
       "owner": "fable",
@@ -75,7 +75,7 @@
       "type": "experiment",
       "title": "Address collapse in FABLE Equities Snapback Turbo",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Trailing-14d PF 0.52, PnL -1760. Decide: halve risk on new entries, pause pending diagnosis, or archive."
+      "requested_action": "Trailing-14d PF 0.54, PnL -1675. Decide: halve risk on new entries, pause pending diagnosis, or archive."
     },
     {
       "owner": "fable",
@@ -85,7 +85,7 @@
       "type": "experiment",
       "title": "Address collapse in FABLE Meta-Allocator v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Trailing-14d PF 0.09, PnL -943. Decide: halve risk on new entries, pause pending diagnosis, or archive."
+      "requested_action": "Trailing-14d PF 0.16, PnL -479. Decide: halve risk on new entries, pause pending diagnosis, or archive."
     },
     {
       "owner": "fable",
@@ -95,7 +95,7 @@
       "type": "sample_collection",
       "title": "Keep collecting sample for FABLE Equities Fader v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Stable: forward PF 1.04, trailing 1.00. Stay the course; review at month boundary for registration."
+      "requested_action": "Stable: forward PF 1.09, trailing 2.16. Stay the course; review at month boundary for registration."
     }
   ]
 }
