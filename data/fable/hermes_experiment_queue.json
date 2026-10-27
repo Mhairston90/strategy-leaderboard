@@ -1,6 +1,6 @@
 {
   "owner": "fable",
-  "generated_at": "2026-10-26T16:06:46.000Z",
+  "generated_at": "2026-10-27T16:07:09.000Z",
   "guardrails": [
     "Review-only: no live routing, position-sizing, or spec files were modified.",
     "Queue items are research and operational recommendations only.",
@@ -65,7 +65,7 @@
       "type": "experiment",
       "title": "Defend FABLE Equities Snapback L/S v1 \u2014 winner fading in current window",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Full forward PF 1.27 but trailing-14d PF 0.61. Diagnose regime fit before the edge decays further."
+      "requested_action": "Full forward PF 1.27 but trailing-14d PF 0.69. Diagnose regime fit before the edge decays further."
     },
     {
       "owner": "fable",
@@ -75,7 +75,7 @@
       "type": "experiment",
       "title": "Defend FABLE Equities Snapback Turbo \u2014 winner fading in current window",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Full forward PF 1.25 but trailing-14d PF 0.68. Diagnose regime fit before the edge decays further."
+      "requested_action": "Full forward PF 1.25 but trailing-14d PF 0.63. Diagnose regime fit before the edge decays further."
     },
     {
       "owner": "fable",
@@ -85,7 +85,7 @@
       "type": "experiment",
       "title": "Address collapse in FABLE Meta-Allocator v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Trailing-14d PF 0.19, PnL -460. Decide: halve risk on new entries, pause pending diagnosis, or archive."
+      "requested_action": "Trailing-14d PF 0.20, PnL -442. Decide: halve risk on new entries, pause pending diagnosis, or archive."
     },
     {
       "owner": "fable",
@@ -95,7 +95,7 @@
       "type": "sample_collection",
       "title": "Keep collecting sample for FABLE Equities Fader v1",
       "source": "data/fable/hermes_experiment_queue.json",
-      "requested_action": "Stable: forward PF 1.10, trailing 6.03. Stay the course; review at month boundary for registration."
+      "requested_action": "Stable: forward PF 1.10, trailing 5.50. Stay the course; review at month boundary for registration."
     }
   ]
 }
